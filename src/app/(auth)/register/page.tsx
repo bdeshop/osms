@@ -1,11 +1,10 @@
-import RegisterUser from "@/components/auth/register/Register";
+import Register from "@/components/auth/register/Register";
 
-const Register = () => {
-  return (
-    <div>
-      <RegisterUser/>
-    </div>
-  )
+export const metadata = {
+  title: "Register",
+  description: "Create a new account",
+};
+
+export default function RegisterPage() {
+  return <Register />;
 }
-
-export default Register ;

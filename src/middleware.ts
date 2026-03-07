@@ -9,16 +9,18 @@ export function middleware(request: NextRequest) {
   // Function to check if a route is allowed for the role
   const isAllowed = (allowedRoles: string[]) => allowedRoles.includes(role);
 
-  // 1️⃣ Admin routes
-  if (pathname.startsWith("/admin") && !isAllowed(["ADMIN"])) {
+  // 1️⃣ Admin routes (SUPER_ADMIN and ADMIN)
+  if (pathname.startsWith("/admin") && !isAllowed(["SUPER_ADMIN", "ADMIN"])) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // 2️⃣ Patient routes
-  if (pathname.startsWith("/users") && !isAllowed(["USERS"])) {
+  // 2️⃣ User routes (USER role)
+  if (
+    pathname.startsWith("/users") &&
+    !isAllowed(["USER", "ADMIN", "SUPER_ADMIN"])
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
- 
 
   return NextResponse.next();
 }

@@ -14,9 +14,37 @@ import {
   Code,
   Folder,
   Key,
+  Package,
+  User,
 } from "lucide-react";
 
 export const SIDEBAR_CONFIG: SidebarSection[] = [
+  {
+    title: "Super Admin Panel",
+    roles: ["SUPER_ADMIN"],
+    items: [
+      {
+        title: "Dashboard",
+        url: "/admin/overview",
+        icon: LayoutDashboard,
+      },
+      {
+        title: "Packages",
+        url: "/admin/packages",
+        icon: Package,
+      },
+      {
+        title: "Users",
+        url: "/admin/users",
+        icon: Users,
+      },
+      {
+        title: "Profile",
+        url: "/profile",
+        icon: User,
+      },
+    ],
+  },
   {
     title: "Admin Panel",
     roles: ["ADMIN"],
@@ -27,14 +55,36 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: LayoutDashboard,
       },
       {
+        title: "Packages",
+        url: "/admin/packages",
+        icon: Package,
+      },
+      {
+        title: "Profile",
+        url: "/profile",
+        icon: User,
+      },
+      {
         title: "Messaging",
         icon: MessageCircle,
         items: [
           { title: "Send SMS", url: "/admin/messaging/sms", icon: Mail },
           { title: "Campaign", url: "/admin/messaging/campaign", icon: Zap },
-          { title: "Send Using File", url: "/admin/messaging/file", icon: Folder },
-          { title: "Sender ID", url: "/admin/messaging/sender-id", icon: Settings },
-          { title: "Non Masking ID", url: "/admin/messaging/non-masking", icon: Shield },
+          {
+            title: "Send Using File",
+            url: "/admin/messaging/file",
+            icon: Folder,
+          },
+          {
+            title: "Sender ID",
+            url: "/admin/messaging/sender-id",
+            icon: Settings,
+          },
+          {
+            title: "Non Masking ID",
+            url: "/admin/messaging/non-masking",
+            icon: Shield,
+          },
         ],
       },
       {
@@ -79,16 +129,20 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         ],
       },
     ],
-  }
-  ,
+  },
   {
     title: "User Panel",
-    roles: ["USERS"],
+    roles: ["USER"],
     items: [
       {
         title: "Dashboard",
         url: "/user/overview",
         icon: LayoutDashboard,
+      },
+      {
+        title: "Profile",
+        url: "/profile",
+        icon: User,
       },
       {
         title: "Phonebook",
@@ -116,10 +170,12 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
           { title: "Documentation", url: "/user/api/docs", icon: FileText },
         ],
       },
-    ]
-  }
+    ],
+  },
 ];
 
 // Helper: check if item has children
-export const hasChildren = (item: SidebarItem): item is SidebarItem & { items: SidebarItem[] } =>
+export const hasChildren = (
+  item: SidebarItem,
+): item is SidebarItem & { items: SidebarItem[] } =>
   !!item.items && item.items.length > 0;
