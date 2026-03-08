@@ -61,13 +61,13 @@ export default function Register() {
 
     try {
       // Call backend API
-      const data = await authAPI.register(
+      const data = (await authAPI.register(
         formData.email,
         formData.password,
         formData.firstName,
         formData.lastName,
         formData.role,
-      );
+      )) as any;
 
       // Store token and user data
       if (data.data?.token) {
@@ -77,10 +77,12 @@ export default function Register() {
 
       // Redirect based on role
       const userRole = data.data?.user?.role;
-      if (userRole === "SUPER_ADMIN" || userRole === "ADMIN") {
+      console.log("User role after registration:", userRole);
+
+      if (userRole === "ADMIN") {
         router.push("/admin/overview");
       } else {
-        router.push("/users/overview");
+        router.push("/user/overview");
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Registration failed");
@@ -90,18 +92,18 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black">
       {/* Animated background */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black opacity-90 animate-pulse"
+        className="absolute inset-0 bg-linear-to-br from-gray-800 via-gray-900 to-black opacity-90 animate-pulse"
         style={{ animationDuration: "4s" }}
       />
 
       {/* Card */}
-      <div className="relative z-10 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-10 w-full max-w-md shadow-2xl border border-gray-700 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="relative z-10 bg-linear-to-b from-gray-800 to-gray-900 rounded-2xl p-10 w-full max-w-md shadow-2xl border border-gray-700 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Avatar icon */}
         <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/50">
+          <div className="w-16 h-16 rounded-full bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/50">
             <UserPlus size={32} className="text-gray-900" />
           </div>
         </div>
@@ -199,7 +201,6 @@ export default function Register() {
             >
               <option value="USER">User</option>
               <option value="ADMIN">Admin</option>
-              <option value="SUPER_ADMIN">Super Admin</option>
             </select>
           </div>
 
@@ -256,7 +257,7 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-6 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 disabled:opacity-70 disabled:cursor-not-allowed text-gray-900 font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-500/40 hover:shadow-amber-500/60 hover:-translate-y-0.5"
+            className="w-full mt-6 bg-linear-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 disabled:opacity-70 disabled:cursor-not-allowed text-gray-900 font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-500/40 hover:shadow-amber-500/60 hover:-translate-y-0.5"
           >
             {loading ? (
               <span className="w-4 h-4 border-2 border-gray-900/30 border-t-gray-900 rounded-full animate-spin" />

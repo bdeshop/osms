@@ -115,3 +115,18 @@ export const userAPI = {
       body: JSON.stringify({ role }),
     }),
 };
+
+// Messaging APIs
+export const messagingAPI = {
+  sendSMS: (recipient: string, message: string) =>
+    apiCall("/messaging/send", {
+      method: "POST",
+      body: JSON.stringify({ recipient, message }),
+    }),
+
+  sendBulkSMS: (recipients: string[], message: string) =>
+    apiCall("/messaging/send-bulk", {
+      method: "POST",
+      body: JSON.stringify({ recipients, message }),
+    }),
+};

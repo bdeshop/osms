@@ -19,9 +19,12 @@ import {
 } from "lucide-react";
 
 export const SIDEBAR_CONFIG: SidebarSection[] = [
+  // ============================================
+  // ADMIN PANEL - For ADMIN users
+  // ============================================
   {
-    title: "Super Admin Panel",
-    roles: ["SUPER_ADMIN"],
+    title: "Admin Panel",
+    roles: ["ADMIN"],
     items: [
       {
         title: "Dashboard",
@@ -43,26 +46,10 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         url: "/profile",
         icon: User,
       },
-    ],
-  },
-  {
-    title: "Admin Panel",
-    roles: ["ADMIN"],
-    items: [
       {
-        title: "Dashboard",
-        url: "/users/overview",
-        icon: LayoutDashboard,
-      },
-      {
-        title: "Packages",
-        url: "/admin/packages",
-        icon: Package,
-      },
-      {
-        title: "Profile",
-        url: "/profile",
-        icon: User,
+        title: "API Documentation",
+        url: "/api-docs",
+        icon: FileText,
       },
       {
         title: "Messaging",
@@ -125,11 +112,15 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         items: [
           { title: "API Keys", url: "/admin/api/keys", icon: Key },
           { title: "Webhooks", url: "/admin/api/webhooks", icon: Zap },
-          { title: "Documentation", url: "/admin/api/docs", icon: FileText },
+          { title: "Documentation", url: "/api-docs", icon: FileText },
         ],
       },
     ],
   },
+
+  // ============================================
+  // USER PANEL - For USER users
+  // ============================================
   {
     title: "User Panel",
     roles: ["USER"],
@@ -140,9 +131,19 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: LayoutDashboard,
       },
       {
+        title: "Packages",
+        url: "/user/packages",
+        icon: Package,
+      },
+      {
         title: "Profile",
         url: "/profile",
         icon: User,
+      },
+      {
+        title: "API Documentation",
+        url: "/api-docs",
+        icon: FileText,
       },
       {
         title: "Phonebook",
@@ -167,7 +168,7 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         items: [
           { title: "API Keys", url: "/user/api/keys", icon: Key },
           { title: "Webhooks", url: "/user/api/webhooks", icon: Zap },
-          { title: "Documentation", url: "/user/api/docs", icon: FileText },
+          { title: "Documentation", url: "/api-docs", icon: FileText },
         ],
       },
     ],

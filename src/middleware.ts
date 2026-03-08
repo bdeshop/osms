@@ -1,23 +1,20 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { DUMMY_USER } from "@/lib/dummyAuth";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const role = DUMMY_USER.role;
 
-  // Function to check if a route is allowed for the role
-  const isAllowed = (allowedRoles: string[]) => allowedRoles.includes(role);
+  // Get user role from authToken or user data in cookies/headers
+  // Since we can't access localStorage in middleware, we'll check the auth token
+  const authToken = request.cookies.get("authToken")?.value;
 
-  // 1️⃣ Admin routes (SUPER_ADMIN and ADMIN)
-  if (pathname.startsWith("/admin") && !isAllowed(["SUPER_ADMIN", "ADMIN"])) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // For now, we'll allow access if there's an auth token
+  // The actual role check will happen on the client side
 
-  // 2️⃣ User routes (USER role)
+  // If no auth token, redirect to login
   if (
-    pathname.startsWith("/users") &&
-    !isAllowed(["USER", "ADMIN", "SUPER_ADMIN"])
+    !authToken &&
+    (pathname.startsWith("/admin") || pathname.startsWith("/user"))
   ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -27,5 +24,5 @@ export function middleware(request: NextRequest) {
 
 // Apply middleware to all protected routes
 export const config = {
-  matcher: ["/admin/:path*", "/users/:path*"],
+  matcher: ["/admin/:path*", "/user/:path*"],
 };

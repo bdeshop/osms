@@ -29,10 +29,10 @@ export default function AdminLogin() {
 
       // Redirect based on role
       const userRole = data.data?.user?.role;
-      if (userRole === "SUPER_ADMIN" || userRole === "ADMIN") {
+      if (userRole === "ADMIN") {
         router.push("/admin/overview");
       } else {
-        router.push("/users/overview");
+        router.push("/user/overview");
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Login failed");
