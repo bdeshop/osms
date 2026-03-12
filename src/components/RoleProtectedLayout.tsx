@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 
 interface RoleProtectedLayoutProps {
@@ -14,49 +14,65 @@ export default function RoleProtectedLayout({
   allowedRoles,
 }: RoleProtectedLayoutProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasChecked, setHasChecked] = useState(false);
 
   useEffect(() => {
-    const checkAuth = () => {
-      try {
-        // Get user from localStorage
-        const userStr = localStorage.getItem("user");
-        const authToken = localStorage.getItem("authToken");
+    // Only run once
+    if (hasChecked) return;
+    setHasChecked(true);
 
-        if (!authToken || !userStr) {
-          router.push("/login");
-          return;
-        }
+    try {
+      // Get user from localStorage
+      const userStr = localStorage.getItem("user");
+      const authToken = localStorage.getItem("authToken");
 
-        const user = JSON.parse(userStr);
-        const userRole = user.role;
+      console.log("RoleProtectedLayout - Checking auth:", {
+        hasToken: !!authToken,
+        hasUser: !!userStr,
+      });
 
-        // Check if user role is allowed for this route
-        if (!allowedRoles.includes(userRole)) {
-          // Redirect to appropriate dashboard based on role
-          if (userRole === "ADMIN") {
-            router.push("/admin/overview");
-          } else if (userRole === "USER") {
-            router.push("/user/overview");
-          } else {
-            router.push("/login");
-          }
-          return;
-        }
-
-        setIsAuthorized(true);
-      } catch (error) {
-        console.error("Auth check failed:", error);
-        router.push("/login");
-      } finally {
+      if (!authToken || !userStr) {
+        console.log("No auth token or user, redirecting to /adminLogin");
+        router.push("/adminLogin");
         setIsLoading(false);
+        return;
       }
-    };
 
-    checkAuth();
-  }, [pathname, router, allowedRoles]);
+      const user = JSON.parse(userStr);
+      const userRole = user.role;
+
+      console.log("User role from localStorage:", userRole);
+      console.log("Allowed roles:", allowedRoles);
+
+      // Check if user role is allowed for this route
+      if (!allowedRoles.includes(userRole)) {
+        console.log("User role not allowed for this route, redirecting...");
+        // Redirect to appropriate dashboard based on role
+        if (userRole === "ADMIN") {
+          console.log("Redirecting to /admin/overview");
+          router.push("/admin/overview");
+        } else if (userRole === "USER") {
+          console.log("Redirecting to /user/overview");
+          router.push("/user/overview");
+        } else {
+          console.log("Unknown role, redirecting to /adminLogin");
+          router.push("/adminLogin");
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("User authorized");
+      setIsAuthorized(true);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      router.push("/adminLogin");
+      setIsLoading(false);
+    }
+  }, [hasChecked, router, allowedRoles]);
 
   if (isLoading) {
     return (

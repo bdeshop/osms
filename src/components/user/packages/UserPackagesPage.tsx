@@ -38,6 +38,7 @@ export default function UserPackagesPage() {
   );
   const [showModal, setShowModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -70,7 +71,8 @@ export default function UserPackagesPage() {
 
   const handleConfirmSelection = () => {
     if (selectedPackage) {
-      localStorage.setItem("selectedPackage", JSON.stringify(selectedPackage));
+      // Only store the package ID, not the full package with token
+      localStorage.setItem("selectedPackageId", selectedPackage._id);
       setShowModal(false);
       setShowSuccess(true);
 
@@ -102,10 +104,10 @@ export default function UserPackagesPage() {
 
         {/* Currently Selected Package */}
         {(() => {
-          const stored = localStorage.getItem("selectedPackage");
-          if (stored) {
-            try {
-              const pkg = JSON.parse(stored);
+          const storedId = localStorage.getItem("selectedPackageId");
+          if (storedId) {
+            const pkg = packages.find((p) => p._id === storedId);
+            if (pkg) {
               return (
                 <div className="mb-8 bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 flex items-center justify-between">
                   <div>
@@ -116,7 +118,7 @@ export default function UserPackagesPage() {
                   </div>
                   <button
                     onClick={() => {
-                      localStorage.removeItem("selectedPackage");
+                      localStorage.removeItem("selectedPackageId");
                       window.location.reload();
                     }}
                     className="text-amber-400 hover:text-red-400 transition-colors px-4 py-2 rounded-lg hover:bg-red-500/10"
@@ -125,8 +127,6 @@ export default function UserPackagesPage() {
                   </button>
                 </div>
               );
-            } catch (e) {
-              return null;
             }
           }
           return null;
@@ -203,37 +203,6 @@ export default function UserPackagesPage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
-                )}
-
-                {/* Package Token */}
-                {pkg.packageToken && (
-                  <div className="bg-gray-900 rounded p-3 border border-gray-700 mb-4">
-                    <p className="text-gray-400 text-xs mb-2">Package Token</p>
-                    <div className="flex items-center justify-between gap-2">
-                      <code className="text-amber-400 text-xs truncate">
-                        {pkg.packageToken?.substring(0, 16) || ""}...
-                      </code>
-                      <button
-                        onClick={() =>
-                          copyToClipboard(
-                            pkg.packageToken || "",
-                            `token-${pkg._id}`,
-                          )
-                        }
-                        className="shrink-0 hover:bg-gray-800 p-1 rounded transition-colors"
-                        title="Copy token"
-                      >
-                        {copied === `token-${pkg._id}` ? (
-                          <Check size={14} className="text-green-400" />
-                        ) : (
-                          <Copy
-                            size={14}
-                            className="text-gray-400 hover:text-amber-400"
-                          />
-                        )}
-                      </button>
-                    </div>
                   </div>
                 )}
 

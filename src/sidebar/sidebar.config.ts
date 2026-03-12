@@ -136,6 +136,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: Package,
       },
       {
+        title: "Messages",
+        url: "/user/messages",
+        icon: MessageCircle,
+      },
+      {
         title: "Profile",
         url: "/profile",
         icon: User,

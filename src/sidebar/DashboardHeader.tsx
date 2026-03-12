@@ -59,7 +59,7 @@ export default function DashboardHeader() {
   const userName = user ? `${user.firstName} ${user.lastName}` : "User";
 
   return (
-    <header className="h-16 w-full bg-gradient-to-r from-gray-800 to-gray-900 border-b border-gray-700 flex items-center justify-end px-6">
+    <header className="h-16 w-full bg-gradient-to-r from-gray-800 to-gray-900 border-b border-gray-700 flex items-center justify-end px-6 sticky top-0 z-40">
       <div className="flex items-center gap-6 text-white">
         {/* Language */}
         <DropdownMenu>

@@ -129,4 +129,9 @@ export const messagingAPI = {
       method: "POST",
       body: JSON.stringify({ recipients, message }),
     }),
+
+  getMessagesByPackage: (packageId: string) =>
+    apiCall(`/messaging/package/${packageId}`, { method: "GET" }),
+
+  getAllMessages: () => apiCall("/messaging/messages", { method: "GET" }),
 };

@@ -27,8 +27,9 @@ export default function PackagesManager() {
     description: "",
     messageCount: "",
     costPerMessage: "",
-    features: "",
+    features: [] as string[],
   });
+  const [featureInput, setFeatureInput] = useState("");
 
   // Fetch packages
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function PackagesManager() {
         description: formData.description,
         messageCount: parseInt(formData.messageCount),
         costPerMessage: parseFloat(formData.costPerMessage),
-        features: formData.features.split(",").map((f) => f.trim()),
+        features: formData.features,
       };
 
       if (editingId) {
@@ -72,8 +73,9 @@ export default function PackagesManager() {
         description: "",
         messageCount: "",
         costPerMessage: "",
-        features: "",
+        features: [],
       });
+      setFeatureInput("");
       setEditingId(null);
       setShowForm(false);
       await fetchPackages();
@@ -90,8 +92,9 @@ export default function PackagesManager() {
       description: pkg.description,
       messageCount: pkg.messageCount.toString(),
       costPerMessage: pkg.costPerMessage.toString(),
-      features: pkg.features.join(", "),
+      features: pkg.features,
     });
+    setFeatureInput("");
     setEditingId(pkg._id);
     setShowForm(true);
   };
@@ -141,8 +144,9 @@ export default function PackagesManager() {
             description: "",
             messageCount: "",
             costPerMessage: "",
-            features: "",
+            features: [],
           });
+          setFeatureInput("");
         }}
         className="mb-6 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-gray-900 font-bold py-3 px-6 rounded-lg flex items-center gap-2 transition-all shadow-lg shadow-amber-500/40"
       >
@@ -200,14 +204,73 @@ export default function PackagesManager() {
               required
               className="md:col-span-2 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
             />
-            <textarea
-              placeholder="Features (comma-separated)"
-              value={formData.features}
-              onChange={(e) =>
-                setFormData({ ...formData, features: e.target.value })
-              }
-              className="md:col-span-2 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
-            />
+            <div className="md:col-span-2">
+              <label className="block text-gray-300 text-sm font-medium mb-2">
+                Features
+              </label>
+              <div className="flex gap-2 mb-3">
+                <input
+                  type="text"
+                  placeholder="Add a feature"
+                  value={featureInput}
+                  onChange={(e) => setFeatureInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      if (featureInput.trim()) {
+                        setFormData({
+                          ...formData,
+                          features: [...formData.features, featureInput.trim()],
+                        });
+                        setFeatureInput("");
+                      }
+                    }
+                  }}
+                  className="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (featureInput.trim()) {
+                      setFormData({
+                        ...formData,
+                        features: [...formData.features, featureInput.trim()],
+                      });
+                      setFeatureInput("");
+                    }
+                  }}
+                  className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-all"
+                >
+                  <Plus size={18} />
+                </button>
+              </div>
+              {formData.features.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {formData.features.map((feature, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-amber-500/20 text-amber-400 text-sm px-3 py-1 rounded border border-amber-500/30 flex items-center gap-2"
+                    >
+                      {feature}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData({
+                            ...formData,
+                            features: formData.features.filter(
+                              (_, i) => i !== idx,
+                            ),
+                          });
+                        }}
+                        className="text-amber-400 hover:text-amber-300 font-bold"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <div className="md:col-span-2 flex gap-4">
               <button
                 type="submit"

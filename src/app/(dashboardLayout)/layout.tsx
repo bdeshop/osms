@@ -10,12 +10,18 @@ export default function DashboardLayout({
   return (
     <RoleProtectedLayout allowedRoles={["ADMIN", "USER"]}>
       <div className="flex min-h-screen bg-gray-900">
-        <DashboardSidebarWrapper />
+        {/* Sticky Sidebar */}
+        <div className="sticky top-0 h-screen">
+          <DashboardSidebarWrapper />
+        </div>
 
         <div className="flex flex-col flex-1">
-          <DashboardHeader />
+          {/* Sticky Header */}
+          <div className="sticky top-0 z-40">
+            <DashboardHeader />
+          </div>
 
-          <main className="flex-1 bg-linear-to-br from-gray-900 via-gray-800 to-black">
+          <main className="flex-1 bg-linear-to-br from-gray-900 via-gray-800 to-black overflow-y-auto">
             {children}
           </main>
         </div>

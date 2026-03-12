@@ -3,11 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Accordion,
   AccordionContent,
@@ -39,7 +35,7 @@ const ListItem = React.forwardRef<
         className={cn(
           "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors",
           "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-          className
+          className,
         )}
         {...props}
       >
@@ -125,7 +121,7 @@ const aboutMenu = [
 const triggerClass = cn(
   "bg-transparent text-primary-foreground px-3 py-2 text-sm font-medium transition-colors",
   "hover:bg-primary/80 data-[state=open]:bg-primary/80",
-  "data-[state=open]:shadow-sm"
+  "data-[state=open]:shadow-sm",
 );
 
 /* ───────────────── HEADER ───────────────── */
@@ -134,7 +130,6 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-primary text-primary-foreground shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-
           {/* LOGO */}
           <Link href="/" className="flex items-center">
             <Logo />
@@ -144,7 +139,6 @@ export default function Header() {
           <nav className="hidden lg:flex lg:gap-1">
             <NavigationMenu>
               <NavigationMenuList>
-
                 {/* PRODUCTS – Mega Menu */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className={triggerClass}>
@@ -176,7 +170,7 @@ export default function Header() {
                                 ))}
                               </ul>
                             </li>
-                          )
+                          ),
                         )}
                       </ul>
                     </div>
@@ -215,7 +209,7 @@ export default function Header() {
                             title={item.title}
                             href={item.href}
                           />
-                        )
+                        ),
                       )}
                     </ul>
                   </NavigationMenuContent>
@@ -248,12 +242,14 @@ export default function Header() {
                 {/* CONTACT – direct link */}
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild className={triggerClass}>
-                    <Link href="/contact" className={navigationMenuTriggerStyle()}>
+                    <Link
+                      href="/contact"
+                      className={navigationMenuTriggerStyle()}
+                    >
                       Contact
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
-
               </NavigationMenuList>
             </NavigationMenu>
           </nav>
@@ -266,10 +262,13 @@ export default function Header() {
             </Button>
 
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/login">Log In</Link>
+              <Link href="/adminLogin">Log In</Link>
             </Button>
 
-            <Button asChild className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-full px-6">
+            <Button
+              asChild
+              className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-full px-6"
+            >
               <Link href="/signup">Free Trial</Link>
             </Button>
           </div>
@@ -300,7 +299,9 @@ export default function Header() {
                         <div className="pl-4 space-y-6">
                           {productsMenu.map((group) => (
                             <div key={group.title}>
-                              <div className="font-medium mb-2">{group.title}</div>
+                              <div className="font-medium mb-2">
+                                {group.title}
+                              </div>
                               <ul className="space-y-2">
                                 {group.items?.map((item) => (
                                   <li key={item.href}>
@@ -360,12 +361,17 @@ export default function Header() {
                 {/* Mobile bottom actions */}
                 <div className="p-6 border-t border-primary-foreground/10 mt-auto">
                   <div className="flex flex-col gap-4">
-                    <Button variant="outline" className="justify-start gap-2" asChild>
-                      <Link href="/login">
-                        Log In
-                      </Link>
+                    <Button
+                      variant="outline"
+                      className="justify-start gap-2"
+                      asChild
+                    >
+                      <Link href="/adminLogin">Log In</Link>
                     </Button>
-                    <Button className="bg-fuchsia-600 hover:bg-fuchsia-700" asChild>
+                    <Button
+                      className="bg-fuchsia-600 hover:bg-fuchsia-700"
+                      asChild
+                    >
                       <Link href="/signup">Start Free Trial</Link>
                     </Button>
                   </div>
@@ -373,7 +379,6 @@ export default function Header() {
               </div>
             </SheetContent>
           </Sheet>
-
         </div>
       </div>
     </header>

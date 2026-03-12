@@ -57,7 +57,7 @@ export default function DashboardSidebar({ role }: SidebarProps) {
 
   // Desktop Sidebar
   const DesktopSidebar = () => (
-    <aside className="hidden lg:flex w-64 min-h-screen border-r border-gray-700 bg-gradient-to-b from-gray-800 to-gray-900 flex-col">
+    <aside className="hidden lg:flex w-64 min-h-screen border-r border-gray-700 bg-gradient-to-b from-gray-800 to-gray-900 flex-col sticky top-0 h-screen">
       {/* Logo */}
       <div className="flex items-center justify-center h-16 border-b border-gray-700">
         <Logo />

@@ -18,9 +18,7 @@ export default function UsersManager() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState<
-    "ALL" | "SUPER_ADMIN" | "ADMIN" | "USER"
-  >("ALL");
+  const [filter, setFilter] = useState<"ALL" | "ADMIN" | "USER">("ALL");
 
   // Fetch users
   useEffect(() => {
@@ -74,14 +72,11 @@ export default function UsersManager() {
     filter === "ALL" ? users : users.filter((u) => u.role === filter);
 
   // Count by role
-  const superAdminCount = users.filter((u) => u.role === "SUPER_ADMIN").length;
   const adminCount = users.filter((u) => u.role === "ADMIN").length;
   const userCount = users.filter((u) => u.role === "USER").length;
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case "SUPER_ADMIN":
-        return "bg-red-500/20 text-red-400 border-red-500/30";
       case "ADMIN":
         return "bg-blue-500/20 text-blue-400 border-blue-500/30";
       case "USER":
@@ -107,7 +102,7 @@ export default function UsersManager() {
       )}
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700">
           <div className="flex items-center justify-between">
             <div>
@@ -115,18 +110,6 @@ export default function UsersManager() {
               <p className="text-3xl font-bold text-white">{users.length}</p>
             </div>
             <UsersIcon className="text-amber-500" size={32} />
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-400 text-sm">Super Admins</p>
-              <p className="text-3xl font-bold text-red-400">
-                {superAdminCount}
-              </p>
-            </div>
-            <span className="text-4xl">👑</span>
           </div>
         </div>
 
@@ -153,7 +136,7 @@ export default function UsersManager() {
 
       {/* Filter Tabs */}
       <div className="mb-6 flex gap-2 flex-wrap">
-        {["ALL", "SUPER_ADMIN", "ADMIN", "USER"].map((role) => (
+        {["ALL", "ADMIN", "USER"].map((role) => (
           <button
             key={role}
             onClick={() => setFilter(role as any)}
@@ -237,7 +220,6 @@ export default function UsersManager() {
                         user.role,
                       )} bg-transparent`}
                     >
-                      <option value="SUPER_ADMIN">👑 Super Admin</option>
                       <option value="ADMIN">🔐 Admin</option>
                       <option value="USER">👤 User</option>
                     </select>

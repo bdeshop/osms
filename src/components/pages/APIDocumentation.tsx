@@ -1,12 +1,63 @@
 "use client";
 
-import { useState } from "react";
-import { Copy, Check, Send, ChevronDown, ChevronUp, Code } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Copy,
+  Check,
+  Send,
+  ChevronDown,
+  ChevronUp,
+  Code,
+  Loader,
+} from "lucide-react";
+import { packageAPI } from "@/services/api";
+
+interface PackageData {
+  _id: string;
+  name: string;
+  description: string;
+  messageCount: number;
+  costPerMessage: number;
+  totalPrice: number;
+  features: string[];
+  isActive: boolean;
+  packageToken: string;
+}
 
 export default function APIDocumentation() {
+  const router = useRouter();
   const [copied, setCopied] = useState<string | null>(null);
   const [expandedEndpoint, setExpandedEndpoint] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<{ [key: string]: string }>({});
+  const [selectedPackage, setSelectedPackage] = useState<PackageData | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Load selected package from localStorage and fetch from API
+    const selectedId = localStorage.getItem("selectedPackageId");
+    if (selectedId) {
+      fetchPackageById(selectedId);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchPackageById = async (packageId: string) => {
+    try {
+      setLoading(true);
+      const response = (await packageAPI.getById(packageId)) as any;
+      setSelectedPackage(response.data);
+    } catch (err) {
+      console.error("Failed to fetch package:", err);
+      // If package fetch fails, clear the selection
+      localStorage.removeItem("selectedPackageId");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -26,6 +77,11 @@ export default function APIDocumentation() {
 
   const API_BASE_URL = "http://localhost:9000";
 
+  // Get package token from localStorage or use placeholder
+  const packageToken =
+    selectedPackage?.packageToken || "your_package_token_here";
+  const costPerMessage = selectedPackage?.costPerMessage || 0;
+
   const endpoints = [
     {
       id: "send-sms",
@@ -37,7 +93,8 @@ export default function APIDocumentation() {
       request: {
         recipient: "8801772411171",
         message: "Hello SMS",
-        packageToken: "your_package_token_here",
+        packageToken: packageToken,
+        cost: costPerMessage,
       },
       response: {
         success: true,
@@ -53,7 +110,8 @@ export default function APIDocumentation() {
   -d '{
     "recipient": "8801772411171",
     "message": "Hello SMS",
-    "packageToken": "your_package_token_here"
+    "packageToken": "${packageToken}",
+    "cost": ${costPerMessage}
   }'`,
       jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/send', {
   method: 'POST',
@@ -63,7 +121,8 @@ export default function APIDocumentation() {
   body: JSON.stringify({
     recipient: '8801772411171',
     message: 'Hello SMS',
-    packageToken: 'your_package_token_here'
+    packageToken: '${packageToken}',
+    cost: ${costPerMessage}
   })
 });
 
@@ -78,7 +137,8 @@ headers = {
 payload = {
     'recipient': '8801772411171',
     'message': 'Hello SMS',
-    'packageToken': 'your_package_token_here'
+    'packageToken': '${packageToken}',
+    'cost': ${costPerMessage}
 }
 
 response = requests.post(url, json=payload, headers=headers)
@@ -96,7 +156,8 @@ print(response.json())`,
       request: {
         recipients: ["8801772411171", "8801234567890"],
         message: "Hello SMS",
-        packageToken: "your_package_token_here",
+        packageToken: packageToken,
+        cost: costPerMessage,
       },
       response: {
         success: true,
@@ -111,7 +172,8 @@ print(response.json())`,
   -d '{
     "recipients": ["8801772411171", "8801234567890"],
     "message": "Hello SMS",
-    "packageToken": "your_package_token_here"
+    "packageToken": "${packageToken}",
+    "cost": ${costPerMessage}
   }'`,
       jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/send-bulk', {
   method: 'POST',
@@ -121,7 +183,8 @@ print(response.json())`,
   body: JSON.stringify({
     recipients: ['8801772411171', '8801234567890'],
     message: 'Hello SMS',
-    packageToken: 'your_package_token_here'
+    packageToken: '${packageToken}',
+    cost: ${costPerMessage}
   })
 });
 
@@ -136,7 +199,8 @@ headers = {
 payload = {
     'recipients': ['8801772411171', '8801234567890'],
     'message': 'Hello SMS',
-    'packageToken': 'your_package_token_here'
+    'packageToken': '${packageToken}',
+    'cost': ${costPerMessage}
 }
 
 response = requests.post(url, json=payload, headers=headers)
@@ -251,37 +315,124 @@ print(response.json())`,
           </div>
         </div>
 
+        {/* Selected Package Info */}
+        {loading ? (
+          <div className="bg-linear-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-lg p-6 mb-8 flex items-center justify-center">
+            <Loader className="animate-spin text-amber-500 mr-3" size={24} />
+            <span className="text-gray-300">
+              Loading package information...
+            </span>
+          </div>
+        ) : selectedPackage ? (
+          <div className="bg-linear-to-br from-green-500/10 to-green-600/5 border border-green-500/30 rounded-lg p-6 mb-8">
+            <h2 className="text-white font-bold text-xl mb-4">
+              ✅ Currently Selected Package
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-gray-300 mb-6">
+              <div className="bg-gray-900/50 rounded p-4 border border-gray-700">
+                <p className="text-gray-400 text-sm mb-1">Package Name</p>
+                <p className="text-white font-semibold">
+                  {selectedPackage.name}
+                </p>
+              </div>
+              <div className="bg-gray-900/50 rounded p-4 border border-gray-700">
+                <p className="text-gray-400 text-sm mb-1">Cost Per Message</p>
+                <p className="text-white font-semibold">
+                  ৳{selectedPackage.costPerMessage}
+                </p>
+              </div>
+              <div className="bg-gray-900/50 rounded p-4 border border-gray-700">
+                <p className="text-gray-400 text-sm mb-1">Messages</p>
+                <p className="text-white font-semibold">
+                  {selectedPackage.messageCount}
+                </p>
+              </div>
+              <div className="bg-gray-900/50 rounded p-4 border border-gray-700">
+                <p className="text-gray-400 text-sm mb-1">Total Price</p>
+                <p className="text-white font-semibold">
+                  ৳{selectedPackage.totalPrice}
+                </p>
+              </div>
+            </div>
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded p-4">
+              <p className="text-blue-400 text-sm">
+                <strong>✓ Ready to use:</strong> Your package token is now
+                available in all API examples below. You can copy the examples
+                and use them directly in your application.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-linear-to-br from-yellow-500/10 to-yellow-600/5 border border-yellow-500/30 rounded-lg p-6 mb-8">
+            <h2 className="text-white font-bold text-xl mb-2">
+              ⚠️ No Package Selected
+            </h2>
+            <p className="text-yellow-400 mb-4">
+              You haven't selected a package yet. Please select a package to see
+              your package token and cost in the API examples below.
+            </p>
+            <button
+              onClick={() => router.push("/user/packages")}
+              className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            >
+              Select a Package
+            </button>
+          </div>
+        )}
+
         {/* Authentication Info */}
         <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6 mb-8">
           <h2 className="text-white font-semibold mb-3 flex items-center gap-2">
             🔐 Authentication
           </h2>
           <p className="text-gray-300 mb-4">
-            All requests require a <strong>Package Token</strong> in the request
-            body:
+            All requests require a <strong>Package Token</strong> and{" "}
+            <strong>Cost</strong> in the request body:
           </p>
-          <div className="bg-gray-900 rounded p-4 border border-gray-700 flex items-center justify-between group mb-4">
-            <code className="text-amber-400 text-sm">
-              "packageToken": "your_package_token_here"
-            </code>
-            <button
-              onClick={() =>
-                copyToClipboard(
-                  '"packageToken": "your_package_token_here"',
-                  "auth-header",
-                )
-              }
-              className="shrink-0"
-            >
-              {copied === "auth-header" ? (
-                <Check size={18} className="text-green-400" />
-              ) : (
-                <Copy
-                  size={18}
-                  className="text-gray-400 hover:text-amber-400"
-                />
-              )}
-            </button>
+          <div className="space-y-3 mb-4">
+            <div className="bg-gray-900 rounded p-4 border border-gray-700 flex items-center justify-between group">
+              <code className="text-amber-400 text-sm break-all">
+                "packageToken": "{packageToken}"
+              </code>
+              <button
+                onClick={() =>
+                  copyToClipboard(
+                    `"packageToken": "${packageToken}"`,
+                    "auth-token",
+                  )
+                }
+                className="shrink-0 ml-4"
+              >
+                {copied === "auth-token" ? (
+                  <Check size={18} className="text-green-400" />
+                ) : (
+                  <Copy
+                    size={18}
+                    className="text-gray-400 hover:text-amber-400"
+                  />
+                )}
+              </button>
+            </div>
+            <div className="bg-gray-900 rounded p-4 border border-gray-700 flex items-center justify-between group">
+              <code className="text-amber-400 text-sm">
+                "cost": {costPerMessage}
+              </code>
+              <button
+                onClick={() =>
+                  copyToClipboard(`"cost": ${costPerMessage}`, "auth-cost")
+                }
+                className="shrink-0 ml-4"
+              >
+                {copied === "auth-cost" ? (
+                  <Check size={18} className="text-green-400" />
+                ) : (
+                  <Copy
+                    size={18}
+                    className="text-gray-400 hover:text-amber-400"
+                  />
+                )}
+              </button>
+            </div>
           </div>
           <div className="bg-red-500/10 border border-red-500/30 rounded p-4">
             <p className="text-red-400 text-sm">

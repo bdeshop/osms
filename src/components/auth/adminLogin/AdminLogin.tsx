@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authAPI } from "@/services/api";
 
@@ -11,6 +11,36 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isChecking, setIsChecking] = useState(true);
+
+  // Check if user already has a token and redirect to dashboard
+  useEffect(() => {
+    const checkAuth = () => {
+      try {
+        const authToken = localStorage.getItem("authToken");
+        const userStr = localStorage.getItem("user");
+
+        if (authToken && userStr) {
+          const user = JSON.parse(userStr);
+          const userRole = user.role;
+
+          if (userRole === "ADMIN") {
+            router.replace("/admin/overview");
+            return;
+          } else if (userRole === "USER") {
+            router.replace("/user/overview");
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Auth check error:", err);
+      } finally {
+        setIsChecking(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,41 +49,64 @@ export default function AdminLogin() {
 
     try {
       // Call backend API using the service
-      const data = await authAPI.login(email, password);
+      const data = (await authAPI.login(email, password)) as any;
 
-      // Store token and user data in localStorage
+      console.log("Login response:", data);
+
+      // Store token and user data in localStorage and cookies
       if (data.data?.token) {
         localStorage.setItem("authToken", data.data.token);
         localStorage.setItem("user", JSON.stringify(data.data.user));
+
+        // Also set cookie for middleware to work
+        document.cookie = `authToken=${data.data.token}; path=/; max-age=86400`;
+
+        console.log("Stored user:", data.data.user);
       }
 
       // Redirect based on role
       const userRole = data.data?.user?.role;
+      console.log("User role:", userRole);
+
       if (userRole === "ADMIN") {
-        router.push("/admin/overview");
+        console.log("Redirecting to /admin/overview");
+        router.replace("/admin/overview");
+      } else if (userRole === "USER") {
+        console.log("Redirecting to /user/overview");
+        router.replace("/user/overview");
       } else {
-        router.push("/user/overview");
+        console.log("Unknown role, redirecting to /adminLogin");
+        router.replace("/adminLogin");
       }
     } catch (err: unknown) {
+      console.error("Login error:", err);
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
+  if (isChecking) {
+    return (
+      <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black">
+        <div className="text-amber-500">Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black">
       {/* Animated background with reduced animation */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black opacity-90 animate-pulse"
+        className="absolute inset-0 bg-linear-to-br from-gray-800 via-gray-900 to-black opacity-90 animate-pulse"
         style={{ animationDuration: "4s" }}
       />
 
       {/* Card */}
-      <div className="relative z-10 bg-gradient-to-b from-gray-800 to-gray-900 rounded-2xl p-10 w-full max-w-md shadow-2xl border border-gray-700 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="relative z-10 bg-linear-to-b from-gray-800 to-gray-900 rounded-2xl p-10 w-full max-w-md shadow-2xl border border-gray-700 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {/* Avatar icon */}
         <div className="flex justify-center mb-6">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/50">
+          <div className="w-16 h-16 rounded-full bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/50">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -171,7 +224,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 disabled:opacity-70 disabled:cursor-not-allowed text-gray-900 font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-500/40 hover:shadow-amber-500/60 hover:-translate-y-0.5"
+            className="w-full mt-2 bg-linear-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 disabled:opacity-70 disabled:cursor-not-allowed text-gray-900 font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-500/40 hover:shadow-amber-500/60 hover:-translate-y-0.5"
           >
             {loading ? (
               <span className="w-5 h-5 border-2 border-gray-900/30 border-t-gray-900 rounded-full animate-spin" />
