@@ -165,6 +165,9 @@ export const adminAPI = {
 
   getComprehensiveUsage: () =>
     apiCall("/admin/comprehensive-usage", { method: "GET" }),
+
+  getAnalytics: () =>
+    apiCall("/admin/analytics", { method: "GET" }),
 };
 
 // User API (for logged-in users)
@@ -191,6 +194,8 @@ export const userDataAPI = {
     }),
 
   getCurrentPackage: () => apiCall("/user/current-package", { method: "GET" }),
+
+  getAnalytics: () => apiCall("/user/analytics", { method: "GET" }),
 };
 
 // Messaging APIs

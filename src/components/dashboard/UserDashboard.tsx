@@ -1,322 +1,329 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { packageAPI } from "@/services/api";
+import { userDataAPI } from "@/services/api";
 import {
   Package,
-  Copy,
-  Check,
-  Zap,
-  MessageCircle,
+  CheckCircle,
+  XCircle,
+  Clock,
+  MessageSquare,
   DollarSign,
+  TrendingUp,
+  Activity,
+  Zap,
   Loader,
-  X,
   AlertCircle,
+  ArrowRight,
+  Shield,
+  Calendar,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
-interface PackageData {
-  _id: string;
-  name: string;
-  description: string;
-  messageCount: number;
-  costPerMessage: number;
-  totalPrice: number;
-  features: string[];
-  isActive: boolean;
-  packageToken: string;
+interface UserAnalytics {
+  overview: {
+    totalMessagesSent: number;
+    messagesSentToday: number;
+    currentBalance: number;
+    activePackage: string;
+  };
+  recentMessages: {
+    recipient: string;
+    message: string;
+    status: "sent" | "failed" | "pending";
+    createdAt: string;
+  }[];
+  packageBreakdown: { name: string; count: number }[];
+}
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  subtitle?: string;
+  color: string;
+  delay?: number;
+}
+
+function StatCard({ title, value, icon, subtitle, color, delay = 0 }: StatCardProps) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay }}
+      className={`bg-gray-800/30 backdrop-blur-sm rounded-3xl p-6 border border-gray-700/50 hover:border-${color}-500/30 transition-all hover:shadow-xl hover:shadow-${color}-500/5 group relative overflow-hidden`}
+    >
+      <div className={`absolute top-0 right-0 w-24 h-24 bg-${color}-500/5 -mr-12 -mt-12 rounded-full blur-2xl group-hover:bg-${color}-500/10 transition-colors`}></div>
+      <div className="flex flex-col h-full justify-between gap-6">
+        <div className={`p-2.5 w-fit rounded-xl bg-${color}-500/10 border border-${color}-500/20 text-${color}-500 group-hover:scale-110 transition-transform`}>
+          {icon}
+        </div>
+        <div>
+          <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">{title}</p>
+          <div className="flex items-end gap-2">
+            <p className="text-3xl font-black text-white tracking-tighter">{value}</p>
+            {subtitle && <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">{subtitle}</p>}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
 }
 
 export default function UserDashboard() {
-  const [selectedPackage, setSelectedPackage] = useState<PackageData | null>(
-    null,
-  );
+  const [analytics, setAnalytics] = useState<UserAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
-  const [copied, setCopied] = useState<string | null>(null);
-  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchCurrentSelection();
+    fetchAnalytics();
   }, []);
 
-  const fetchCurrentSelection = async () => {
+  const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      const response = (await packageAPI.getSelectionInfo()) as any;
-      if (response.success && response.data) {
-        setSelectedPackage(response.data.packageId);
+      setError(null);
+      const response = (await userDataAPI.getAnalytics()) as any;
+      if (response.success) {
+        setAnalytics(response.data);
       } else {
-        setSelectedPackage(null);
+        setError("Failed to fetch dashboard data.");
       }
     } catch (err) {
-      console.error("Failed to fetch selection:", err);
+      console.error("User dashboard error:", err);
+      setError("An error occurred while loading your profile.");
     } finally {
       setLoading(false);
     }
   };
 
-  const copyToClipboard = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(id);
-    setTimeout(() => setCopied(null), 2000);
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
   };
 
-  const handleCancelPackage = async () => {
-    if (!selectedPackage) return;
-    try {
-      setLoading(true);
-      await packageAPI.select(selectedPackage._id, "cancelled");
-      setSelectedPackage(null);
-      setShowCancelModal(false);
-    } catch (err) {
-      console.error("Failed to cancel package:", err);
-    } finally {
-      setLoading(false);
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "sent": return <CheckCircle className="text-green-400" size={14} />;
+      case "failed": return <XCircle className="text-red-400" size={14} />;
+      case "pending": return <Clock className="text-yellow-400" size={14} />;
+      default: return null;
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center gap-4">
         <Loader className="animate-spin text-amber-500" size={40} />
+        <p className="text-gray-400 font-medium animate-pulse tracking-widest uppercase text-[10px]">Loading Profile Data...</p>
+      </div>
+    );
+  }
+
+  if (error || !analytics) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-6 text-center">
+        <AlertCircle className="text-red-500 mb-4" size={48} />
+        <h2 className="text-white text-xl font-bold mb-2">Sync Error</h2>
+        <p className="text-gray-400 mb-6">{error || "Could not load dashboard information."}</p>
+        <button onClick={fetchAnalytics} className="bg-amber-500 text-gray-900 px-6 py-2 rounded-lg font-bold hover:bg-amber-600 transition-colors">Retry Sync</button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-black p-6">
+    <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-black p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">User Dashboard</h1>
-          <p className="text-gray-400">
-            Select a package and get started with sending SMS
-          </p>
+        {/* Dynamic Header */}
+        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <motion.div 
+               initial={{ opacity: 0, x: -20 }}
+               animate={{ opacity: 1, x: 0 }}
+               className="flex items-center gap-2 mb-3"
+            >
+               <span className="w-8 h-1 bg-amber-500 rounded-full"></span>
+               <p className="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em]">Personal Usage Hub</p>
+            </motion.div>
+            <h1 className="text-4xl font-black text-white tracking-tighter mb-2">
+              My <span className="text-amber-500">Dashboard</span>
+            </h1>
+            <p className="text-gray-400 font-medium leading-relaxed">
+              Track your SMS campaigns and monitor your package balance.
+            </p>
+          </div>
+          
+          <div className="flex gap-3">
+             <a href="/user/packages" className="bg-gray-800 hover:bg-gray-700 text-white px-5 py-2.5 rounded-2xl border border-gray-700 transition-all text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                <Package size={16} /> Browse Packs
+             </a>
+             <a href="/user/messages" className="bg-amber-500 hover:bg-amber-600 text-gray-900 px-5 py-2.5 rounded-2xl transition-all text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                <MessageSquare size={16} /> Message Logs
+             </a>
+          </div>
         </div>
 
-        {/* Main Content */}
-        <div>
-          {selectedPackage ? (
-            <div className="space-y-6">
-              {/* Package Info Card */}
-              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h2 className="text-white font-bold text-2xl mb-2">
-                      {selectedPackage.name}
-                    </h2>
-                    <p className="text-gray-400">
-                      {selectedPackage.description}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setShowCancelModal(true)}
-                    className="shrink-0 text-gray-400 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg"
-                    title="Cancel package"
-                  >
-                    <X size={24} />
-                  </button>
+        {/* User Summary Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          <StatCard
+            title="Total Delivery"
+            value={analytics.overview.totalMessagesSent}
+            icon={<Activity size={20} />}
+            subtitle="Historical total"
+            color="blue"
+            delay={0.1}
+          />
+          <StatCard
+            title="Today's Traffic"
+            value={analytics.overview.messagesSentToday}
+            icon={<TrendingUp size={20} />}
+            subtitle="Last 24 hours"
+            color="amber"
+            delay={0.2}
+          />
+          <StatCard
+            title="Remaining Power"
+            value={analytics.overview.currentBalance}
+            icon={<Zap size={20} />}
+            subtitle="Messages available"
+            color="green"
+            delay={0.3}
+          />
+          <StatCard
+            title="Primary Plan"
+            value={analytics.overview.activePackage || "NONE"}
+            icon={<Shield size={20} />}
+            subtitle="Current selection"
+            color="purple"
+            delay={0.4}
+          />
+        </div>
+
+        {/* Intelligence Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+           
+           {/* Package Utilization (Bar Chart Style) */}
+           <div className="lg:col-span-4 bg-gray-800/30 rounded-3xl border border-gray-700/50 p-8">
+              <div className="mb-10">
+                <h3 className="text-xl font-black text-white mb-1 uppercase tracking-tighter">Plan Analysis</h3>
+                <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Message distribution per package</p>
+              </div>
+
+              <div className="space-y-6">
+                 {analytics.packageBreakdown.length === 0 ? (
+                   <p className="text-gray-600 text-xs italic py-10 text-center">No package history recorded.</p>
+                 ) : (
+                   analytics.packageBreakdown.map((pkg, i) => {
+                      const total = analytics.packageBreakdown.reduce((acc, p) => acc + p.count, 0);
+                      const percent = Math.round((pkg.count / total) * 100);
+                      return (
+                        <div key={i} className="group cursor-default">
+                           <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                 <div className="w-2 h-2 rounded-full bg-amber-500/50"></div>
+                                 <span className="text-white font-bold text-sm tracking-tight truncate max-w-[150px]">{pkg.name}</span>
+                              </div>
+                              <span className="text-[10px] text-gray-400 font-black">{percent}%</span>
+                           </div>
+                           <div className="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-gray-700/50">
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${percent}%` }}
+                                transition={{ duration: 1, delay: i * 0.1 + 0.6 }}
+                                className="h-full bg-linear-to-r from-amber-500 to-amber-700" 
+                              />
+                           </div>
+                           <p className="text-[9px] text-gray-600 font-bold mt-1 uppercase text-right">{pkg.count} SMS</p>
+                        </div>
+                      )
+                   })
+                 )}
+              </div>
+              
+              {!analytics.overview.activePackage && (
+                 <div className="mt-10 pt-8 border-t border-gray-700/50 text-center">
+                    <p className="text-gray-500 text-xs mb-4">Ready to expand your reach?</p>
+                    <a href="/user/packages" className="inline-block text-amber-500 hover:text-amber-400 text-[10px] font-black uppercase tracking-widest transition-colors">
+                      Select New Package →
+                    </a>
+                 </div>
+              )}
+           </div>
+
+           {/* Recent Activity (Table/List Style) */}
+           <div className="lg:col-span-8 bg-gray-800/30 rounded-3xl border border-gray-700/50 p-8 flex flex-col">
+              <div className="flex items-center justify-between mb-10">
+                 <div>
+                    <h3 className="text-xl font-black text-white mb-1 uppercase tracking-tighter">Live Activity</h3>
+                    <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Chronological stream of recent delivery logs</p>
+                 </div>
+                 <MessageSquare className="text-amber-500/40" size={32} />
+              </div>
+              
+              {analytics.recentMessages.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center p-12 text-center border border-dashed border-gray-700 rounded-2xl">
+                   <AlertCircle className="text-gray-600 mb-3" size={32} />
+                   <p className="text-gray-500 text-sm italic">No recent messages found.</p>
                 </div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  {/* Messages */}
-                  <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
-                    <div className="flex items-center gap-2 mb-2">
-                      <MessageCircle className="text-blue-400" size={18} />
-                      <p className="text-gray-400 text-sm">Messages</p>
-                    </div>
-                    <p className="text-white font-bold text-2xl">
-                      {selectedPackage.messageCount}
-                    </p>
-                  </div>
-
-                  {/* Cost Per Message */}
-                  <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
-                    <div className="flex items-center gap-2 mb-2">
-                      <DollarSign className="text-green-400" size={18} />
-                      <p className="text-gray-400 text-sm">Cost/Message</p>
-                    </div>
-                    <p className="text-white font-bold text-2xl">
-                      ৳{selectedPackage.costPerMessage}
-                    </p>
-                  </div>
-
-                  {/* Total Price */}
-                  <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600 col-span-2">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Zap className="text-amber-400" size={18} />
-                      <p className="text-gray-400 text-sm">Total Price</p>
-                    </div>
-                    <p className="text-white font-bold text-2xl">
-                      ৳{selectedPackage.totalPrice}
-                    </p>
-                  </div>
+              ) : (
+                <div className="flex-1 space-y-3 overflow-y-auto pr-2 scrollbar-premium">
+                   {analytics.recentMessages.map((msg, i) => (
+                      <div 
+                        key={i} 
+                        className="bg-gray-900/40 p-4 rounded-2xl border border-gray-800 hover:border-gray-700 transition-all group cursor-default"
+                      >
+                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="flex items-start gap-3">
+                               <div className="mt-0.5 min-w-[20px]">
+                                  {getStatusIcon(msg.status)}
+                               </div>
+                               <div>
+                                  <p className="text-white font-black text-sm tracking-tight mb-1">{msg.recipient}</p>
+                                  <p className="text-gray-400 text-xs line-clamp-1 italic">"{msg.message}"</p>
+                               </div>
+                            </div>
+                            <div className="sm:text-right shrink-0">
+                               <p className="text-white text-[10px] font-black">{formatDate(msg.createdAt)}</p>
+                               <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                                 msg.status === 'sent' ? 'bg-green-500/5 border-green-500/20 text-green-400' :
+                                 msg.status === 'failed' ? 'bg-red-500/5 border-red-500/20 text-red-400' :
+                                 'bg-yellow-500/5 border-yellow-500/20 text-yellow-400'
+                               }`}>
+                                 {msg.status}
+                               </span>
+                            </div>
+                         </div>
+                      </div>
+                   ))}
                 </div>
+              )}
 
-                {/* Features */}
-                {selectedPackage.features.length > 0 && (
-                  <div>
-                    <h3 className="text-white font-semibold mb-3">Features</h3>
-                    <ul className="space-y-2">
-                      {selectedPackage.features.map((feature, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-center gap-2 text-gray-300 text-sm"
-                        >
-                          <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              <div className="mt-6">
+                 <a href="/user/messages" className="w-full bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white py-3 rounded-2xl border border-gray-700/50 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all">
+                    View Comprehensive Audit History <ArrowRight size={14} />
+                 </a>
               </div>
+           </div>
 
-              {/* Package Token */}
-              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-6">
-                <h3 className="text-white font-bold text-lg mb-3">
-                  Package Token
-                </h3>
-                <p className="text-gray-400 text-sm mb-3">
-                  Use this token to send SMS with this package:
-                </p>
-                {selectedPackage.packageToken ? (
-                  <div className="bg-gray-900 rounded p-4 border border-gray-700 flex items-center justify-between group">
-                    <code className="text-amber-400 text-xs break-all">
-                      {selectedPackage.packageToken}
-                    </code>
-                    <button
-                      onClick={() =>
-                        copyToClipboard(
-                          selectedPackage.packageToken,
-                          "package-token",
-                        )
-                      }
-                      className="ml-4 shrink-0 hover:bg-gray-800 p-2 rounded transition-colors"
-                    >
-                      {copied === "package-token" ? (
-                        <Check size={18} className="text-green-400" />
-                      ) : (
-                        <Copy
-                          size={18}
-                          className="text-gray-400 hover:text-amber-400"
-                        />
-                      )}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="bg-red-500/10 border border-red-500/30 rounded p-4">
-                    <p className="text-red-400 text-sm">
-                      Token not available. Please contact support or refresh the
-                      page.
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* API Usage Example */}
-              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-6">
-                <h3 className="text-white font-bold text-lg mb-3">
-                  How to Use
-                </h3>
-                {selectedPackage.packageToken ? (
-                  <div className="space-y-3 text-gray-300 text-sm">
-                    <p>1. Copy the package token above</p>
-                    <p>
-                      2. Make a POST request to{" "}
-                      <code className="bg-gray-900 px-2 py-1 rounded text-amber-400">
-                        /api/messaging/send
-                      </code>
-                    </p>
-                    <p>3. Include the token in your request body</p>
-                    <div className="bg-gray-900 rounded p-3 border border-gray-700 mt-3">
-                      <pre className="text-xs text-gray-300 overflow-x-auto">
-                        {`{
-  "recipient": "8801772411171",
-  "message": "Hello SMS",
-  "packageToken": "${selectedPackage.packageToken}"
-}`}
-                      </pre>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="bg-yellow-500/10 border border-yellow-500/30 rounded p-4">
-                    <p className="text-yellow-400 text-sm">
-                      Token is being generated. Please refresh the page in a
-                      moment.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-12 text-center">
-              <div className="mb-4">
-                <Package className="mx-auto text-gray-500 mb-3" size={48} />
-              </div>
-              <h3 className="text-white font-bold text-lg mb-2">
-                No Package Selected
-              </h3>
-              <p className="text-gray-400 mb-6">
-                You haven't selected a package yet. Go to the packages page to
-                choose one and start sending SMS.
-              </p>
-              <a
-                href="/user/packages"
-                className="inline-block bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-8 rounded-lg transition-all"
-              >
-                Select a Package
-              </a>
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Cancel Package Modal */}
-      {showCancelModal && selectedPackage && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-lg border border-gray-700 max-w-md w-full p-6">
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-red-500/20 border border-red-500/30 rounded-full p-3">
-                <AlertCircle className="text-red-400" size={24} />
-              </div>
-              <h2 className="text-2xl font-bold text-white">Cancel Package?</h2>
-            </div>
-
-            {/* Message */}
-            <p className="text-gray-400 mb-6">
-              Are you sure you want to cancel your selected package{" "}
-              <strong className="text-amber-400">{selectedPackage.name}</strong>
-              ? You can select a different package anytime.
-            </p>
-
-            {/* Warning */}
-            <div className="bg-red-500/10 border border-red-500/30 rounded p-4 mb-6">
-              <p className="text-red-400 text-sm">
-                <strong>Note:</strong> Any ongoing SMS operations with this
-                package will be affected.
-              </p>
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowCancelModal(false)}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-all"
-              >
-                Keep Package
-              </button>
-              <button
-                onClick={handleCancelPackage}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-all"
-              >
-                Cancel Package
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <style jsx global>{`
+        .scrollbar-premium::-webkit-scrollbar {
+          width: 4px;
+        }
+        .scrollbar-premium::-webkit-scrollbar-track {
+          background: rgba(31, 41, 55, 0.1);
+          border-radius: 10px;
+        }
+        .scrollbar-premium::-webkit-scrollbar-thumb {
+          background: rgba(245, 158, 11, 0.2);
+          border-radius: 10px;
+        }
+        .scrollbar-premium::-webkit-scrollbar-thumb:hover {
+          background: rgba(245, 158, 11, 0.4);
+        }
+      `}</style>
     </div>
   );
 }
