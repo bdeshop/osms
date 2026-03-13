@@ -32,9 +32,9 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: LayoutDashboard,
       },
       {
-        title: "Users & Packages",
+        title: "Usage Audits",
         url: "/admin/users-packages-messages",
-        icon: Users,
+        icon: Shield,
       },
       {
         title: "Packages",

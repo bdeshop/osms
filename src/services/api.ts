@@ -162,6 +162,9 @@ export const adminAPI = {
     const query = params.toString() ? `?${params.toString()}` : "";
     return apiCall(`/admin/package-selections${query}`, { method: "GET" });
   },
+
+  getComprehensiveUsage: () =>
+    apiCall("/admin/comprehensive-usage", { method: "GET" }),
 };
 
 // User API (for logged-in users)
