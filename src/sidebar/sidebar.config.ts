@@ -32,6 +32,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: LayoutDashboard,
       },
       {
+        title: "Users & Packages",
+        url: "/admin/users-packages-messages",
+        icon: Users,
+      },
+      {
         title: "Packages",
         url: "/admin/packages",
         icon: Package,

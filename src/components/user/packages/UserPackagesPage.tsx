@@ -36,12 +36,15 @@ export default function UserPackagesPage() {
   const [selectedPackage, setSelectedPackage] = useState<PackageData | null>(
     null,
   );
+  const [activePackageId, setActivePackageId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    const storedId = localStorage.getItem("selectedPackageId");
+    setActivePackageId(storedId);
     fetchPackages();
   }, []);
 
@@ -69,10 +72,16 @@ export default function UserPackagesPage() {
     setShowModal(true);
   };
 
+  const handleCancelPackage = () => {
+    localStorage.removeItem("selectedPackageId");
+    setActivePackageId(null);
+  };
+
   const handleConfirmSelection = () => {
     if (selectedPackage) {
       // Only store the package ID, not the full package with token
       localStorage.setItem("selectedPackageId", selectedPackage._id);
+      setActivePackageId(selectedPackage._id);
       setShowModal(false);
       setShowSuccess(true);
 
@@ -104,9 +113,8 @@ export default function UserPackagesPage() {
 
         {/* Currently Selected Package */}
         {(() => {
-          const storedId = localStorage.getItem("selectedPackageId");
-          if (storedId) {
-            const pkg = packages.find((p) => p._id === storedId);
+          if (activePackageId) {
+            const pkg = packages.find((p) => p._id === activePackageId);
             if (pkg) {
               return (
                 <div className="mb-8 bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 flex items-center justify-between">
@@ -117,13 +125,10 @@ export default function UserPackagesPage() {
                     <p className="text-white font-bold">{pkg.name}</p>
                   </div>
                   <button
-                    onClick={() => {
-                      localStorage.removeItem("selectedPackageId");
-                      window.location.reload();
-                    }}
+                    onClick={handleCancelPackage}
                     className="text-amber-400 hover:text-red-400 transition-colors px-4 py-2 rounded-lg hover:bg-red-500/10"
                   >
-                    Change Package
+                    Cancel Package
                   </button>
                 </div>
               );
@@ -206,13 +211,27 @@ export default function UserPackagesPage() {
                   </div>
                 )}
 
-                {/* Select Button */}
-                <button
-                  onClick={() => handleSelectPackage(pkg)}
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-all"
-                >
-                  Select Package
-                </button>
+                {/* Select/Cancel Button */}
+                {activePackageId === pkg._id ? (
+                  <button
+                    onClick={handleCancelPackage}
+                    className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 font-bold py-2 px-4 rounded-lg transition-all"
+                  >
+                    Cancel Package
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleSelectPackage(pkg)}
+                    disabled={!!activePackageId}
+                    className={`w-full font-bold py-2 px-4 rounded-lg transition-all ${
+                      activePackageId
+                        ? "bg-gray-800 text-gray-600 border border-gray-700 cursor-not-allowed"
+                        : "bg-amber-500 hover:bg-amber-600 text-gray-900"
+                    }`}
+                  >
+                    Select Package
+                  </button>
+                )}
               </div>
             ))}
           </div>

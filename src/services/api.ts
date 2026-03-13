@@ -116,6 +116,35 @@ export const userAPI = {
     }),
 };
 
+// Admin APIs
+export const adminAPI = {
+  getAllUsers: () => apiCall("/admin/users", { method: "GET" }),
+
+  getUsersPackagesMessages: () =>
+    apiCall("/admin/users-packages-messages", { method: "GET" }),
+
+  getAllPackages: () => apiCall("/admin/packages", { method: "GET" }),
+
+  getPackageMessages: (packageId: string) =>
+    apiCall(`/admin/packages/${packageId}/messages`, { method: "GET" }),
+};
+
+// User API (for logged-in users)
+export const userDataAPI = {
+  getMyPackages: () => apiCall("/user/packages", { method: "GET" }),
+
+  getPackageWithMessages: (packageId: string) =>
+    apiCall(`/user/packages/${packageId}`, { method: "GET" }),
+
+  getPackagesWithMessages: () =>
+    apiCall("/user/packages-messages", { method: "GET" }),
+
+  getMyMessages: (status?: string) => {
+    const query = status ? `?status=${status}` : "";
+    return apiCall(`/user/messages${query}`, { method: "GET" });
+  },
+};
+
 // Messaging APIs
 export const messagingAPI = {
   sendSMS: (recipient: string, message: string) =>

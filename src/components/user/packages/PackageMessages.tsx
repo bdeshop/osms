@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { packageAPI, messagingAPI } from "@/services/api";
+import { userDataAPI } from "@/services/api";
 import {
   ChevronDown,
   ChevronUp,
@@ -32,6 +32,7 @@ interface PackageWithMessages {
   totalPrice: number;
   isActive: boolean;
   messages: Message[];
+  totalMessages?: number;
 }
 
 export default function PackageMessages() {
@@ -39,9 +40,6 @@ export default function PackageMessages() {
   const [expandedPackage, setExpandedPackage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [loadingMessages, setLoadingMessages] = useState<Set<string>>(
-    new Set(),
-  );
 
   useEffect(() => {
     fetchPackages();
@@ -51,18 +49,9 @@ export default function PackageMessages() {
     try {
       setLoading(true);
       setError(null);
-      const response = (await packageAPI.getAll()) as any;
+      const response = (await userDataAPI.getPackagesWithMessages()) as any;
       const packagesData = response.data || [];
-
-      // Initialize packages with empty messages
-      const packagesWithMessages: PackageWithMessages[] = packagesData.map(
-        (pkg: any) => ({
-          ...pkg,
-          messages: [],
-        }),
-      );
-
-      setPackages(packagesWithMessages);
+      setPackages(packagesData);
     } catch (err) {
       console.error("Failed to fetch packages:", err);
       setError("Failed to load packages. Please try again.");
@@ -71,39 +60,11 @@ export default function PackageMessages() {
     }
   };
 
-  const fetchMessagesForPackage = async (packageId: string) => {
-    try {
-      setLoadingMessages((prev) => new Set(prev).add(packageId));
-      const response = (await messagingAPI.getMessagesByPackage(
-        packageId,
-      )) as any;
-      const messages = response.data || [];
-
-      setPackages((prev) =>
-        prev.map((pkg) => (pkg._id === packageId ? { ...pkg, messages } : pkg)),
-      );
-    } catch (err) {
-      console.error("Failed to fetch messages:", err);
-      setError("Failed to load messages for this package.");
-    } finally {
-      setLoadingMessages((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(packageId);
-        return newSet;
-      });
-    }
-  };
-
   const togglePackage = (packageId: string) => {
     if (expandedPackage === packageId) {
       setExpandedPackage(null);
     } else {
       setExpandedPackage(packageId);
-      // Fetch messages if not already loaded
-      const pkg = packages.find((p) => p._id === packageId);
-      if (pkg && pkg.messages.length === 0) {
-        fetchMessagesForPackage(packageId);
-      }
     }
   };
 
@@ -218,15 +179,15 @@ export default function PackageMessages() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-gray-400 text-xs">Cost/Msg</p>
+                      <p className="text-gray-400 text-xs">Sent</p>
                       <p className="text-white font-bold text-lg">
-                        ৳{pkg.costPerMessage}
+                        {pkg.messages.length}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-gray-400 text-xs">Total</p>
+                      <p className="text-gray-400 text-xs">Cost/Msg</p>
                       <p className="text-white font-bold text-lg">
-                        ৳{pkg.totalPrice}
+                        ৳{pkg.costPerMessage}
                       </p>
                     </div>
                   </div>
@@ -244,11 +205,7 @@ export default function PackageMessages() {
                 {/* Messages Section */}
                 {expandedPackage === pkg._id && (
                   <div className="border-t border-gray-700 bg-gray-900/50 p-6">
-                    {loadingMessages.has(pkg._id) ? (
-                      <div className="flex items-center justify-center py-8">
-                        <Loader className="animate-spin text-amber-500" />
-                      </div>
-                    ) : pkg.messages.length === 0 ? (
+                    {pkg.messages.length === 0 ? (
                       <div className="text-center py-8">
                         <MessageSquare className="mx-auto text-gray-500 mb-3" />
                         <p className="text-gray-400">
@@ -280,7 +237,7 @@ export default function PackageMessages() {
                               <p className="text-sm mb-2 font-mono">
                                 To: {msg.recipient}
                               </p>
-                              <p className="text-sm break-words">
+                              <p className="text-sm wrap-break-word">
                                 {msg.message}
                               </p>
                             </div>
