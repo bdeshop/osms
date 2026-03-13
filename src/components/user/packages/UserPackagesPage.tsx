@@ -43,8 +43,6 @@ export default function UserPackagesPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const storedId = localStorage.getItem("selectedPackageId");
-    setActivePackageId(storedId);
     fetchPackages();
   }, []);
 
@@ -52,7 +50,17 @@ export default function UserPackagesPage() {
     try {
       setLoading(true);
       const response = (await packageAPI.getActive()) as any;
-      setPackages(response.data || []);
+      const data = response.data || [];
+      setPackages(data);
+
+      // Derive activePackageId from the list (using the isSelected flag calculated by the backend)
+      const active = data.find((p: any) => p.isSelected);
+      if (active) {
+        setActivePackageId(active._id);
+      } else {
+        setActivePackageId(null);
+      }
+
       setError("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch packages");
@@ -72,23 +80,40 @@ export default function UserPackagesPage() {
     setShowModal(true);
   };
 
-  const handleCancelPackage = () => {
-    localStorage.removeItem("selectedPackageId");
-    setActivePackageId(null);
+  const handleCancelPackage = async () => {
+    if (!activePackageId) return;
+    try {
+      setLoading(true);
+      await packageAPI.select(activePackageId, "cancelled");
+      setActivePackageId(null);
+      // Refresh packages to update isSelected flags if they are used
+      fetchPackages();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to cancel package");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleConfirmSelection = () => {
+  const handleConfirmSelection = async () => {
     if (selectedPackage) {
-      // Only store the package ID, not the full package with token
-      localStorage.setItem("selectedPackageId", selectedPackage._id);
-      setActivePackageId(selectedPackage._id);
-      setShowModal(false);
-      setShowSuccess(true);
+      try {
+        setLoading(true);
+        await packageAPI.select(selectedPackage._id, "selected");
+        setActivePackageId(selectedPackage._id);
+        setShowModal(false);
+        setShowSuccess(true);
 
-      // Redirect to user overview after 2 seconds
-      setTimeout(() => {
-        router.push("/user/overview");
-      }, 2000);
+        // Redirect to user overview after 2 seconds
+        setTimeout(() => {
+          router.push("/user/overview");
+        }, 2000);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to select package");
+        setShowModal(false);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 

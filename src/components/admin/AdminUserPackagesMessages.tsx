@@ -43,6 +43,11 @@ interface UserData {
   isActive: boolean;
   createdAt: string;
   packages: PackageData[];
+  currentSelectedPackage: {
+    _id: string;
+    name: string;
+    description: string;
+  } | null;
 }
 
 export default function AdminUserPackagesMessages() {
@@ -233,6 +238,14 @@ export default function AdminUserPackagesMessages() {
                         Role:{" "}
                         <span className="text-amber-400">{user.role}</span>
                       </p>
+                      {user.currentSelectedPackage && (
+                        <p className="text-green-400 text-xs mt-1">
+                          Selected Package:{" "}
+                          <span className="font-semibold">
+                            {user.currentSelectedPackage.name}
+                          </span>
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -283,7 +296,11 @@ export default function AdminUserPackagesMessages() {
                         {user.packages.map((pkg) => (
                           <div
                             key={pkg._id}
-                            className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden"
+                            className={`bg-gray-800 rounded-lg border overflow-hidden transition-colors ${
+                              user.currentSelectedPackage?._id === pkg._id
+                                ? "border-green-500 bg-green-500/5"
+                                : "border-gray-700"
+                            }`}
                           >
                             {/* Package Header */}
                             <button

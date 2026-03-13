@@ -35,24 +35,20 @@ export default function UserDashboard() {
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   useEffect(() => {
-    // Load selected package ID from localStorage
-    const selectedId = localStorage.getItem("selectedPackageId");
-    if (selectedId) {
-      fetchPackageById(selectedId);
-    } else {
-      setLoading(false);
-    }
+    fetchCurrentSelection();
   }, []);
 
-  const fetchPackageById = async (packageId: string) => {
+  const fetchCurrentSelection = async () => {
     try {
       setLoading(true);
-      const response = (await packageAPI.getById(packageId)) as any;
-      setSelectedPackage(response.data);
+      const response = (await packageAPI.getSelectionInfo()) as any;
+      if (response.success && response.data) {
+        setSelectedPackage(response.data.packageId);
+      } else {
+        setSelectedPackage(null);
+      }
     } catch (err) {
-      console.error("Failed to fetch package:", err);
-      // If package fetch fails, clear the selection
-      localStorage.removeItem("selectedPackageId");
+      console.error("Failed to fetch selection:", err);
     } finally {
       setLoading(false);
     }
@@ -64,10 +60,18 @@ export default function UserDashboard() {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const handleCancelPackage = () => {
-    localStorage.removeItem("selectedPackageId");
-    setSelectedPackage(null);
-    setShowCancelModal(false);
+  const handleCancelPackage = async () => {
+    if (!selectedPackage) return;
+    try {
+      setLoading(true);
+      await packageAPI.select(selectedPackage._id, "cancelled");
+      setSelectedPackage(null);
+      setShowCancelModal(false);
+    } catch (err) {
+      console.error("Failed to cancel package:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {

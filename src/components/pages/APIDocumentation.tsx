@@ -36,24 +36,20 @@ export default function APIDocumentation() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load selected package from localStorage and fetch from API
-    const selectedId = localStorage.getItem("selectedPackageId");
-    if (selectedId) {
-      fetchPackageById(selectedId);
-    } else {
-      setLoading(false);
-    }
+    fetchCurrentSelection();
   }, []);
 
-  const fetchPackageById = async (packageId: string) => {
+  const fetchCurrentSelection = async () => {
     try {
       setLoading(true);
-      const response = (await packageAPI.getById(packageId)) as any;
-      setSelectedPackage(response.data);
+      const response = (await packageAPI.getSelectionInfo()) as any;
+      if (response.success && response.data) {
+        setSelectedPackage(response.data.packageId);
+      } else {
+        setSelectedPackage(null);
+      }
     } catch (err) {
-      console.error("Failed to fetch package:", err);
-      // If package fetch fails, clear the selection
-      localStorage.removeItem("selectedPackageId");
+      console.error("Failed to fetch selection:", err);
     } finally {
       setLoading(false);
     }
@@ -80,21 +76,19 @@ export default function APIDocumentation() {
   // Get package token from localStorage or use placeholder
   const packageToken =
     selectedPackage?.packageToken || "your_package_token_here";
-  const costPerMessage = selectedPackage?.costPerMessage || 0;
 
   const endpoints = [
     {
       id: "send-sms",
       title: "Send SMS",
       method: "POST",
-      endpoint: "/api/messaging/send",
-      fullUrl: `${API_BASE_URL}/api/messaging/send`,
-      description: "Send SMS to a single recipient",
+      endpoint: "/api/messaging/sendRequest",
+      fullUrl: `${API_BASE_URL}/api/messaging/sendRequest`,
+      description: "Send SMS to a single recipient using your package token",
       request: {
         recipient: "8801772411171",
         message: "Hello SMS",
         packageToken: packageToken,
-        cost: costPerMessage,
       },
       response: {
         success: true,
@@ -105,15 +99,14 @@ export default function APIDocumentation() {
           status: "sent",
         },
       },
-      curlExample: `curl -X POST ${API_BASE_URL}/api/messaging/send \\
+      curlExample: `curl -X POST ${API_BASE_URL}/api/messaging/sendRequest \\
   -H "Content-Type: application/json" \\
   -d '{
     "recipient": "8801772411171",
     "message": "Hello SMS",
-    "packageToken": "${packageToken}",
-    "cost": ${costPerMessage}
+    "packageToken": "${packageToken}"
   }'`,
-      jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/send', {
+      jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/sendRequest', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -121,8 +114,7 @@ export default function APIDocumentation() {
   body: JSON.stringify({
     recipient: '8801772411171',
     message: 'Hello SMS',
-    packageToken: '${packageToken}',
-    cost: ${costPerMessage}
+    packageToken: '${packageToken}'
   })
 });
 
@@ -130,15 +122,14 @@ const data = await response.json();
 console.log(data);`,
       pythonExample: `import requests
 
-url = '${API_BASE_URL}/api/messaging/send'
+url = '${API_BASE_URL}/api/messaging/sendRequest'
 headers = {
     'Content-Type': 'application/json'
 }
 payload = {
     'recipient': '8801772411171',
     'message': 'Hello SMS',
-    'packageToken': '${packageToken}',
-    'cost': ${costPerMessage}
+    'packageToken': '${packageToken}'
 }
 
 response = requests.post(url, json=payload, headers=headers)
@@ -150,14 +141,13 @@ print(response.json())`,
       id: "send-bulk",
       title: "Send Bulk SMS",
       method: "POST",
-      endpoint: "/api/messaging/send-bulk",
-      fullUrl: `${API_BASE_URL}/api/messaging/send-bulk`,
-      description: "Send SMS to multiple recipients",
+      endpoint: "/api/messaging/sendBulkRequest",
+      fullUrl: `${API_BASE_URL}/api/messaging/sendBulkRequest`,
+      description: "Send SMS to multiple recipients at once",
       request: {
         recipients: ["8801772411171", "8801234567890"],
         message: "Hello SMS",
         packageToken: packageToken,
-        cost: costPerMessage,
       },
       response: {
         success: true,
@@ -167,15 +157,14 @@ print(response.json())`,
           status: "Sent to 2 recipients, 0 failed",
         },
       },
-      curlExample: `curl -X POST ${API_BASE_URL}/api/messaging/send-bulk \\
+      curlExample: `curl -X POST ${API_BASE_URL}/api/messaging/sendBulkRequest \\
   -H "Content-Type: application/json" \\
   -d '{
     "recipients": ["8801772411171", "8801234567890"],
     "message": "Hello SMS",
-    "packageToken": "${packageToken}",
-    "cost": ${costPerMessage}
+    "packageToken": "${packageToken}"
   }'`,
-      jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/send-bulk', {
+      jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/sendBulkRequest', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -183,8 +172,7 @@ print(response.json())`,
   body: JSON.stringify({
     recipients: ['8801772411171', '8801234567890'],
     message: 'Hello SMS',
-    packageToken: '${packageToken}',
-    cost: ${costPerMessage}
+    packageToken: '${packageToken}'
   })
 });
 
@@ -192,21 +180,54 @@ const data = await response.json();
 console.log(data);`,
       pythonExample: `import requests
 
-url = '${API_BASE_URL}/api/messaging/send-bulk'
+url = '${API_BASE_URL}/api/messaging/sendBulkRequest'
 headers = {
     'Content-Type': 'application/json'
 }
 payload = {
     'recipients': ['8801772411171', '8801234567890'],
     'message': 'Hello SMS',
-    'packageToken': '${packageToken}',
-    'cost': ${costPerMessage}
+    'packageToken': '${packageToken}'
 }
 
 response = requests.post(url, json=payload, headers=headers)
 print(response.json())`,
       notes:
         "Message must be 160 characters or less. Use the package token from your selected package.",
+    },
+    {
+      id: "view-history",
+      title: "View History",
+      method: "GET",
+      endpoint: "/api/messaging/history/{token}",
+      fullUrl: `${API_BASE_URL}/api/messaging/history/${packageToken}`,
+      description: "View message history for a specific package token",
+      request: null,
+      response: {
+        success: true,
+        data: [
+          {
+            recipient: "8801772411171",
+            message: "Hello SMS",
+            status: "sent",
+            createdAt: "2026-03-14T..."
+          }
+        ]
+      },
+      curlExample: `curl -X GET ${API_BASE_URL}/api/messaging/history/${packageToken}`,
+      jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/history/${packageToken}', {
+  method: 'GET'
+});
+
+const data = await response.json();
+console.log(data);`,
+      pythonExample: `import requests
+
+url = '${API_BASE_URL}/api/messaging/history/${packageToken}'
+
+response = requests.get(url)
+print(response.json())`,
+      notes: "This is a public endpoint that returns all messages sent using this specific token.",
     },
   ];
 
@@ -386,8 +407,7 @@ print(response.json())`,
             🔐 Authentication
           </h2>
           <p className="text-gray-300 mb-4">
-            All requests require a <strong>Package Token</strong> and{" "}
-            <strong>Cost</strong> in the request body:
+            All requests require your unique <strong>Package Token</strong> to be included in the request:
           </p>
           <div className="space-y-3 mb-4">
             <div className="bg-gray-900 rounded p-4 border border-gray-700 flex items-center justify-between group">
@@ -404,26 +424,6 @@ print(response.json())`,
                 className="shrink-0 ml-4"
               >
                 {copied === "auth-token" ? (
-                  <Check size={18} className="text-green-400" />
-                ) : (
-                  <Copy
-                    size={18}
-                    className="text-gray-400 hover:text-amber-400"
-                  />
-                )}
-              </button>
-            </div>
-            <div className="bg-gray-900 rounded p-4 border border-gray-700 flex items-center justify-between group">
-              <code className="text-amber-400 text-sm">
-                "cost": {costPerMessage}
-              </code>
-              <button
-                onClick={() =>
-                  copyToClipboard(`"cost": ${costPerMessage}`, "auth-cost")
-                }
-                className="shrink-0 ml-4"
-              >
-                {copied === "auth-cost" ? (
                   <Check size={18} className="text-green-400" />
                 ) : (
                   <Copy

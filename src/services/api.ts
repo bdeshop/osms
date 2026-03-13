@@ -14,14 +14,16 @@ async function apiCall<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const token = getAuthToken();
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...options.headers,
+    ...(options.headers as Record<string, string>),
   };
 
   if (token) {
-    headers.Authorization = `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
+
+  console.log(`📡 API Call: ${options.method || "GET"} ${endpoint}`);
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -30,10 +32,13 @@ async function apiCall<T>(
 
   if (!response.ok) {
     const error = await response.json();
+    console.error(`❌ API Error: ${endpoint}`, error);
     throw new Error(error.message || "API request failed");
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log(`✅ API Success: ${endpoint}`, data);
+  return data;
 }
 
 // Auth APIs
@@ -85,11 +90,18 @@ export const packageAPI = {
     apiCall(`/packages/${id}`, {
       method: "DELETE",
     }),
-
   toggleStatus: (id: string) =>
     apiCall(`/packages/${id}/toggle-status`, {
       method: "PATCH",
     }),
+
+  select: (packageId: string, action: "selected" | "cancelled") =>
+    apiCall("/packages/select", {
+      method: "POST",
+      body: JSON.stringify({ packageId, action }),
+    }),
+
+  getSelectionInfo: () => apiCall("/packages/selection-info", { method: "GET" }),
 };
 
 // User APIs
@@ -127,6 +139,29 @@ export const adminAPI = {
 
   getPackageMessages: (packageId: string) =>
     apiCall(`/admin/packages/${packageId}/messages`, { method: "GET" }),
+
+  trackPackageSelection: (
+    userId: string,
+    packageId: string,
+    action: "selected" | "cancelled",
+  ) =>
+    apiCall("/admin/track-package-selection", {
+      method: "POST",
+      body: JSON.stringify({ userId, packageId, action }),
+    }),
+
+  getPackageSelections: (filters?: {
+    userId?: string;
+    packageId?: string;
+    action?: string;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.userId) params.append("userId", filters.userId);
+    if (filters?.packageId) params.append("packageId", filters.packageId);
+    if (filters?.action) params.append("action", filters.action);
+    const query = params.toString() ? `?${params.toString()}` : "";
+    return apiCall(`/admin/package-selections${query}`, { method: "GET" });
+  },
 };
 
 // User API (for logged-in users)
@@ -143,6 +178,16 @@ export const userDataAPI = {
     const query = status ? `?status=${status}` : "";
     return apiCall(`/user/messages${query}`, { method: "GET" });
   },
+
+  getUsageDetails: () => apiCall("/user/usage-details", { method: "GET" }),
+
+  selectPackage: (packageId: string) =>
+    apiCall("/user/select-package", {
+      method: "POST",
+      body: JSON.stringify({ packageId }),
+    }),
+
+  getCurrentPackage: () => apiCall("/user/current-package", { method: "GET" }),
 };
 
 // Messaging APIs
