@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { packageAPI } from "@/services/api";
+import { packageAPI, paymentAPI } from "@/services/api";
 import {
   Copy,
   Check,
@@ -44,6 +44,14 @@ export default function UserPackagesPage() {
 
   useEffect(() => {
     fetchPackages();
+    
+    // Check for payment success from OraclePay redirect
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') === 'success') {
+      setShowSuccess(true);
+      // Clean up the URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   const fetchPackages = async () => {
@@ -99,17 +107,22 @@ export default function UserPackagesPage() {
     if (selectedPackage) {
       try {
         setLoading(true);
-        await packageAPI.select(selectedPackage._id, "selected");
-        setActivePackageId(selectedPackage._id);
-        setShowModal(false);
-        setShowSuccess(true);
+        // Success URL on our frontend
+        const successUrl = `${window.location.origin}/user/packages?payment=success`;
+        
+        const response = (await paymentAPI.initiatePurchase(
+          selectedPackage._id,
+          successUrl
+        )) as any;
 
-        // Redirect to user overview after 2 seconds
-        setTimeout(() => {
-          router.push("/user/overview");
-        }, 2000);
+        if (response.payment_page_url) {
+          // Redirect to OraclePay
+          window.location.href = response.payment_page_url;
+        } else {
+          throw new Error("Could not generate payment link");
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to select package");
+        setError(err instanceof Error ? err.message : "Failed to initiate payment");
         setShowModal(false);
       } finally {
         setLoading(false);

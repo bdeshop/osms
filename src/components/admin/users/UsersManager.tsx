@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { userAPI } from "@/services/api";
-import { Trash2, Loader, Users as UsersIcon } from "lucide-react";
+import { Trash2, Loader, Users as UsersIcon, DollarSign } from "lucide-react";
 
 interface User {
   _id: string;
@@ -12,6 +12,7 @@ interface User {
   role: string;
   isActive: boolean;
   createdAt: string;
+  balance?: number;
 }
 
 export default function UsersManager() {
@@ -175,6 +176,9 @@ export default function UsersManager() {
                   Role
                 </th>
                 <th className="px-6 py-4 text-left text-gray-400 font-semibold">
+                  Balance
+                </th>
+                <th className="px-6 py-4 text-left text-gray-400 font-semibold">
                   Status
                 </th>
                 <th className="px-6 py-4 text-left text-gray-400 font-semibold">
@@ -223,6 +227,14 @@ export default function UsersManager() {
                       <option value="ADMIN">🔐 Admin</option>
                       <option value="USER">👤 User</option>
                     </select>
+                  </td>
+                  
+                  {/* Balance */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5 text-amber-500 font-bold">
+                       <DollarSign size={14} />
+                       <span>৳{user.balance || 0}</span>
+                    </div>
                   </td>
 
                   {/* Status */}

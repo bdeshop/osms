@@ -22,6 +22,7 @@ import {
   ExternalLink,
   Shield,
   Activity,
+  DollarSign,
 } from "lucide-react";
 
 interface SelectionHistory {
@@ -69,6 +70,7 @@ interface UserReport {
     role: string;
     isActive: boolean;
     createdAt: string;
+    balance?: number;
   };
   usage: PackageUsage[];
 }
@@ -256,7 +258,10 @@ export default function AdminUserPackagesMessages() {
                       <div className="flex items-center gap-3 mt-1.5 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
                         <span className="flex items-center gap-1"><Calendar size={10}/> Joined {formatDate(report.user.createdAt, 'date')}</span>
                         <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
+                        <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
                         <span className="flex items-center gap-1 text-amber-500"><Package size={10}/> {report.usage.length} Package Interactions</span>
+                        <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
+                        <span className="flex items-center gap-1 text-green-500"><DollarSign size={10}/> ৳{report.user.balance || 0} Balance</span>
                       </div>
                     </div>
                   </div>

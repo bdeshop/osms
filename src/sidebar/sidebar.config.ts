@@ -16,6 +16,7 @@ import {
   Key,
   Package,
   User,
+  CreditCard,
 } from "lucide-react";
 
 export const SIDEBAR_CONFIG: SidebarSection[] = [
@@ -47,6 +48,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: Users,
       },
       {
+        title: "Payments",
+        url: "/admin/payments",
+        icon: CreditCard,
+      },
+      {
         title: "Profile",
         url: "/profile",
         icon: User,
@@ -55,6 +61,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         title: "API Documentation",
         url: "/api-docs",
         icon: FileText,
+      },
+      {
+        title: "Settings",
+        url: "/admin/settings",
+        icon: Settings,
       },
       {
         title: "Messaging",
@@ -139,6 +150,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         title: "Packages",
         url: "/user/packages",
         icon: Package,
+      },
+      {
+        title: "Recharge Wallet",
+        url: "/user/recharge",
+        icon: CreditCard,
       },
       {
         title: "Messages",

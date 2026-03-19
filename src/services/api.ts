@@ -101,7 +101,8 @@ export const packageAPI = {
       body: JSON.stringify({ packageId, action }),
     }),
 
-  getSelectionInfo: () => apiCall("/packages/selection-info", { method: "GET" }),
+  getSelectionInfo: () =>
+    apiCall("/packages/selection-info", { method: "GET" }),
 };
 
 // User APIs
@@ -166,8 +167,15 @@ export const adminAPI = {
   getComprehensiveUsage: () =>
     apiCall("/admin/comprehensive-usage", { method: "GET" }),
 
-  getAnalytics: () =>
-    apiCall("/admin/analytics", { method: "GET" }),
+  getAnalytics: () => apiCall("/admin/analytics", { method: "GET" }),
+
+  getSettings: () => apiCall("/admin/settings", { method: "GET" }),
+
+  updateSetting: (key: string, value: string) =>
+    apiCall("/admin/settings", {
+      method: "POST",
+      body: JSON.stringify({ key, value }),
+    }),
 };
 
 // User API (for logged-in users)
@@ -196,6 +204,35 @@ export const userDataAPI = {
   getCurrentPackage: () => apiCall("/user/current-package", { method: "GET" }),
 
   getAnalytics: () => apiCall("/user/analytics", { method: "GET" }),
+};
+
+// Payment & Recharge APIs
+export const paymentAPI = {
+  initiatePurchase: (packageId: string, success_redirect_url: string) =>
+    apiCall("/payment/initiate", {
+      method: "POST",
+      body: JSON.stringify({ packageId, success_redirect_url }),
+    }),
+
+  recharge: (amount: number, success_redirect_url: string) =>
+    apiCall("/payment/recharge", {
+      method: "POST",
+      body: JSON.stringify({ amount, success_redirect_url }),
+    }),
+
+  getAdminPayments: (type?: string, status?: string) => {
+    const params = new URLSearchParams();
+    if (type) params.append("type", type);
+    if (status) params.append("status", status);
+    const query = params.toString() ? `?${params.toString()}` : "";
+    return apiCall(`/admin/payments${query}`, { method: "GET" });
+  },
+
+  approveRecharge: (paymentId: string) =>
+    apiCall(`/admin/payments/${paymentId}/approve`, { method: "POST" }),
+
+  rejectRecharge: (paymentId: string) =>
+    apiCall(`/admin/payments/${paymentId}/reject`, { method: "POST" }),
 };
 
 // Messaging APIs

@@ -26,6 +26,7 @@ interface UserAnalytics {
     messagesSentToday: number;
     currentBalance: number;
     activePackage: string;
+    walletBalance: number;
   };
   recentMessages: {
     recipient: string;
@@ -153,33 +154,42 @@ export default function UserDashboard() {
             </p>
           </div>
           
-          <div className="flex gap-3">
+             <a href="/user/recharge" className="bg-amber-500 hover:bg-amber-600 text-gray-900 px-5 py-2.5 rounded-2xl transition-all text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                <DollarSign size={16} /> Recharge
+             </a>
              <a href="/user/packages" className="bg-gray-800 hover:bg-gray-700 text-white px-5 py-2.5 rounded-2xl border border-gray-700 transition-all text-xs font-bold uppercase tracking-widest flex items-center gap-2">
                 <Package size={16} /> Browse Packs
              </a>
-             <a href="/user/messages" className="bg-amber-500 hover:bg-amber-600 text-gray-900 px-5 py-2.5 rounded-2xl transition-all text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-amber-500/20">
-                <MessageSquare size={16} /> Message Logs
+             <a href="/user/messages" className="bg-gray-800 hover:bg-gray-700 text-white px-5 py-2.5 rounded-2xl border border-gray-700 transition-all text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                <MessageSquare size={16} /> Logs
              </a>
-          </div>
         </div>
 
         {/* User Summary Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          <StatCard
+            title="Wallet Balance"
+            value={`৳${analytics.overview.walletBalance || 0}`}
+            icon={<DollarSign size={20} />}
+            subtitle="Account Funds"
+            color="amber"
+            delay={0.1}
+          />
           <StatCard
             title="Total Delivery"
             value={analytics.overview.totalMessagesSent}
             icon={<Activity size={20} />}
             subtitle="Historical total"
             color="blue"
-            delay={0.1}
+            delay={0.2}
           />
           <StatCard
             title="Today's Traffic"
             value={analytics.overview.messagesSentToday}
             icon={<TrendingUp size={20} />}
             subtitle="Last 24 hours"
-            color="amber"
-            delay={0.2}
+            color="purple"
+            delay={0.3}
           />
           <StatCard
             title="Remaining Power"
@@ -187,14 +197,6 @@ export default function UserDashboard() {
             icon={<Zap size={20} />}
             subtitle="Messages available"
             color="green"
-            delay={0.3}
-          />
-          <StatCard
-            title="Primary Plan"
-            value={analytics.overview.activePackage || "NONE"}
-            icon={<Shield size={20} />}
-            subtitle="Current selection"
-            color="purple"
             delay={0.4}
           />
         </div>

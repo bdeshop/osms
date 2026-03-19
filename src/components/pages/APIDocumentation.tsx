@@ -229,6 +229,104 @@ response = requests.get(url)
 print(response.json())`,
       notes: "This is a public endpoint that returns all messages sent using this specific token.",
     },
+    {
+      id: "purchase-package",
+      title: "Purchase Package",
+      method: "POST",
+      endpoint: "/api/payment/initiate",
+      fullUrl: `${API_BASE_URL}/api/payment/initiate`,
+      description: "Initiate a package purchase using OraclePay",
+      request: {
+        packageId: "PACKAGE_ID_HERE",
+        success_redirect_url: "https://your-site.com/payment-success",
+      },
+      response: {
+        success: true,
+        payment_page_url: "https://oraclepay.com/pay/...",
+      },
+      curlExample: `curl -X POST ${API_BASE_URL}/api/payment/initiate \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "packageId": "PACKAGE_ID_HERE",
+    "success_redirect_url": "https://your-site.com/payment-success"
+  }'`,
+      jsExample: `const response = await fetch('${API_BASE_URL}/api/payment/initiate', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    packageId: 'PACKAGE_ID_HERE',
+    success_redirect_url: 'https://your-site.com/payment-success'
+  })
+});
+
+const data = await response.json();
+if (data.payment_page_url) {
+  window.location.href = data.payment_page_url;
+}`,
+      pythonExample: `import requests
+
+url = '${API_BASE_URL}/api/payment/initiate'
+payload = {
+    'packageId': 'PACKAGE_ID_HERE',
+    'success_redirect_url': 'https://your-site.com/payment-success'
+}
+
+response = requests.post(url, json=payload)
+print(response.json())`,
+      notes:
+        "The backend returns a payment_page_url. Promptly redirect the user's browser to this URL to complete payment.",
+    },
+    {
+      id: "recharge-wallet",
+      title: "Recharge Wallet",
+      method: "POST",
+      endpoint: "/api/payment/recharge",
+      fullUrl: `${API_BASE_URL}/api/payment/recharge`,
+      description: "Add money to account balance (Requires Admin Approval)",
+      request: {
+        amount: 500,
+        success_redirect_url: "https://your-site.com/recharge-status",
+      },
+      response: {
+        success: true,
+        payment_page_url: "https://oraclepay.com/pay/...",
+      },
+      curlExample: `curl -X POST ${API_BASE_URL}/api/payment/recharge \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "amount": 500,
+    "success_redirect_url": "https://your-site.com/recharge-status"
+  }'`,
+      jsExample: `const response = await fetch('${API_BASE_URL}/api/payment/recharge', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    amount: 500,
+    success_redirect_url: 'https://your-site.com/recharge-status'
+  })
+});
+
+const data = await response.json();
+if (data.payment_page_url) {
+  window.location.href = data.payment_page_url;
+}`,
+      pythonExample: `import requests
+
+url = '${API_BASE_URL}/api/payment/recharge'
+payload = {
+    'amount': 500,
+    'success_redirect_url': 'https://your-site.com/recharge-status'
+}
+
+response = requests.post(url, json=payload)
+print(response.json())`,
+      notes:
+        "After payment, money won't show up immediately. An administrator must approve it first in the Admin Panel.",
+    },
   ];
 
   const CodeTab = ({ endpoint }: { endpoint: (typeof endpoints)[0] }) => {
