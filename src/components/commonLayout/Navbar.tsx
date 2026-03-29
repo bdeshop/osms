@@ -15,7 +15,7 @@ export default function Navbar() {
             Login
           </Link>
           <Link
-            href="/register"
+            href="/user-register"
             className="px-6 py-2 rounded-lg bg-pink-600 hover:bg-pink-700 text-white font-semibold transition-all"
           >
             Sign Up
