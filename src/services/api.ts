@@ -221,6 +221,12 @@ export const paymentAPI = {
       body: JSON.stringify({ amount, success_redirect_url }),
     }),
 
+  requestManualRecharge: (amount: number, transactionId: string, bank?: string) =>
+    apiCall("/payment/request-recharge", {
+      method: "POST",
+      body: JSON.stringify({ amount, transactionId, bank }),
+    }),
+
   getAdminPayments: (type?: string, status?: string) => {
     const params = new URLSearchParams();
     if (type) params.append("type", type);

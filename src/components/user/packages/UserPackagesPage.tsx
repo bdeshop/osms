@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { packageAPI, paymentAPI } from "@/services/api";
+import { packageAPI, authAPI } from "@/services/api";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Copy,
   Check,
@@ -14,64 +15,61 @@ import {
   AlertCircle,
   CheckCircle,
   ArrowRight,
+  Clock,
+  Info,
+  Wallet,
+  ShieldCheck,
+  PackageCheck,
+  Key,
+  ShieldAlert,
 } from "lucide-react";
 
 interface PackageData {
   _id: string;
   name: string;
   description: string;
-  messageCount: number;
   costPerMessage: number;
-  totalPrice: number;
   features: string[];
   isActive: boolean;
-  packageToken?: string;
+  packageToken?: string | null;
+  expiresAt?: string;
+  isSelected?: boolean;
+}
+
+interface UserProfile {
+  firstName: string;
+  lastName: string;
+  email: string;
+  balance: number;
 }
 
 export default function UserPackagesPage() {
   const [packages, setPackages] = useState<PackageData[]>([]);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
-  const [selectedPackage, setSelectedPackage] = useState<PackageData | null>(
-    null,
-  );
-  const [activePackageId, setActivePackageId] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showCancelModal, setShowCancelModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    fetchPackages();
-    
-    // Check for payment success from OraclePay redirect
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('payment') === 'success') {
-      setShowSuccess(true);
-      // Clean up the URL
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
+    fetchData();
   }, []);
 
-  const fetchPackages = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const response = (await packageAPI.getActive()) as any;
-      const data = response.data || [];
-      setPackages(data);
+      const [pkgRes, userRes] = await Promise.all([
+        packageAPI.getActive() as any,
+        authAPI.getMe() as any
+      ]);
 
-      // Derive activePackageId from the list (using the isSelected flag calculated by the backend)
-      const active = data.find((p: any) => p.isSelected);
-      if (active) {
-        setActivePackageId(active._id);
-      } else {
-        setActivePackageId(null);
-      }
-
+      setPackages(pkgRes.data || []);
+      setUserProfile(userRes.data || null);
       setError("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch packages");
+      setError(err instanceof Error ? err.message : "Failed to fetch data");
     } finally {
       setLoading(false);
     }
@@ -83,378 +81,282 @@ export default function UserPackagesPage() {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const handleSelectPackage = (pkg: PackageData) => {
-    setSelectedPackage(pkg);
-    setShowModal(true);
-  };
-
-  const handleCancelPackage = async () => {
-    if (!activePackageId) return;
+  const handleActivatePackage = async (packageId: string) => {
     try {
-      setLoading(true);
-      await packageAPI.select(activePackageId, "cancelled");
-      setActivePackageId(null);
-      // Refresh packages to update isSelected flags if they are used
-      fetchPackages();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to cancel package");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleConfirmSelection = async () => {
-    if (selectedPackage) {
-      try {
-        setLoading(true);
-        // Success URL on our frontend
-        const successUrl = `${window.location.origin}/user/packages?payment=success`;
-        
-        const response = (await paymentAPI.initiatePurchase(
-          selectedPackage._id,
-          successUrl
-        )) as any;
-
-        if (response.payment_page_url) {
-          // Redirect to OraclePay
-          window.location.href = response.payment_page_url;
-        } else {
-          throw new Error("Could not generate payment link");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to initiate payment");
-        setShowModal(false);
-      } finally {
-        setLoading(false);
+      setActionLoading(packageId);
+      setError("");
+      const response = await packageAPI.select(packageId, "selected") as any;
+      if (response.success) {
+        setShowSuccess(true);
+        fetchData();
+        setTimeout(() => setShowSuccess(false), 5000);
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to activate plan");
+    } finally {
+      setActionLoading(null);
     }
   };
 
-  if (loading) {
+  const handleCancelPackage = async (packageId: string) => {
+    if (!confirm("Are you sure you want to deactivate this plan? Your token will be invalidated immediately.")) return;
+    try {
+      setActionLoading(packageId);
+      await packageAPI.select(packageId, "cancelled");
+      fetchData();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to cancel plan");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const calculateExpiry = (dateString?: string) => {
+    if (!dateString) return "No Expiry Set";
+    const expiry = new Date(dateString);
+    const now = new Date();
+    const diff = expiry.getTime() - now.getTime();
+    if (diff < 0) return "Expired";
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    return days === 0 ? "Expires Today" : `${days} days remaining`;
+  };
+
+  if (loading && !packages.length) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center gap-4">
         <Loader className="animate-spin text-amber-500" size={40} />
+        <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest animate-pulse">Synchronizing Global Rates...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-black p-6">
+    <div className="min-h-screen bg-gray-950 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">My Packages</h1>
-          <p className="text-gray-400">
-            Browse and select packages to send SMS
-          </p>
+        
+        {/* Modern Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-16 px-2">
+           <div>
+              <motion.div 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-2 mb-4"
+              >
+                 <span className="w-8 h-1 bg-amber-500 rounded-full"></span>
+                 <p className="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em]">Protocol Selection</p>
+              </motion.div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter mb-4 uppercase">
+                Service <span className="text-amber-500">Architecture</span>
+              </h1>
+              <p className="text-gray-500 font-bold max-w-xl leading-relaxed uppercase text-[10px] tracking-widest">
+                Select your preferred messaging protocol. All costs are deducted in real-time from your unified wallet balance. No upfront package costs.
+              </p>
+           </div>
+
+           <motion.div 
+             whileHover={{ scale: 1.02 }}
+             className="relative group cursor-pointer"
+             onClick={() => router.push('/user/recharge')}
+           >
+              <div className="absolute inset-0 bg-amber-500/20 blur-2xl group-hover:bg-amber-500/30 transition-all opacity-0 group-hover:opacity-100" />
+              <div className="relative bg-gray-900 border border-white/10 p-6 rounded-[2rem] flex items-center gap-6 shadow-2xl">
+                 <div className="bg-amber-500 text-gray-950 p-4 rounded-2xl shadow-xl shadow-amber-500/20 rotate-3 group-hover:rotate-0 transition-transform">
+                    <Wallet size={28} />
+                 </div>
+                 <div>
+                    <p className="text-gray-500 text-[9px] font-black uppercase tracking-widest mb-1">Unified Balance</p>
+                    <p className="text-3xl font-black text-white tracking-tighter font-mono">
+                      ৳{userProfile?.balance.toFixed(2) || "0.00"}
+                    </p>
+                 </div>
+                 <div className="ml-4 h-12 w-12 rounded-full border border-white/10 flex items-center justify-center text-amber-500 hover:bg-amber-500 hover:text-gray-900 transition-all">
+                    <ArrowRight size={20} />
+                 </div>
+              </div>
+           </motion.div>
         </div>
 
-        {/* Currently Selected Package */}
-        {(() => {
-          if (activePackageId) {
-            const pkg = packages.find((p) => p._id === activePackageId);
-            if (pkg) {
-              return (
-                <div className="mb-8 bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-amber-400 font-semibold text-sm">
-                      Currently Selected
-                    </p>
-                    <p className="text-white font-bold">{pkg.name}</p>
+        {/* Global Feedback Loop */}
+        <AnimatePresence>
+          {(error || showSuccess) && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+              animate={{ height: 'auto', opacity: 1, marginBottom: 32 }}
+              exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+              className={`overflow-hidden rounded-3xl border p-6 flex items-center justify-between gap-4 ${
+                error ? "bg-red-500/10 border-red-500/20 text-red-500" : "bg-green-500/10 border-green-500/20 text-green-500"
+              }`}
+            >
+               <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-xl ${error ? "bg-red-500/20" : "bg-green-500/20"}`}>
+                     {error ? <AlertCircle size={20} /> : <CheckCircle size={20} />}
                   </div>
-                  <button
-                    onClick={handleCancelPackage}
-                    className="text-amber-400 hover:text-red-400 transition-colors px-4 py-2 rounded-lg hover:bg-red-500/10"
-                  >
-                    Cancel Package
-                  </button>
-                </div>
-              );
-            }
-          }
-          return null;
-        })()}
+                  <p className="text-[10px] font-black uppercase tracking-widest">{error || "System synchronization successful. Protocol live."}</p>
+               </div>
+               <button onClick={() => { setError(""); setShowSuccess(false); }} className="hover:rotate-90 transition-transform">
+                  <X size={20} />
+               </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-red-400">
-            {error}
-          </div>
-        )}
-
-        {/* Packages Grid */}
-        {packages.length === 0 ? (
-          <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-12 text-center">
-            <p className="text-gray-400 text-lg">No packages available</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {packages.map((pkg) => (
-              <div
-                key={pkg._id}
-                className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-6 hover:border-amber-500/50 transition-all"
-              >
-                {/* Package Name */}
-                <h3 className="text-white font-bold text-xl mb-2">
-                  {pkg.name}
-                </h3>
-
-                {/* Description */}
-                <p className="text-gray-400 text-sm mb-4">{pkg.description}</p>
-
-                {/* Stats */}
-                <div className="space-y-3 mb-6">
-                  {/* Messages */}
-                  <div className="flex items-center gap-2">
-                    <MessageCircle className="text-blue-400" size={16} />
-                    <span className="text-gray-300 text-sm">
-                      {pkg.messageCount} messages
-                    </span>
-                  </div>
-
-                  {/* Cost */}
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="text-green-400" size={16} />
-                    <span className="text-gray-300 text-sm">
-                      ৳{pkg.costPerMessage} per message
-                    </span>
-                  </div>
-
-                  {/* Total Price */}
-                  <div className="flex items-center gap-2">
-                    <Zap className="text-amber-400" size={16} />
-                    <span className="text-gray-300 text-sm font-semibold">
-                      Total: ৳{pkg.totalPrice}
-                    </span>
-                  </div>
+        {/* Plan Matrix */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+           {packages.map((pkg, i) => (
+             <motion.div
+               key={pkg._id}
+               initial={{ opacity: 0, y: 30 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: i * 0.1 }}
+               className={`relative flex flex-col group rounded-[2.5rem] border transition-all duration-500 overflow-hidden ${
+                  pkg.isSelected 
+                    ? "bg-linear-to-b from-gray-900 to-amber-950/20 border-amber-500/50 shadow-2xl shadow-amber-500/10" 
+                    : "bg-gray-900 border-white/5 hover:border-white/10"
+               }`}
+             >
+                {/* Visual Accent */}
+                <div className={`absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none ${pkg.isSelected && "opacity-20 text-amber-500"}`}>
+                  <ShieldCheck size={120} />
                 </div>
 
-                {/* Features */}
-                {pkg.features && pkg.features.length > 0 && (
-                  <div className="mb-6 pb-6 border-b border-gray-700">
-                    <p className="text-gray-400 text-xs font-semibold mb-2">
-                      FEATURES
-                    </p>
-                    <ul className="space-y-1">
-                      {pkg.features.slice(0, 3).map((feature, idx) => (
-                        <li
-                          key={idx}
-                          className="text-gray-400 text-xs flex items-center gap-2"
-                        >
-                          <span className="w-1.5 h-1.5 bg-amber-400 rounded-full"></span>
-                          {feature}
+                <div className="p-10 flex-1 flex flex-col">
+                   <div className="mb-8 flex items-start justify-between">
+                      <div className="space-y-1">
+                         <div className="flex items-center gap-2">
+                            <h3 className="text-2xl font-black text-white uppercase tracking-tighter">{pkg.name}</h3>
+                            {pkg.isSelected && (
+                              <span className="bg-amber-500 text-gray-950 text-[8px] font-black px-2 py-0.5 rounded-full uppercase">Active</span>
+                            )}
+                         </div>
+                         <p className="text-gray-500 text-[9px] font-bold uppercase tracking-widest line-clamp-2">{pkg.description}</p>
+                      </div>
+                   </div>
+
+                   <div className="bg-white/5 rounded-3xl p-6 mb-8 border border-white/5 group-hover:border-white/10 transition-colors">
+                      <p className="text-gray-500 text-[8px] font-black uppercase tracking-widest mb-1">Operational Rate</p>
+                      <div className="flex items-baseline gap-1">
+                         <span className="text-3xl font-black text-white tracking-tighter">৳{pkg.costPerMessage}</span>
+                         <span className="text-[10px] text-gray-600 font-bold uppercase">/ Segment</span>
+                      </div>
+                   </div>
+
+                   <ul className="space-y-4 mb-10 flex-1">
+                      {pkg.features.map((feature, fidx) => (
+                        <li key={fidx} className="flex items-center gap-3 text-gray-400 group-hover:text-gray-300 transition-colors">
+                           <div className="w-1.5 h-1.5 rounded-full bg-amber-500/40 group-hover:scale-125 transition-transform" />
+                           <span className="text-[10px] font-bold uppercase tracking-tight">{feature}</span>
                         </li>
                       ))}
-                    </ul>
-                  </div>
-                )}
+                   </ul>
 
-                {/* Select/Cancel Button */}
-                {activePackageId === pkg._id ? (
-                  <button
-                    onClick={handleCancelPackage}
-                    className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/50 font-bold py-2 px-4 rounded-lg transition-all"
-                  >
-                    Cancel Package
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleSelectPackage(pkg)}
-                    disabled={!!activePackageId}
-                    className={`w-full font-bold py-2 px-4 rounded-lg transition-all ${
-                      activePackageId
-                        ? "bg-gray-800 text-gray-600 border border-gray-700 cursor-not-allowed"
-                        : "bg-amber-500 hover:bg-amber-600 text-gray-900"
-                    }`}
-                  >
-                    Select Package
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+                   <AnimatePresence mode="wait">
+                      {pkg.isSelected ? (
+                        <motion.div 
+                          key="selected"
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="space-y-4"
+                        >
+                           {/* Token Section */}
+                           <div className="p-4 bg-gray-950/80 rounded-2xl border border-amber-500/20 relative group/token shadow-inner">
+                              <p className="text-gray-500 text-[8px] font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                                <Key size={10} className="text-amber-500" /> API Token
+                              </p>
+                              <div className="flex items-center justify-between gap-3">
+                                 <code className="text-[10px] font-mono font-bold text-amber-500 truncate select-all">{pkg.packageToken}</code>
+                                 <button 
+                                   onClick={() => copyToClipboard(pkg.packageToken || "", pkg._id)}
+                                   className="text-gray-600 hover:text-white transition-colors p-1"
+                                 >
+                                    {copied === pkg._id ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                                 </button>
+                              </div>
+                           </div>
+
+                           <div className="flex items-center justify-between px-2">
+                              <div className="flex items-center gap-2 text-gray-500 text-[9px] font-black uppercase tracking-widest">
+                                 <Clock size={12} className="text-amber-500" /> {calculateExpiry(pkg.expiresAt)}
+                              </div>
+                              <button 
+                                onClick={() => handleCancelPackage(pkg._id)}
+                                disabled={actionLoading === pkg._id}
+                                className="text-red-500/40 hover:text-red-500 text-[9px] font-black uppercase tracking-widest transition-colors disabled:opacity-50"
+                              >
+                                {actionLoading === pkg._id ? "Processing..." : "Terminate"}
+                              </button>
+                           </div>
+                        </motion.div>
+                      ) : (
+                        <motion.button
+                          key="activate"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => handleActivatePackage(pkg._id)}
+                          disabled={!!actionLoading}
+                          className="w-full bg-white text-gray-950 font-black py-4 rounded-[1.5rem] hover:bg-amber-500 transition-all flex items-center justify-center gap-2 uppercase text-[10px] tracking-widest shadow-2xl disabled:opacity-50"
+                        >
+                           {actionLoading === pkg._id ? (
+                             <Loader className="animate-spin" size={16} />
+                           ) : (
+                             <>
+                                Activate Protocol
+                                <ArrowRight size={14} className="translate-y-[1px]" />
+                             </>
+                           )}
+                        </motion.button>
+                      )}
+                   </AnimatePresence>
+                </div>
+             </motion.div>
+           ))}
+        </div>
+
+        {/* Informational Footer Logic */}
+        <div className="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+           {[
+             { title: "Real-time Billing", desc: "No prepaid bundles. Every SMS is billed directly from your wallet.", icon: Wallet, color: "text-blue-500" },
+             { title: "30-Day Cycle", desc: "Protocols remain active for 30 days once selected. Balance never expires.", icon: Clock, color: "text-amber-500" },
+             { title: "Segment Aware", desc: "Encoded using high-efficiency GSM-7 or UCS-2 logic for local characters.", icon: MessageCircle, color: "text-green-500" },
+             { title: "Secure Handshake", desc: "Encrypted tokens ensure only authenticated endpoints can dispatch.", icon: Key, color: "text-purple-500" }
+           ].map((item, i) => (
+             <div key={i} className="space-y-3">
+                <div className={`flex items-center gap-3 ${item.color}`}>
+                   <item.icon size={20} />
+                   <h4 className="text-white font-black uppercase text-[10px] tracking-widest">{item.title}</h4>
+                </div>
+                <p className="text-gray-500 text-[10px] font-bold leading-relaxed">{item.desc}</p>
+             </div>
+           ))}
+        </div>
+
+        {/* Security Warning */}
+        <div className="mt-20 p-8 bg-red-500/5 border border-red-500/10 rounded-3xl flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+           <div className="p-4 bg-red-500/10 text-red-500 rounded-2xl">
+              <ShieldAlert size={32} />
+           </div>
+           <div className="flex-1">
+              <h5 className="text-white font-black text-xs uppercase mb-1">Security Protocol Directive</h5>
+              <p className="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">
+                Do not share, publish, or commit your Package Tokens to public repositories. Anyone with access to the token can deplete your wallet balance.
+              </p>
+           </div>
+        </div>
       </div>
 
-      {/* Selection Modal */}
-      {showModal && selectedPackage && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-lg border border-gray-700 max-w-md w-full p-6">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-white">
-                Package Selected
-              </h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            {/* Package Details */}
-            <div className="bg-gray-800 rounded p-4 mb-6 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-400">Package Name:</span>
-                <span className="text-white font-semibold">
-                  {selectedPackage.name}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-400">Messages:</span>
-                <span className="text-white font-semibold">
-                  {selectedPackage.messageCount}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-400">Cost per Message:</span>
-                <span className="text-white font-semibold">
-                  ৳{selectedPackage.costPerMessage}
-                </span>
-              </div>
-              <div className="flex items-center justify-between border-t border-gray-700 pt-3">
-                <span className="text-gray-400 font-semibold">Total Cost:</span>
-                <span className="text-amber-400 font-bold text-lg">
-                  ৳{selectedPackage.totalPrice}
-                </span>
-              </div>
-            </div>
-
-            {/* Token Section */}
-            {selectedPackage.packageToken && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded p-4 mb-6">
-                <div className="flex items-start gap-3 mb-3">
-                  <AlertCircle
-                    className="text-red-400 shrink-0 mt-0.5"
-                    size={20}
-                  />
-                  <div>
-                    <p className="text-red-400 font-semibold text-sm">
-                      Important
-                    </p>
-                    <p className="text-red-300 text-xs mt-1">
-                      Never share this token with anyone. Keep it private and
-                      secure.
-                    </p>
-                  </div>
-                </div>
-                <div className="bg-gray-900 rounded p-3 border border-gray-700">
-                  <p className="text-gray-400 text-xs mb-2">
-                    Your Package Token
-                  </p>
-                  <div className="flex items-center justify-between gap-2">
-                    <code className="text-amber-400 text-xs break-all">
-                      {selectedPackage.packageToken}
-                    </code>
-                    <button
-                      onClick={() =>
-                        copyToClipboard(
-                          selectedPackage.packageToken || "",
-                          "selected-token",
-                        )
-                      }
-                      className="shrink-0 hover:bg-gray-800 p-1 rounded transition-colors"
-                      title="Copy token"
-                    >
-                      {copied === "selected-token" ? (
-                        <Check size={16} className="text-green-400" />
-                      ) : (
-                        <Copy
-                          size={16}
-                          className="text-gray-400 hover:text-amber-400"
-                        />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Info Box */}
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <CheckCircle
-                  className="text-blue-400 shrink-0 mt-0.5"
-                  size={20}
-                />
-                <div>
-                  <p className="text-blue-400 font-semibold text-sm">
-                    Ready to Send SMS
-                  </p>
-                  <p className="text-blue-300 text-xs mt-1">
-                    Use this token in your API requests to send SMS messages.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirmSelection}
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-all"
-              >
-                Confirm & Use
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Success Modal */}
-      {showSuccess && selectedPackage && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-lg border border-gray-700 max-w-md w-full p-6 text-center">
-            {/* Success Icon */}
-            <div className="flex justify-center mb-4">
-              <div className="bg-green-500/20 border border-green-500/30 rounded-full p-4">
-                <CheckCircle className="text-green-400" size={48} />
-              </div>
-            </div>
-
-            {/* Success Message */}
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Package Selected!
-            </h2>
-            <p className="text-gray-400 mb-6">
-              Your package{" "}
-              <strong className="text-amber-400">{selectedPackage.name}</strong>{" "}
-              is ready to use.
-            </p>
-
-            {/* Token Display */}
-            <div className="bg-gray-800 rounded p-4 mb-6 border border-gray-700">
-              <p className="text-gray-400 text-xs mb-2">Your Package Token</p>
-              <code className="text-amber-400 text-sm break-all font-mono">
-                {selectedPackage.packageToken}
-              </code>
-            </div>
-
-            {/* Info */}
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded p-3 mb-6">
-              <p className="text-blue-300 text-xs">
-                Redirecting to dashboard in 2 seconds...
-              </p>
-            </div>
-
-            {/* Button */}
-            <button
-              onClick={() => router.push("/user/overview")}
-              className="w-full bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-all flex items-center justify-center gap-2"
-            >
-              Go to Dashboard
-              <ArrowRight size={18} />
-            </button>
-          </div>
-        </div>
-      )}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+      `}</style>
     </div>
+
   );
 }
