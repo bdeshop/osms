@@ -21,6 +21,7 @@ interface UserData {
   lastName: string;
   role: string;
   isActive: boolean;
+  balance: number;
 }
 
 export default function DashboardHeader() {
@@ -30,6 +31,9 @@ export default function DashboardHeader() {
 
   useEffect(() => {
     fetchCurrentUser();
+    // Refresh user data every 5 seconds to show updated balance
+    const interval = setInterval(fetchCurrentUser, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchCurrentUser = async () => {
@@ -93,7 +97,13 @@ export default function DashboardHeader() {
         {/* Balance */}
         <div className="flex flex-col border-l border-gray-600 pl-4 leading-tight">
           <span className="text-xs text-gray-400">Balance</span>
-          <span className="font-semibold text-amber-400">৳ 20,000.00</span>
+          <span className="font-semibold text-amber-400">
+            ৳{" "}
+            {user?.balance?.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }) || "0.00"}
+          </span>
         </div>
 
         {/* Recharge Button */}

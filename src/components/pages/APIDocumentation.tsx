@@ -11,7 +11,7 @@ import {
   Code,
   Loader,
 } from "lucide-react";
-import { packageAPI } from "@/services/api";
+import { packageAPI, API_BASE_URL, API_BASE } from "@/services/api";
 
 interface PackageData {
   _id: string;
@@ -70,8 +70,6 @@ export default function APIDocumentation() {
   };
 
   const getActiveTab = (endpointId: string) => activeTab[endpointId] || "curl";
-
-  const API_BASE_URL = "http://localhost:9000";
 
   // Get package token from localStorage or use placeholder
   const packageToken =
@@ -210,9 +208,9 @@ print(response.json())`,
             recipient: "8801772411171",
             message: "Hello SMS",
             status: "sent",
-            createdAt: "2026-03-14T..."
-          }
-        ]
+            createdAt: "2026-03-14T...",
+          },
+        ],
       },
       curlExample: `curl -X GET ${API_BASE_URL}/api/messaging/history/${packageToken}`,
       jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/history/${packageToken}', {
@@ -227,7 +225,8 @@ url = '${API_BASE_URL}/api/messaging/history/${packageToken}'
 
 response = requests.get(url)
 print(response.json())`,
-      notes: "This is a public endpoint that returns all messages sent using this specific token.",
+      notes:
+        "This is a public endpoint that returns all messages sent using this specific token.",
     },
     {
       id: "purchase-package",
@@ -505,7 +504,8 @@ print(response.json())`,
             🔐 Authentication
           </h2>
           <p className="text-gray-300 mb-4">
-            All requests require your unique <strong>Package Token</strong> to be included in the request:
+            All requests require your unique <strong>Package Token</strong> to
+            be included in the request:
           </p>
           <div className="space-y-3 mb-4">
             <div className="bg-gray-900 rounded p-4 border border-gray-700 flex items-center justify-between group">
@@ -693,7 +693,7 @@ print(response.json())`,
             Test the API endpoints directly with Swagger UI:
           </p>
           <a
-            href="http://localhost:9000/api-docs"
+            href={`${API_BASE}/api-docs`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-2 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Code, Zap, Shield, BookOpen } from "lucide-react";
+import { API_BASE } from "@/services/api";
 
 export default function Home() {
   return (
@@ -91,7 +92,7 @@ export default function Home() {
               <p className="text-gray-400 mb-4">Send SMS with JavaScript:</p>
               <pre className="bg-gray-900 rounded p-4 text-amber-400 text-sm overflow-x-auto">
                 {`const response = await fetch(
-  'http://localhost:9000/api/messaging/send',
+  '${API_BASE}/api/messaging/send',
   {
     method: 'POST',
     headers: {
@@ -113,7 +114,7 @@ console.log(data);`}
               <p className="text-gray-400 mb-4">Or use cURL:</p>
               <pre className="bg-gray-900 rounded p-4 text-amber-400 text-sm overflow-x-auto">
                 {`curl -X POST \\
-  http://localhost:9000/api/messaging/send \\
+  ${API_BASE}/api/messaging/send \\
   -H "Authorization: Bearer YOUR_TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{
