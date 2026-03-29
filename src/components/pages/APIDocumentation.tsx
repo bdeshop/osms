@@ -229,6 +229,97 @@ print(response.json())`,
         "This is a public endpoint that returns all messages sent using this specific token.",
     },
     {
+      id: "generate-otp",
+      title: "Generate & Send OTP",
+      method: "GET",
+      endpoint: "/api/messaging/otp",
+      fullUrl: `${API_BASE_URL}/api/messaging/otp`,
+      description: "Generate a 4-digit OTP and send it via SMS (Billed to wallet)",
+      request: {
+        recipient: "8801772411171",
+        packageToken: packageToken,
+        expiry: 5
+      },
+      response: {
+        success: true,
+        message: "OTP sent successfully",
+        data: {
+          otp: "1234",
+          expiry: "2026-03-29T...",
+          messageId: "msg_789012",
+          cost: 2.0
+        }
+      },
+      curlExample: `curl -G "${API_BASE_URL}/api/messaging/otp" \\
+  --data-urlencode "recipient=8801772411171" \\
+  --data-urlencode "packageToken=${packageToken}" \\
+  --data-urlencode "expiry=5"`,
+      jsExample: `const response = await fetch(\`${API_BASE_URL}/api/messaging/otp?recipient=8801772411171&packageToken=${packageToken}&expiry=5\`, {
+  method: 'GET'
+});
+
+const data = await response.json();
+console.log(data);`,
+      pythonExample: `import requests
+
+url = '${API_BASE_URL}/api/messaging/otp'
+params = {
+    'recipient': '8801772411171',
+    'packageToken': '${packageToken}',
+    'expiry': 5
+}
+
+response = requests.get(url, params=params)
+print(response.json())`,
+      notes: "The OTP is 4 digits numeric. The cost is deducted from your balance based on the plan rate.",
+    },
+    {
+      id: "verify-otp",
+      title: "Verify OTP",
+      method: "POST",
+      endpoint: "/api/messaging/verify-otp",
+      fullUrl: `${API_BASE_URL}/api/messaging/verify-otp`,
+      description: "Verify a 4-digit code sent to a specific number",
+      request: {
+        recipient: "8801772411171",
+        code: "1234"
+      },
+      response: {
+        success: true,
+        message: "OTP verified successfully"
+      },
+      curlExample: `curl -X POST ${API_BASE_URL}/api/messaging/verify-otp \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "recipient": "8801772411171",
+    "code": "1234"
+  }'`,
+      jsExample: `const response = await fetch('${API_BASE_URL}/api/messaging/verify-otp', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    recipient: '8801772411171',
+    code: '1234'
+  })
+});
+
+const data = await response.json();
+console.log(data);`,
+      pythonExample: `import requests
+
+url = '${API_BASE_URL}/api/messaging/verify-otp'
+payload = {
+    'recipient': '8801772411171',
+    'code': '1234'
+}
+
+response = requests.post(url, json=payload)
+print(response.json())`,
+      notes: "OTP can only be verified once. After a successful verification, the code is invalidated.",
+    },
+    {
       id: "purchase-package",
       title: "Purchase Package",
       method: "POST",
