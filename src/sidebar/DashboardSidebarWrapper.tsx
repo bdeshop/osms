@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { UserRole } from "@/types/user.role";
 import DashboardSidebar from "./DashboardSidebar";
 
 export default function DashboardSidebarWrapper() {
-  const [role, setRole] = useState<string>("USER");
+  const [role, setRole] = useState<UserRole>("USER");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -12,7 +13,8 @@ export default function DashboardSidebarWrapper() {
       const userStr = localStorage.getItem("user");
       if (userStr) {
         const user = JSON.parse(userStr);
-        setRole(user.role || "USER");
+        const userRole = user.role as UserRole;
+        setRole(userRole || "USER");
       }
     } catch (error) {
       console.error("Failed to get user role:", error);

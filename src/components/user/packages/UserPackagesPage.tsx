@@ -29,6 +29,9 @@ interface PackageData {
   name: string;
   description: string;
   costPerMessage: number;
+  totalPrice: number;
+  messageCount: number; // Remaining for active, Total for others
+  totalMessages: number;
   features: string[];
   isActive: boolean;
   packageToken?: string | null;
@@ -58,6 +61,7 @@ export default function UserPackagesPage() {
   }, []);
 
   const fetchData = async () => {
+    console.log(`🔄 [UI] fetchData requested...`);
     try {
       setLoading(true);
       const [pkgRes, userRes] = await Promise.all([
@@ -65,10 +69,17 @@ export default function UserPackagesPage() {
         authAPI.getMe() as any
       ]);
 
+      console.log(`📊 [UI] fetchData Success:`, { 
+        packagesFound: pkgRes.data?.length, 
+        currentBalance: userRes.data?.balance,
+        remainingMessages: userRes.data?.remainingMessages 
+      });
+
       setPackages(pkgRes.data || []);
       setUserProfile(userRes.data || null);
       setError("");
     } catch (err) {
+      console.error(`❌ [UI] fetchData Failed:`, err);
       setError(err instanceof Error ? err.message : "Failed to fetch data");
     } finally {
       setLoading(false);
@@ -82,16 +93,25 @@ export default function UserPackagesPage() {
   };
 
   const handleActivatePackage = async (packageId: string) => {
+    console.log(`🌐 [UI] handleActivatePackage called for Package ID: ${packageId}`);
     try {
       setActionLoading(packageId);
       setError("");
+      
       const response = await packageAPI.select(packageId, "selected") as any;
+      console.log(`📡 [UI] Server Response for selection:`, response);
+
       if (response.success) {
+        console.log(`✨ [UI] Activation success! Syncing profile and packages...`);
         setShowSuccess(true);
         fetchData();
         setTimeout(() => setShowSuccess(false), 5000);
+      } else {
+        console.warn(`⚠️ [UI] Server returned success:false but no error thrown:`, response);
+        setError(response.message || "Failed to activate protocol");
       }
     } catch (err) {
+      console.error(`❌ [UI] Activation error:`, err);
       setError(err instanceof Error ? err.message : "Failed to activate plan");
     } finally {
       setActionLoading(null);
@@ -149,7 +169,7 @@ export default function UserPackagesPage() {
                 Service <span className="text-amber-500">Architecture</span>
               </h1>
               <p className="text-gray-500 font-bold max-w-xl leading-relaxed uppercase text-[10px] tracking-widest">
-                Select your preferred messaging protocol. All costs are deducted in real-time from your unified wallet balance. No upfront package costs.
+                Select your prepaid messaging protocol. Purchase a bundle of messages using your unified wallet balance. Protocal remains active until messages are exhausted or cycle expires.
               </p>
            </div>
 
@@ -233,10 +253,31 @@ export default function UserPackagesPage() {
                    </div>
 
                    <div className="bg-white/5 rounded-3xl p-6 mb-8 border border-white/5 group-hover:border-white/10 transition-colors">
-                      <p className="text-gray-500 text-[8px] font-black uppercase tracking-widest mb-1">Operational Rate</p>
-                      <div className="flex items-baseline gap-1">
-                         <span className="text-3xl font-black text-white tracking-tighter">৳{pkg.costPerMessage}</span>
-                         <span className="text-[10px] text-gray-600 font-bold uppercase">/ Segment</span>
+                      <div className="flex justify-between items-end mb-4">
+                        <div>
+                          <p className="text-gray-500 text-[8px] font-black uppercase tracking-widest mb-1">Package Volume</p>
+                          <div className="flex items-baseline gap-1">
+                             <span className="text-2xl font-black text-white tracking-tighter">
+                               {pkg.isSelected ? pkg.messageCount : pkg.totalMessages}
+                             </span>
+                             <span className="text-[10px] text-gray-600 font-bold uppercase">Messages</span>
+                          </div>
+                          {pkg.isSelected && (
+                            <p className="text-[8px] text-amber-500/60 font-bold uppercase mt-1">Of {pkg.totalMessages} Total</p>
+                          )}
+                        </div>
+                        <div className="text-right">
+                          <p className="text-gray-500 text-[8px] font-black uppercase tracking-widest mb-1">Package Price</p>
+                          <span className="text-xl font-black text-white tracking-tighter">৳{pkg.totalPrice}</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-4 border-t border-white/5">
+                        <p className="text-gray-500 text-[8px] font-black uppercase tracking-widest mb-1">Effective Rate</p>
+                        <div className="flex items-baseline gap-1">
+                           <span className="text-amber-500 text-sm font-black tracking-tighter">৳{pkg.costPerMessage.toFixed(2)}</span>
+                           <span className="text-[8px] text-gray-600 font-bold uppercase">/ Segment</span>
+                        </div>
                       </div>
                    </div>
 

@@ -161,13 +161,14 @@ export default function Header() {
                                 {section.title}
                               </h4>
                               <ul className="space-y-2">
-                                {section.items.map((item) => (
-                                  <ListItem
-                                    key={item.href}
-                                    title={item.title}
-                                    href={item.href}
-                                  />
-                                ))}
+                                {section.items &&
+                                  section.items.map((item) => (
+                                    <ListItem
+                                      key={item.href}
+                                      title={item.title}
+                                      href={item.href}
+                                    />
+                                  ))}
                               </ul>
                             </li>
                           ),

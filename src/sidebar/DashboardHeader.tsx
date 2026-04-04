@@ -99,6 +99,19 @@ export default function DashboardHeader() {
           <span className="absolute top-2 right-2 w-2 h-2 bg-amber-500 rounded-full border-2 border-gray-900 shadow-lg shadow-amber-500/20 animate-pulse" />
         </Button>
 
+        {/* Message Balance Display */}
+        <div className="flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-2xl border border-white/5 group hover:border-amber-500/30 transition-all duration-500">
+           <div className="bg-amber-500/10 p-1.5 rounded-lg text-amber-500 group-hover:scale-110 transition-transform">
+             <Zap size={14} />
+           </div>
+           <div className="flex flex-col leading-tight">
+             <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Messages Left</span>
+             <span className="font-mono font-bold text-white text-sm">
+               {(user as any)?.remainingMessages?.toLocaleString() || "0"}
+             </span>
+           </div>
+        </div>
+
         {/* Balance Display */}
         <div className="flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-2xl border border-white/5 group hover:border-amber-500/30 transition-all duration-500">
            <div className="bg-amber-500/10 p-1.5 rounded-lg text-amber-500 group-hover:scale-110 transition-transform">
@@ -120,6 +133,7 @@ export default function DashboardHeader() {
         <motion.button 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          onClick={() => router.push("/user/recharge")}
           className="h-9 px-5 bg-linear-to-r from-amber-400 to-amber-600 text-gray-950 text-xs rounded-xl font-black uppercase tracking-widest transition-all shadow-lg shadow-amber-500/20"
         >
           Recharge

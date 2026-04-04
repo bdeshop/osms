@@ -1,6 +1,7 @@
-export const API_BASE_URL = "http://localhost:9000/api";
-export const API_BASE = "http://localhost:9000";
-
+export const API_BASE_URL = "http://localhost:5000/api";
+export const API_BASE = "http://localhost:5000";
+// export const API_BASE_URL = "https://o-sms.com/backend/api";
+// export const API_BASE = "https://o-sms.com/backend";
 // Get auth token from localStorage
 const getAuthToken = () => {
   if (typeof window !== "undefined") {
@@ -221,7 +222,11 @@ export const paymentAPI = {
       body: JSON.stringify({ amount, success_redirect_url }),
     }),
 
-  requestManualRecharge: (amount: number, transactionId: string, bank?: string) =>
+  requestManualRecharge: (
+    amount: number,
+    transactionId: string,
+    bank?: string,
+  ) =>
     apiCall("/payment/request-recharge", {
       method: "POST",
       body: JSON.stringify({ amount, transactionId, bank }),

@@ -26,7 +26,8 @@ interface UsageDetail {
     _id: string;
     name: string;
     description: string;
-    messageCount: number;
+    messageCount: number;      // Remaining balance
+    totalCapacity: number;     // Original capacity
     costPerMessage: number;
     totalPrice: number;
     features: string[];
@@ -223,7 +224,7 @@ export default function PackageMessages() {
                         </span>
                         <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
                         <span className="flex items-center gap-1">
-                          <Hash size={10} className="text-blue-500/60" /> {item.package.messageCount} Capacity
+                          <Hash size={10} className="text-blue-500/60" /> {item.package.messageCount} / {item.package.totalCapacity} Left
                         </span>
                         <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
                         <span className="flex items-center gap-1">
@@ -240,14 +241,14 @@ export default function PackageMessages() {
                         <div className="w-16 h-1.5 bg-gray-700 rounded-full overflow-hidden">
                           <div 
                             className="h-full bg-amber-500 transition-all duration-500" 
-                            style={{ width: `${Math.min(100, (item.totalMessagesSent / item.package.messageCount) * 100)}%` }}
+                            style={{ width: `${Math.min(100, ((item.package.totalCapacity - item.package.messageCount) / item.package.totalCapacity) * 100)}%` }}
                           />
                         </div>
                       </div>
                       <div className="text-center">
                         <p className="text-gray-500 text-[8px] font-black uppercase tracking-widest mb-0.5">Utilized</p>
                         <p className="text-sm font-bold text-white">
-                          {Math.round((item.totalMessagesSent / item.package.messageCount) * 100)}%
+                          {Math.round(((item.package.totalCapacity - item.package.messageCount) / item.package.totalCapacity) * 100)}%
                         </p>
                       </div>
                     </div>

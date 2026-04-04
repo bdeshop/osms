@@ -26,6 +26,7 @@ export default function PackagesManager() {
     name: "",
     description: "",
     messageCount: "",
+    totalPrice: "",
     costPerMessage: "",
     features: [] as string[],
   });
@@ -39,7 +40,7 @@ export default function PackagesManager() {
   const fetchPackages = async () => {
     try {
       setLoading(true);
-      const data = await packageAPI.getAll();
+      const data = (await packageAPI.getAll()) as { data: Package[] };
       setPackages(data.data || []);
       setError("");
     } catch (err) {
@@ -59,6 +60,7 @@ export default function PackagesManager() {
         description: formData.description,
         messageCount: parseInt(formData.messageCount),
         costPerMessage: parseFloat(formData.costPerMessage),
+        totalPrice: parseFloat((formData as any).totalPrice),
         features: formData.features,
       };
 
@@ -73,8 +75,9 @@ export default function PackagesManager() {
         description: "",
         messageCount: "",
         costPerMessage: "",
+        totalPrice: "",
         features: [],
-      });
+      } as any);
       setFeatureInput("");
       setEditingId(null);
       setShowForm(false);
@@ -92,8 +95,9 @@ export default function PackagesManager() {
       description: pkg.description,
       messageCount: pkg.messageCount.toString(),
       costPerMessage: pkg.costPerMessage.toString(),
+      totalPrice: pkg.totalPrice.toString(),
       features: pkg.features,
-    });
+    } as any);
     setFeatureInput("");
     setEditingId(pkg._id);
     setShowForm(true);
@@ -143,6 +147,7 @@ export default function PackagesManager() {
             name: "",
             description: "",
             messageCount: "",
+            totalPrice: "",
             costPerMessage: "",
             features: [],
           });
@@ -178,23 +183,40 @@ export default function PackagesManager() {
               type="number"
               placeholder="Message Count"
               value={formData.messageCount}
-              onChange={(e) =>
-                setFormData({ ...formData, messageCount: e.target.value })
-              }
+              onChange={(e) => {
+                const count = parseInt(e.target.value);
+                const price = parseFloat(formData.totalPrice || "0");
+                const cost = count > 0 ? (price / count).toFixed(4) : "0";
+                setFormData({ ...formData, messageCount: e.target.value, costPerMessage: cost });
+              }}
               required
               className="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
             />
             <input
               type="number"
               step="0.01"
-              placeholder="Cost Per Message"
-              value={formData.costPerMessage}
-              onChange={(e) =>
-                setFormData({ ...formData, costPerMessage: e.target.value })
-              }
+              placeholder="Total Price"
+              value={(formData as any).totalPrice || ""}
+              onChange={(e) => {
+                const price = parseFloat(e.target.value);
+                const count = parseInt(formData.messageCount || "0");
+                const cost = count > 0 ? (price / count).toFixed(4) : "0";
+                setFormData({ ...formData, totalPrice: e.target.value, costPerMessage: cost } as any);
+              }}
               required
               className="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
             />
+            <div className="flex flex-col">
+              <label className="text-[10px] text-gray-500 uppercase font-black px-1 mb-1">Calculated Cost/Msg</label>
+              <input
+                type="number"
+                step="0.0001"
+                placeholder="Cost Per Message"
+                value={formData.costPerMessage}
+                readOnly
+                className="bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-2 text-amber-500 placeholder-gray-500 focus:outline-none cursor-not-allowed"
+              />
+            </div>
             <textarea
               placeholder="Description"
               value={formData.description}
