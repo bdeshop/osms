@@ -9,6 +9,12 @@ export default function Navbar() {
         </Link>
         <div className="flex gap-4">
           <Link
+            href="/docs"
+            className="px-6 py-2 rounded-lg border-2 border-pink-600 text-pink-600 hover:bg-pink-50 font-semibold transition-all"
+          >
+            Docs
+          </Link>
+          <Link
             href="/login"
             className="px-6 py-2 rounded-lg border-2 border-pink-600 text-pink-600 hover:bg-pink-50 font-semibold transition-all"
           >
