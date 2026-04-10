@@ -5,7 +5,7 @@ export default function Navbar() {
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-4 flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold text-pink-600">
-          Laaffic
+          o-sms
         </Link>
 
         {/* Center Navigation */}

@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "OSMS - SMS Gateway",
-  description:
-    "Laaffic SMS & Voice - Trusted Gaming Marketing Solution Provider",
+  title: "o-sms - SMS Gateway",
+  description: "o-sms - Trusted SMS & Voice Marketing Solution Provider",
   icons: {
     icon: "/favicon.ico",
   },

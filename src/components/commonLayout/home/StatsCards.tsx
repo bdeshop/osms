@@ -5,7 +5,7 @@ const StatsCards = () => {
   const stats = [
     { value: "17+", label: "years of trusted industry experience" },
     { value: "1.5 billion+", label: "messages delivered monthly" },
-    { value: "$4", label: "cost per lead" },
+    { value: "৳4", label: "cost per lead" },
     { value: "5000+", label: "global businesses trust us" },
   ];
 

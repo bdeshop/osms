@@ -187,7 +187,11 @@ export default function PackagesManager() {
                 const count = parseInt(e.target.value);
                 const price = parseFloat(formData.totalPrice || "0");
                 const cost = count > 0 ? (price / count).toFixed(4) : "0";
-                setFormData({ ...formData, messageCount: e.target.value, costPerMessage: cost });
+                setFormData({
+                  ...formData,
+                  messageCount: e.target.value,
+                  costPerMessage: cost,
+                });
               }}
               required
               className="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
@@ -201,13 +205,19 @@ export default function PackagesManager() {
                 const price = parseFloat(e.target.value);
                 const count = parseInt(formData.messageCount || "0");
                 const cost = count > 0 ? (price / count).toFixed(4) : "0";
-                setFormData({ ...formData, totalPrice: e.target.value, costPerMessage: cost } as any);
+                setFormData({
+                  ...formData,
+                  totalPrice: e.target.value,
+                  costPerMessage: cost,
+                } as any);
               }}
               required
               className="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
             />
             <div className="flex flex-col">
-              <label className="text-[10px] text-gray-500 uppercase font-black px-1 mb-1">Calculated Cost/Msg</label>
+              <label className="text-[10px] text-gray-500 uppercase font-black px-1 mb-1">
+                Calculated Cost/Msg
+              </label>
               <input
                 type="number"
                 step="0.0001"
@@ -366,13 +376,13 @@ export default function PackagesManager() {
                 <div className="flex justify-between">
                   <span className="text-gray-400">Cost/Message:</span>
                   <span className="text-amber-400 font-semibold">
-                    ${pkg.costPerMessage.toFixed(2)}
+                    ৳{pkg.costPerMessage.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Total Price:</span>
                   <span className="text-green-400 font-bold text-lg">
-                    ${pkg.totalPrice.toFixed(2)}
+                    ৳{pkg.totalPrice.toFixed(2)}
                   </span>
                 </div>
               </div>

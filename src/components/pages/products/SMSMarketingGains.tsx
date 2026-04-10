@@ -23,11 +23,13 @@ export default function SMSMarketingGains() {
               {/* Text Content */}
               <div className="flex-1 text-center md:text-left">
                 <h3 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
-                  Ultra-low Marketing Cost,<br />Lightweight Launch
+                  Ultra-low Marketing Cost,
+                  <br />
+                  Lightweight Launch
                 </h3>
                 <p className="text-base md:text-lg opacity-95">
-                  Compared to other online marketing methods, Laafic's SMS marketing offers
-                  a customer conversion cost as low as $4.
+                  Compared to other online marketing methods, Laafic's SMS
+                  marketing offers a customer conversion cost as low as ৳4.
                 </p>
               </div>
 
@@ -48,11 +50,14 @@ export default function SMSMarketingGains() {
               {/* Text Content */}
               <div className="flex-1 text-center md:text-left">
                 <h3 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
-                  One-click Bulk Sending<br />of Marketing Texts
+                  One-click Bulk Sending
+                  <br />
+                  of Marketing Texts
                 </h3>
                 <p className="text-base md:text-lg opacity-95">
-                  The Laafic marketing platform can be integrated via API, and some products
-                  have SDK components available for seamless integration.
+                  The Laafic marketing platform can be integrated via API, and
+                  some products have SDK components available for seamless
+                  integration.
                 </p>
               </div>
 
