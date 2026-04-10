@@ -7,24 +7,64 @@ export default function Navbar() {
         <Link href="/" className="text-2xl font-bold text-pink-600">
           Laaffic
         </Link>
-        <div className="flex gap-4">
+
+        {/* Center Navigation */}
+        <div className="hidden lg:flex items-center gap-8">
           <Link
-            href="/docs"
-            className="px-6 py-2 rounded-lg border-2 border-pink-600 text-pink-600 hover:bg-pink-50 font-semibold transition-all"
+            href="#"
+            className="text-gray-700 hover:text-pink-600 font-medium text-sm"
           >
-            Docs
+            Products
           </Link>
           <Link
-            href="/login"
-            className="px-6 py-2 rounded-lg border-2 border-pink-600 text-pink-600 hover:bg-pink-50 font-semibold transition-all"
+            href="#"
+            className="text-gray-700 hover:text-pink-600 font-medium text-sm"
           >
-            Login
+            Solutions
+          </Link>
+          <Link
+            href="#"
+            className="text-gray-700 hover:text-pink-600 font-medium text-sm"
+          >
+            Partners
+          </Link>
+          <Link
+            href="#"
+            className="text-gray-700 hover:text-pink-600 font-medium text-sm"
+          >
+            Resources
+          </Link>
+          <Link
+            href="#"
+            className="text-gray-700 hover:text-pink-600 font-medium text-sm"
+          >
+            About Us
+          </Link>
+          <Link
+            href="/contact"
+            className="text-gray-700 hover:text-pink-600 font-medium text-sm"
+          >
+            Contact Us
+          </Link>
+        </div>
+
+        {/* Right Side */}
+        <div className="flex gap-4 items-center">
+          <select className="text-gray-700 text-sm border-0 bg-transparent hover:text-pink-600">
+            <option>English</option>
+            <option>বাংলা</option>
+          </select>
+          <Link
+            href="/login"
+            className="text-gray-700 hover:text-pink-600 font-medium text-sm"
+          >
+            Log in
           </Link>
           <Link
             href="/user-register"
-            className="px-6 py-2 rounded-lg bg-pink-600 hover:bg-pink-700 text-white font-semibold transition-all"
+            className="px-6 py-2 rounded-full bg-pink-600 hover:bg-pink-700 text-white font-semibold transition-all text-sm"
           >
-            Sign Up
+            Free Trial
           </Link>
         </div>
       </div>

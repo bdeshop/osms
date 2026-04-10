@@ -1,7 +1,9 @@
 import Navbar from "@/components/commonLayout/Navbar";
+// import Footer from "@/components/commonLayout/footer/Footer";
 import Banner from "@/components/commonLayout/home/Banner";
 import BoostChannelsSection from "@/components/commonLayout/home/BoostChannelsSection";
 import BrandMarquee from "@/components/commonLayout/home/BrandMarquee";
+import Footer from "@/components/commonLayout/home/Footer";
 import GlobalReachSection from "@/components/commonLayout/home/GlobalReachSection";
 import LatestUpdatesSlider from "@/components/commonLayout/home/LatestUpdatesSlider";
 import ServiceSlider from "@/components/commonLayout/home/ServiceSlider";
@@ -13,7 +15,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="py-10">
+      <main className="">
         <Banner />
         <StatsCards />
         <GlobalReachSection />
@@ -23,6 +25,8 @@ export default function Home() {
         <TestimonialSlider />
         <LatestUpdatesSlider />
         <StartMessagingCTA />
+
+        <Footer />
       </main>
     </>
   );
