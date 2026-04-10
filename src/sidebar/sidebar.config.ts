@@ -90,47 +90,6 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
           },
         ],
       },
-      {
-        title: "Phonebook",
-        icon: Phone,
-        items: [
-          { title: "Contacts", url: "/admin/phonebook/contacts", icon: Users },
-          { title: "Groups", url: "/admin/phonebook/groups", icon: Users },
-        ],
-      },
-      {
-        title: "Templates",
-        url: "/admin/templates",
-        icon: FileText,
-      },
-      {
-        title: "Blacklist",
-        url: "/admin/blacklist",
-        icon: Shield,
-      },
-      {
-        title: "Chat Box",
-        url: "/admin/chatbox",
-        icon: MessageCircle,
-      },
-      {
-        title: "Reports",
-        icon: BarChart3,
-        items: [
-          { title: "Usage", url: "/admin/reports/usage", icon: Zap },
-          { title: "Delivery", url: "/admin/reports/delivery", icon: Mail },
-          { title: "Errors", url: "/admin/reports/errors", icon: Shield },
-        ],
-      },
-      {
-        title: "Developer / API",
-        icon: Code,
-        items: [
-          { title: "API Keys", url: "/admin/api/keys", icon: Key },
-          { title: "Webhooks", url: "/admin/api/webhooks", icon: Zap },
-          { title: "Documentation", url: "/api-docs", icon: FileText },
-        ],
-      },
     ],
   },
 
@@ -170,32 +129,6 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         title: "API Documentation",
         url: "/api-docs",
         icon: FileText,
-      },
-      {
-        title: "Phonebook",
-        icon: Phone,
-        items: [
-          { title: "Contacts", url: "/user/phonebook/contacts", icon: Users },
-          { title: "Groups", url: "/user/phonebook/groups", icon: Users },
-        ],
-      },
-      {
-        title: "Reports",
-        icon: BarChart3,
-        items: [
-          { title: "Usage", url: "/user/reports/usage", icon: Zap },
-          { title: "Delivery", url: "/user/reports/delivery", icon: Mail },
-          { title: "Errors", url: "/user/reports/errors", icon: Shield },
-        ],
-      },
-      {
-        title: "Developer / API",
-        icon: Code,
-        items: [
-          { title: "API Keys", url: "/user/api/keys", icon: Key },
-          { title: "Webhooks", url: "/user/api/webhooks", icon: Zap },
-          { title: "Documentation", url: "/api-docs", icon: FileText },
-        ],
       },
     ],
   },
