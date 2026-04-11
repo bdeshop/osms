@@ -1,45 +1,71 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
+import { publicAPI } from "@/services/api";
+import { API_BASE } from "@/services/api";
 
 import "swiper/css";
 import "swiper/css/navigation";
+import Link from "next/link";
 
-type UpdateSlide = {
+type NewsUpdateItem = {
+  _id: string;
   title: string;
+  titleBn: string;
   description: string;
-  image: string;
+  descriptionBn: string;
+  imageUrl: string;
+  order: number;
+  isActive: boolean;
 };
-
-const updates: UpdateSlide[] = [
-  {
-    title: "2025 G2E Asia – Laaffic Redefines Gaming Growth",
-    description:
-      "At the 2025 G2E Asia International Entertainment Expo in Manila, Philippines, Laaffic delivered a powerful keynote: 'SMS and Voice Driving Gaming Brand Growth'. Showcasing AI-powered communication solutions including Two-way AI SMS and AI Agent Call for smarter customer acquisition and retention.",
-    image: "https://www.laaffic.com/public/images/index/banner.png",
-  },
-  {
-    title: "AI + SMS/Voice: Next-Gen Gaming Engagement",
-    description:
-      "Our presentation highlighted how AI-enhanced SMS and voice deliver personalized interactions, precise intent recognition, and localized deployment — empowering global gaming brands to overcome acquisition and retention challenges with intelligent tools.",
-    image: "https://www.laaffic.com/public/images/index/banner.png",
-  },
-  {
-    title: "Global Reach, Instant Impact",
-    description:
-      "Enterprise-grade infrastructure meets cutting-edge communication. Scale worldwide with high-delivery SMS, reliable voice, and AI-driven solutions trusted by thousands of partners across 200+ regions.",
-    image: "https://www.laaffic.com/public/images/index/banner.png",
-  },
-];
 
 const GlobalReachSection = () => {
   const swiperRef = useRef<any>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [updates, setUpdates] = useState<NewsUpdateItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchNewsUpdates = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log("📥 Fetching news updates");
+        const response = (await publicAPI.getNewsUpdates()) as any;
+        console.log("✅ News updates fetched:", response.data);
+        setUpdates(response.data || []);
+      } catch (err) {
+        console.error("❌ Failed to fetch news updates:", err);
+        setError("Failed to load news updates");
+        setUpdates([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNewsUpdates();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="relative w-full overflow-hidden text-white py-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#d946ef] via-[#a21caf] to-[#ec4899] opacity-95" />
+        <div className="relative max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+          <Loader className="animate-spin text-white" size={40} />
+        </div>
+      </section>
+    );
+  }
+
+  if (error || updates.length === 0) {
+    return null;
+  }
 
   return (
     <section className="relative w-full overflow-hidden text-white">
@@ -83,12 +109,16 @@ const GlobalReachSection = () => {
           onMouseLeave={() => setIsPaused(false)}
         >
           {updates.map((slide, idx) => (
-            <SwiperSlide key={idx}>
+            <SwiperSlide key={slide._id || idx}>
               <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 lg:gap-12">
                 {/* Image – Left on desktop */}
                 <div className="w-full lg:w-1/2 flex justify-center order-1 lg:order-1">
                   <img
-                    src={slide.image}
+                    src={
+                      slide.imageUrl.startsWith("http")
+                        ? slide.imageUrl
+                        : `${API_BASE}${slide.imageUrl}`
+                    }
                     alt={slide.title}
                     className="max-w-xs sm:max-w-sm lg:max-w-md w-full object-contain rounded-lg sm:rounded-xl  transform transition duration-700 hover:scale-[1.02]"
                     loading={idx === 0 ? "eager" : "lazy"}
@@ -109,14 +139,12 @@ const GlobalReachSection = () => {
 
                   {/* Optional CTA */}
                   <div className="mt-6 sm:mt-8">
-                    <a
-                      href="https://www.laaffic.com/"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href="/"
                       className="inline-block px-6 sm:px-8 py-2.5 sm:py-3 bg-white text-purple-700 font-semibold text-sm sm:text-base rounded-full shadow-lg hover:bg-purple-100 transition duration-300 transform hover:-translate-y-1"
                     >
                       Discover More →
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

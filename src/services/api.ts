@@ -16,10 +16,12 @@ async function apiCall<T>(
   options: RequestInit = {},
 ): Promise<T> {
   const token = getAuthToken();
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(options.headers as Record<string, string>),
-  };
+  const headers: Record<string, string> = {};
+
+  // Only set Content-Type to application/json if body is not FormData
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
@@ -47,6 +49,8 @@ async function apiCall<T>(
 export const publicAPI = {
   getHomepageStats: () =>
     apiCall("/frontend/homepage-stats", { method: "GET" }),
+
+  getNewsUpdates: () => apiCall("/frontend/news-updates", { method: "GET" }),
 
   submitContactForm: (data: any) =>
     apiCall("/frontend/contact-us", {
@@ -207,6 +211,25 @@ export const adminAPI = {
 
   deleteHomepageStat: (statId: string) =>
     apiCall(`/admin/homepage-stats/${statId}`, {
+      method: "DELETE",
+    }),
+
+  getNewsUpdates: () => apiCall("/admin/news-updates", { method: "GET" }),
+
+  createNewsUpdate: (formData: FormData) =>
+    apiCall("/admin/news-updates", {
+      method: "POST",
+      body: formData,
+    }),
+
+  updateNewsUpdate: (newsId: string, formData: FormData) =>
+    apiCall(`/admin/news-updates/${newsId}`, {
+      method: "PATCH",
+      body: formData,
+    }),
+
+  deleteNewsUpdate: (newsId: string) =>
+    apiCall(`/admin/news-updates/${newsId}`, {
       method: "DELETE",
     }),
 

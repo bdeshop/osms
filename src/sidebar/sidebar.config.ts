@@ -17,6 +17,7 @@ import {
   Package,
   User,
   CreditCard,
+  Newspaper,
 } from "lucide-react";
 
 export const SIDEBAR_CONFIG: SidebarSection[] = [
@@ -76,6 +77,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         title: "Homepage Stats",
         url: "/admin/homepage-stats",
         icon: BarChart3,
+      },
+      {
+        title: "News Updates",
+        url: "/admin/news-updates",
+        icon: Newspaper,
       },
       {
         title: "Messaging",
