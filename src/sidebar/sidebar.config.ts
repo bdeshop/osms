@@ -18,6 +18,7 @@ import {
   User,
   CreditCard,
   Newspaper,
+  Radio,
 } from "lucide-react";
 
 export const SIDEBAR_CONFIG: SidebarSection[] = [
@@ -82,6 +83,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         title: "News Updates",
         url: "/admin/news-updates",
         icon: Newspaper,
+      },
+      {
+        title: "Service Channels",
+        url: "/admin/service-channels",
+        icon: Radio,
       },
       {
         title: "Messaging",

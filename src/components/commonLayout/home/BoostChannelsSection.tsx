@@ -1,18 +1,55 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { publicAPI } from "@/services/api";
+import { API_BASE } from "@/services/api";
+import { Loader } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+
+interface ServiceChannel {
+  _id: string;
+  name: string;
+  nameBn: string;
+  icon: string;
+  iconType: "lucide" | "image" | "emoji";
+  order: number;
+  isActive: boolean;
+}
 
 const ServicesGrid = () => {
-  const services = [
-    { id: "sms", label: "SMS", icon: "✉️" },
-    { id: "rcs", label: "RCS", icon: "💬" },
-    { id: "mms", label: "MMS", icon: "📤" },
-    { id: "two-way-sms", label: "Two-way SMS", icon: "🔄" },
-    { id: "whatsapp", label: "WhatsApp", icon: "📱" },
-    { id: "post-call-sms", label: "Post-call SMS", icon: "📞→✉️" },
-    { id: "ai-group-call", label: "AI Group Call", icon: "🤖👥" },
-    { id: "call-center", label: "Call Center", icon: "🎧" },
-  ];
+  const [services, setServices] = useState<ServiceChannel[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log("📥 Fetching service channels");
+        const response = (await publicAPI.getServiceChannels()) as any;
+        console.log("✅ Service channels fetched:", response.data);
+        setServices(response.data || []);
+      } catch (err) {
+        console.error("❌ Failed to fetch service channels:", err);
+        setError("Failed to load services");
+        setServices([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  const getIconComponent = (iconName: string) => {
+    const IconComponent = (LucideIcons as any)[iconName];
+    if (IconComponent) {
+      return <IconComponent size={20} />;
+    }
+    return iconName;
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -37,6 +74,20 @@ const ServicesGrid = () => {
     },
   };
 
+  if (loading) {
+    return (
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+        <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+          <Loader className="animate-spin text-pink-600" size={32} />
+        </div>
+      </section>
+    );
+  }
+
+  if (error || services.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,7 +109,7 @@ const ServicesGrid = () => {
         >
           {services.map((service, idx) => (
             <motion.div
-              key={service.id}
+              key={service._id || idx}
               variants={itemVariants}
               className="group relative"
             >
@@ -72,11 +123,21 @@ const ServicesGrid = () => {
 
                 {/* Content */}
                 <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center mb-2 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300">
-                    {service.icon}
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center mb-2 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300 overflow-hidden">
+                    {service.iconType === "image" ? (
+                      <img
+                        src={`${API_BASE}${service.icon}`}
+                        alt={service.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : service.iconType === "lucide" ? (
+                      getIconComponent(service.icon)
+                    ) : (
+                      service.icon
+                    )}
                   </div>
                   <h3 className="font-semibold text-sm sm:text-base text-gray-900 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300">
-                    {service.label}
+                    {service.name}
                   </h3>
                 </div>
 

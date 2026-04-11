@@ -52,6 +52,9 @@ export const publicAPI = {
 
   getNewsUpdates: () => apiCall("/frontend/news-updates", { method: "GET" }),
 
+  getServiceChannels: () =>
+    apiCall("/frontend/service-channels", { method: "GET" }),
+
   submitContactForm: (data: any) =>
     apiCall("/frontend/contact-us", {
       method: "POST",
@@ -230,6 +233,26 @@ export const adminAPI = {
 
   deleteNewsUpdate: (newsId: string) =>
     apiCall(`/admin/news-updates/${newsId}`, {
+      method: "DELETE",
+    }),
+
+  getServiceChannels: () =>
+    apiCall("/admin/service-channels", { method: "GET" }),
+
+  createServiceChannel: (formData: FormData) =>
+    apiCall("/admin/service-channels", {
+      method: "POST",
+      body: formData,
+    }),
+
+  updateServiceChannel: (channelId: string, formData: FormData) =>
+    apiCall(`/admin/service-channels/${channelId}`, {
+      method: "PATCH",
+      body: formData,
+    }),
+
+  deleteServiceChannel: (channelId: string) =>
+    apiCall(`/admin/service-channels/${channelId}`, {
       method: "DELETE",
     }),
 
