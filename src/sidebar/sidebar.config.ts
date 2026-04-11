@@ -68,6 +68,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: Settings,
       },
       {
+        title: "Contact Us",
+        url: "/admin/contact-us",
+        icon: Mail,
+      },
+      {
         title: "Messaging",
         icon: MessageCircle,
         items: [

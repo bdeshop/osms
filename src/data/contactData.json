@@ -1,0 +1,50 @@
+{
+  "infoCards": [
+    {
+      "id": "customer-service",
+      "title": "Customer Service Center",
+      "description": "Our professional customer service team provides prompt and efficient support. If you have any pre-sales or post-sales inquiries, feel free to contact us via email or online.",
+      "contacts": [
+        {
+          "type": "email",
+          "icon": "✉",
+          "value": "service@laaffic.com"
+        },
+        {
+          "type": "phone",
+          "icon": "📞",
+          "value": "+63 963 790 2308"
+        },
+        {
+          "type": "social",
+          "icon": "@",
+          "value": "@SMS1_service_all"
+        }
+      ]
+    },
+    {
+      "id": "api-support",
+      "title": "API Technical Support",
+      "description": "Our product platform supports API integration, allowing you to seamlessly incorporate our high-quality SMS and voice services into your own company systems. Contact us for any questions regarding the API interface.",
+      "contacts": [
+        {
+          "type": "social",
+          "icon": "@",
+          "value": "@API_Technical_Support"
+        }
+      ]
+    },
+    {
+      "id": "business-collab",
+      "title": "Business Collaboration",
+      "description": "If you are a media representative, event organizer, ecosystem partner, agent, or influencer interested in collaborating with o-sms, please do not hesitate to contact us.",
+      "contacts": [
+        {
+          "type": "email",
+          "icon": "✉",
+          "value": "marketing@laaffic.com"
+        }
+      ]
+    }
+  ]
+}

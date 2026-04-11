@@ -178,6 +178,23 @@ export const adminAPI = {
       method: "POST",
       body: JSON.stringify({ key, value }),
     }),
+
+  getContactForms: (status?: string, limit?: number, skip?: number) => {
+    const params = new URLSearchParams();
+    if (status) params.append("status", status);
+    if (limit) params.append("limit", limit.toString());
+    if (skip) params.append("skip", skip.toString());
+    const query = params.toString() ? `?${params.toString()}` : "";
+    return apiCall(`/admin/frontend/contact-us${query}`, { method: "GET" });
+  },
+
+  getContactFormById: (contactId: string) =>
+    apiCall(`/admin/frontend/contact-us/${contactId}`, { method: "GET" }),
+
+  markContactAsReplied: (contactId: string) =>
+    apiCall(`/admin/frontend/contact-us/${contactId}/mark-replied`, {
+      method: "PATCH",
+    }),
 };
 
 // User API (for logged-in users)
