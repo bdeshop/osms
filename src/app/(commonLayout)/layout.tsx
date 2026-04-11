@@ -6,15 +6,10 @@ import ChatWidget from "@/components/common/ChatWidget";
 export default function CommonLayout({ children }: { children: ReactNode }) {
   return (
     <div className="relative flex min-h-screen flex-col">
-      <Header />
-      <ChatWidget/>
-      <main className="flex-1">
-        {children}
-      </main>
+      <ChatWidget />
+      <main className="flex-1">{children}</main>
 
-      <Footer />
-
-                {/* the purple/blue chat bubble you showed */}
+      {/* the purple/blue chat bubble you showed */}
     </div>
   );
 }

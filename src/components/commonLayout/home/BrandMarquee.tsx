@@ -2,39 +2,21 @@
 
 import React from "react";
 import Marquee from "react-fast-marquee";
+import brandsData from "@/data/brandsData.json";
 
 const BrandMarquee = () => {
-  const brands = [
-    "Kats",
-    "Betfair",
-    "ROBET.COM",
-    "MetaSoft",
-    "OWGAMING",
-    "Play2OS",
-    "X2 SYNDICATE",
-    "ECLIVE",
-    "ONEBET",
-    "PizzaOs",
-    "PayTrades",
-    "CityAds",
-    "UST Gaming",
-    "help2my",
-    "2J.COM",
-    "Gecce",
-  ];
-
-  const uniqueBrands = Array.from(new Set(brands));
+  const uniqueBrands = Array.from(new Set(brandsData.brands));
 
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-white">
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-10 lg:mb-12">
-          Thousands of Brands Rely on o-sms
+          {brandsData.heading}
           <br className="sm:hidden" />
           <span className="text-base sm:text-lg lg:text-xl text-gray-600">
             {" "}
-            to Power Potential Markets
+            {brandsData.subheading}
           </span>
         </h2>
 
