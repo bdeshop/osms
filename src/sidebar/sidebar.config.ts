@@ -73,6 +73,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: Mail,
       },
       {
+        title: "Homepage Stats",
+        url: "/admin/homepage-stats",
+        icon: BarChart3,
+      },
+      {
         title: "Messaging",
         icon: MessageCircle,
         items: [

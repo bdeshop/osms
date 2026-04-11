@@ -1,3 +1,4 @@
+import ChatWidget from "@/components/common/ChatWidget";
 import Navbar from "@/components/commonLayout/Navbar";
 // import Footer from "@/components/commonLayout/footer/Footer";
 import Banner from "@/components/commonLayout/home/Banner";
@@ -20,6 +21,7 @@ export default function Home() {
         <StatsCards />
         <GlobalReachSection />
         <BoostChannelsSection />
+        <ChatWidget />
         {/* <ServiceSlider /> */}
         <BrandMarquee />
         <TestimonialSlider />

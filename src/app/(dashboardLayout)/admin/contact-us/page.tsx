@@ -51,7 +51,11 @@ export default function ContactUsPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = (await adminAPI.getContactForms()) as any;
+      const response = (await adminAPI.getContactForms()) as {
+        success: boolean;
+        data: ContactForm[];
+        message?: string;
+      };
       if (response.success) {
         setContactForms(response.data || []);
       } else {
@@ -67,7 +71,9 @@ export default function ContactUsPage() {
 
   const handleMarkAsReplied = async (contactId: string) => {
     try {
-      const response = (await adminAPI.markContactAsReplied(contactId)) as any;
+      const response = (await adminAPI.markContactAsReplied(contactId)) as {
+        success: boolean;
+      };
       if (response.success) {
         setContactForms(
           contactForms.map((form) =>
@@ -134,25 +140,25 @@ export default function ContactUsPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-4">
+          <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-4">
             <p className="text-gray-400 text-sm mb-1">Total Submissions</p>
             <p className="text-3xl font-bold text-white">
               {contactForms.length}
             </p>
           </div>
-          <div className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 rounded-lg border border-yellow-500/30 p-4">
+          <div className="bg-linear-to-br from-yellow-500/10 to-yellow-600/5 rounded-lg border border-yellow-500/30 p-4">
             <p className="text-yellow-400 text-sm mb-1">New</p>
             <p className="text-3xl font-bold text-yellow-400">
               {contactForms.filter((f) => f.status === "new").length}
             </p>
           </div>
-          <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-lg border border-blue-500/30 p-4">
+          <div className="bg-linear-to-br from-blue-500/10 to-blue-600/5 rounded-lg border border-blue-500/30 p-4">
             <p className="text-blue-400 text-sm mb-1">Read</p>
             <p className="text-3xl font-bold text-blue-400">
               {contactForms.filter((f) => f.status === "read").length}
             </p>
           </div>
-          <div className="bg-gradient-to-br from-green-500/10 to-green-600/5 rounded-lg border border-green-500/30 p-4">
+          <div className="bg-linear-to-br from-green-500/10 to-green-600/5 rounded-lg border border-green-500/30 p-4">
             <p className="text-green-400 text-sm mb-1">Replied</p>
             <p className="text-3xl font-bold text-green-400">
               {contactForms.filter((f) => f.status === "replied").length}
@@ -161,7 +167,7 @@ export default function ContactUsPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-4 mb-6">
+        <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
@@ -180,7 +186,11 @@ export default function ContactUsPage() {
             </div>
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
+              onChange={(e) =>
+                setFilterStatus(
+                  e.target.value as "all" | "new" | "read" | "replied",
+                )
+              }
               className="bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"
             >
               <option value="all">All Status</option>
@@ -218,7 +228,7 @@ export default function ContactUsPage() {
             {filteredForms.map((form) => (
               <div
                 key={form._id}
-                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 overflow-hidden hover:border-amber-500/50 transition-all"
+                className="bg-linear-to-br from-gray-800 to-gray-900 rounded-lg border border-gray-700 overflow-hidden hover:border-amber-500/50 transition-all"
               >
                 {/* Header */}
                 <div

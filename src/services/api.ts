@@ -1,5 +1,5 @@
-export const API_BASE_URL = "http://localhost:5000/api";
-export const API_BASE = "http://localhost:5000";
+export const API_BASE_URL = "http://localhost:9000/api";
+export const API_BASE = "http://localhost:9000";
 // export const API_BASE_URL = "https://o-sms.com/backend/api";
 // export const API_BASE = "https://o-sms.com/backend";
 // Get auth token from localStorage
@@ -42,6 +42,18 @@ async function apiCall<T>(
   console.log(`✅ API Success: ${endpoint}`, data);
   return data;
 }
+
+// Public API calls (no auth required)
+export const publicAPI = {
+  getHomepageStats: () =>
+    apiCall("/frontend/homepage-stats", { method: "GET" }),
+
+  submitContactForm: (data: any) =>
+    apiCall("/frontend/contact-us", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+};
 
 // Auth APIs
 export const authAPI = {
@@ -177,6 +189,25 @@ export const adminAPI = {
     apiCall("/admin/settings", {
       method: "POST",
       body: JSON.stringify({ key, value }),
+    }),
+
+  getHomepageStats: () => apiCall("/admin/homepage-stats", { method: "GET" }),
+
+  createHomepageStat: (data: any) =>
+    apiCall("/admin/homepage-stats", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  updateHomepageStat: (statId: string, data: any) =>
+    apiCall(`/admin/homepage-stats/${statId}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+
+  deleteHomepageStat: (statId: string) =>
+    apiCall(`/admin/homepage-stats/${statId}`, {
+      method: "DELETE",
     }),
 
   getContactForms: (status?: string, limit?: number, skip?: number) => {
