@@ -10,13 +10,13 @@ const StatsCards = () => {
   ];
 
   return (
-    <section className="w-full py-12 sm:py-16 lg:py-20 bg-white">
+    <section className="w-full py-8 sm:py-12 lg:py-16 bg-white">
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="relative p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-pink-200 bg-white shadow-sm hover:shadow-lg transition-shadow duration-300"
+              className="relative p-2 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl border border-pink-200 bg-white shadow-sm hover:shadow-lg transition-shadow duration-300"
             >
               {/* Gradient border effect via pseudo-element */}
               <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 opacity-0 hover:opacity-10 transition-opacity duration-300 pointer-events-none"></div>

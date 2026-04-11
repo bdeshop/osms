@@ -1,0 +1,69 @@
+{
+  "company": {
+    "name": "o-sms",
+    "tagline": "Drives your brand forward",
+    "copyright": "Copyright © 2026 o-sms Pte. Ltd."
+  },
+  "socials": [
+    {
+      "name": "Facebook",
+      "url": "https://facebook.com",
+      "icon": "Facebook"
+    },
+    {
+      "name": "X / Twitter",
+      "url": "https://x.com",
+      "icon": "Twitter"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://linkedin.com",
+      "icon": "Linkedin"
+    },
+    {
+      "name": "YouTube",
+      "url": "https://youtube.com",
+      "icon": "Youtube"
+    }
+  ],
+  "sections": [
+    {
+      "title": "Messaging",
+      "links": [
+        { "label": "SMS", "href": "/messaging/sms" },
+        { "label": "RCS", "href": "/messaging/rcs" },
+        { "label": "MMS", "href": "/messaging/mms" },
+        { "label": "Two-way", "href": "/messaging/two-way" },
+        { "label": "WhatsApp", "href": "/messaging/whatsapp" }
+      ]
+    },
+    {
+      "title": "Voice",
+      "links": [
+        { "label": "Post-call SMS", "href": "/voice/post-call-sms" },
+        { "label": "AI Group Call", "href": "/voice/ai-group-call" },
+        { "label": "Group Call", "href": "/voice/group-call" },
+        { "label": "Call Center", "href": "/voice/call-center" },
+        { "label": "SIP Trunk", "href": "/voice/sip-trunk" }
+      ]
+    },
+    {
+      "title": "Solutions",
+      "links": [
+        { "label": "Verification", "href": "/solutions/verification" },
+        { "label": "Marketing", "href": "/solutions/marketing" },
+        { "label": "Service", "href": "/solutions/service" },
+        { "label": "iGaming", "href": "/solutions/igaming" },
+        { "label": "Fintech", "href": "/solutions/fintech" },
+        { "label": "Blockchain", "href": "/solutions/blockchain" }
+      ]
+    },
+    {
+      "title": "Partners",
+      "links": [
+        { "label": "Affiliate", "href": "/partners/affiliate" },
+        { "label": "Agent", "href": "/partners/agent" }
+      ]
+    }
+  ]
+}

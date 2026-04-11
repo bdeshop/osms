@@ -4,7 +4,6 @@ import React from "react";
 import Marquee from "react-fast-marquee";
 
 const BrandMarquee = () => {
-  // You can later replace these with real logo URLs or components
   const brands = [
     "Kats",
     "Betfair",
@@ -24,21 +23,23 @@ const BrandMarquee = () => {
     "Gecce",
   ];
 
-  // Remove duplicates if you want cleaner list
   const uniqueBrands = Array.from(new Set(brands));
 
   return (
-    <section className="py-16 md:py-20 bg-white">
-      <div className="container mx-auto px-5 sm:px-6 lg:px-8">
+    <section className="py-12 sm:py-16 lg:py-20 bg-white">
+      <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-gray-900 mb-10 md:mb-12">
-          Thousands of Brands Rely on Laaffic
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-10 lg:mb-12">
+          Thousands of Brands Rely on o-sms
           <br className="sm:hidden" />
-          to Power Potential Markets
+          <span className="text-base sm:text-lg lg:text-xl text-gray-600">
+            {" "}
+            to Power Potential Markets
+          </span>
         </h2>
 
         {/* Marquee Row 1 - Left */}
-        <div className="relative">
+        <div className="relative mb-6 sm:mb-8">
           <Marquee
             gradient={false}
             speed={40}
@@ -48,14 +49,17 @@ const BrandMarquee = () => {
             {uniqueBrands.map((brand, idx) => (
               <div
                 key={`row1-${brand}-${idx}`}
-                className="mx-4 sm:mx-6 lg:mx-8 flex-shrink-0"
+                className="mx-2 sm:mx-3 lg:mx-4 flex-shrink-0"
               >
                 <div
-                  className="group relative w-32 sm:w-36 h-14 flex items-center justify-center 
-                           bg-white border border-gray-200 rounded-lg 
-                           shadow-sm hover:shadow-md transition-all duration-300"
+                  className="group relative w-24 sm:w-28 lg:w-32 h-10 sm:h-12 lg:h-14 flex items-center justify-center 
+                           bg-gradient-to-br from-gray-50 to-white border-2 border-gray-100 rounded-lg 
+                           shadow-sm hover:shadow-md hover:border-pink-200 transition-all duration-300 overflow-hidden"
                 >
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
+                  {/* Hover gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                  <span className="relative text-xs sm:text-sm font-semibold text-gray-700 group-hover:text-pink-600 transition-colors duration-300 text-center px-2">
                     {brand}
                   </span>
                 </div>
@@ -64,8 +68,8 @@ const BrandMarquee = () => {
           </Marquee>
         </div>
 
-        {/* Separator / subtle line */}
-        <div className="my-8 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+        {/* Separator */}
+        <div className="my-6 sm:my-8 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
         {/* Marquee Row 2 - Right */}
         <div className="relative">
@@ -79,14 +83,17 @@ const BrandMarquee = () => {
             {uniqueBrands.map((brand, idx) => (
               <div
                 key={`row2-${brand}-${idx}`}
-                className="mx-4 sm:mx-6 lg:mx-8 flex-shrink-0"
+                className="mx-2 sm:mx-3 lg:mx-4 flex-shrink-0"
               >
                 <div
-                  className="group relative w-32 sm:w-36 h-14 flex items-center justify-center 
-                           bg-white border border-gray-200 rounded-lg 
-                           shadow-sm hover:shadow-md transition-all duration-300"
+                  className="group relative w-24 sm:w-28 lg:w-32 h-10 sm:h-12 lg:h-14 flex items-center justify-center 
+                           bg-gradient-to-br from-gray-50 to-white border-2 border-gray-100 rounded-lg 
+                           shadow-sm hover:shadow-md hover:border-pink-200 transition-all duration-300 overflow-hidden"
                 >
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
+                  {/* Hover gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                  <span className="relative text-xs sm:text-sm font-semibold text-gray-700 group-hover:text-pink-600 transition-colors duration-300 text-center px-2">
                     {brand}
                   </span>
                 </div>

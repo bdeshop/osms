@@ -20,7 +20,7 @@ export default function Home() {
         <StatsCards />
         <GlobalReachSection />
         <BoostChannelsSection />
-        <ServiceSlider />
+        {/* <ServiceSlider /> */}
         <BrandMarquee />
         <TestimonialSlider />
         <LatestUpdatesSlider />
