@@ -19,6 +19,7 @@ import {
   CreditCard,
   Newspaper,
   Radio,
+  MessageSquareQuote,
 } from "lucide-react";
 
 export const SIDEBAR_CONFIG: SidebarSection[] = [
@@ -88,6 +89,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         title: "Service Channels",
         url: "/admin/service-channels",
         icon: Radio,
+      },
+      {
+        title: "Testimonials",
+        url: "/admin/testimonials",
+        icon: MessageSquareQuote,
       },
       {
         title: "Messaging",

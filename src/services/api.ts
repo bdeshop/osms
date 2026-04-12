@@ -55,6 +55,8 @@ export const publicAPI = {
   getServiceChannels: () =>
     apiCall("/frontend/service-channels", { method: "GET" }),
 
+  getTestimonials: () => apiCall("/frontend/testimonials", { method: "GET" }),
+
   submitContactForm: (data: any) =>
     apiCall("/frontend/contact-us", {
       method: "POST",
@@ -253,6 +255,25 @@ export const adminAPI = {
 
   deleteServiceChannel: (channelId: string) =>
     apiCall(`/admin/service-channels/${channelId}`, {
+      method: "DELETE",
+    }),
+
+  getTestimonials: () => apiCall("/admin/testimonials", { method: "GET" }),
+
+  createTestimonial: (formData: FormData) =>
+    apiCall("/admin/testimonials", {
+      method: "POST",
+      body: formData,
+    }),
+
+  updateTestimonial: (testimonialId: string, formData: FormData) =>
+    apiCall(`/admin/testimonials/${testimonialId}`, {
+      method: "PATCH",
+      body: formData,
+    }),
+
+  deleteTestimonial: (testimonialId: string) =>
+    apiCall(`/admin/testimonials/${testimonialId}`, {
       method: "DELETE",
     }),
 
