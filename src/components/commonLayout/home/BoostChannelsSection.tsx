@@ -146,7 +146,7 @@ const ServicesGrid = () => {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center mb-2 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300 overflow-hidden">
                     {service.iconType === "image" ? (
                       <img
-                        src={`${API_BASE}${service.icon}`}
+                        src={service.icon.startsWith('http') ? service.icon : (service.icon.startsWith('/images') ? service.icon : `${API_BASE}${service.icon.startsWith('/') ? '' : '/'}${service.icon}`)}
                         alt={service.name}
                         className="w-full h-full object-cover"
                       />

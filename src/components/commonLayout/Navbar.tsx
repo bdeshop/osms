@@ -86,9 +86,14 @@ export default function Navbar() {
 
   const logoText = language === "en" ? config?.logoTextEn : config?.logoTextBn;
   const menuItems = config?.menu || [];
-  const logoSrc = config?.logoImage
-    ? (config.logoImage.startsWith('http') ? config.logoImage : `${API_BASE}${config.logoImage}`)
-    : null;
+  const getImageUrl = (src: string) => {
+    if (!src) return "";
+    if (src.startsWith('http')) return src;
+    if (src.startsWith('/images')) return src;
+    return `${API_BASE}${src}`;
+  };
+
+  const logoSrc = config?.logoImage ? getImageUrl(config.logoImage) : null;
 
   const toggleLanguage = () => setLanguage(l => l === "en" ? "bn" : "en");
 

@@ -110,7 +110,7 @@ const TestimonialSlider = () => {
             {/* Logo & Attribution */}
             <div className="flex flex-col items-center">
               <img
-                src={`${API_BASE}${current.logoUrl}`}
+                src={current.logoUrl?.startsWith('http') ? current.logoUrl : (current.logoUrl?.startsWith('/images') ? current.logoUrl : `${API_BASE}${current.logoUrl}`)}
                 alt={current.attribution}
                 className="h-12 object-contain mb-3"
               />

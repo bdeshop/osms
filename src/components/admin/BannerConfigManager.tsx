@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { adminAPI, API_BASE } from "@/services/api";
-import { 
-  Save, 
-  Loader, 
-  Plus, 
-  Trash2, 
+import {
+  Save,
+  Loader,
+  Plus,
+  Trash2,
   Image as ImageIcon,
   Layout,
   Type,
@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 interface BannerConfig {
   title: string;
@@ -95,7 +96,9 @@ export default function BannerConfigManager() {
   const handleImageUpload = async (type: 'icon' | 'banner', file: File) => {
     try {
       setSaving(true);
-      const response = await adminAPI.uploadLocationImage(file) as any;
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await adminAPI.uploadLocationImage(formData) as any;
       if (response.success && config) {
         const newConfig = { ...config };
         if (type === 'icon') {
@@ -181,8 +184,8 @@ export default function BannerConfigManager() {
           <h2 className="text-3xl font-bold text-white tracking-tight">Banner Configuration</h2>
           <p className="text-gray-400">Manage your homepage hero section content</p>
         </div>
-        <Button 
-          onClick={handleSave} 
+        <Button
+          onClick={handleSave}
           disabled={saving}
           className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8"
         >
@@ -196,7 +199,7 @@ export default function BannerConfigManager() {
           {success}
         </div>
       )}
-      
+
       {error && (
         <div className="bg-red-500/10 border border-red-500/30 p-4 rounded-xl text-red-400 font-medium">
           {error}
@@ -216,24 +219,24 @@ export default function BannerConfigManager() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-semibold text-gray-300">Main Title</label>
-              <Input 
-                value={config.title} 
+              <Input
+                value={config.title}
                 onChange={(e) => setConfig({ ...config, title: e.target.value })}
                 className="bg-gray-800/50 border-gray-700 text-white"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-semibold text-gray-300">Subtitle Prefix</label>
-              <Input 
-                value={config.subtitle} 
+              <Input
+                value={config.subtitle}
                 onChange={(e) => setConfig({ ...config, subtitle: e.target.value })}
                 className="bg-gray-800/50 border-gray-700 text-white"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-semibold text-gray-300">Description</label>
-              <Textarea 
-                value={config.description} 
+              <Textarea
+                value={config.description}
                 onChange={(e) => setConfig({ ...config, description: e.target.value })}
                 className="bg-gray-800/50 border-gray-700 text-white min-h-[100px]"
               />
@@ -253,8 +256,8 @@ export default function BannerConfigManager() {
           <CardContent className="space-y-4">
             {config.typingWords.map((word, idx) => (
               <div key={idx} className="flex gap-2">
-                <Input 
-                  value={word} 
+                <Input
+                  value={word}
                   onChange={(e) => updateTypingWord(idx, e.target.value)}
                   className="bg-gray-800/50 border-gray-700 text-white"
                 />
@@ -291,16 +294,16 @@ export default function BannerConfigManager() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold text-gray-400 uppercase">Label</label>
-                      <Input 
-                        value={btn.label} 
+                      <Input
+                        value={btn.label}
                         onChange={(e) => updateButton(idx, 'label', e.target.value)}
                         className="bg-gray-900/50 border-gray-700 text-white"
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold text-gray-400 uppercase">Href</label>
-                      <Input 
-                        value={btn.href} 
+                      <Input
+                        value={btn.href}
                         onChange={(e) => updateButton(idx, 'href', e.target.value)}
                         className="bg-gray-900/50 border-gray-700 text-white"
                       />
@@ -313,9 +316,8 @@ export default function BannerConfigManager() {
                         <button
                           key={v}
                           onClick={() => updateButton(idx, 'variant', v)}
-                          className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${
-                            btn.variant === v ? 'bg-amber-500 text-gray-950' : 'bg-gray-800 text-gray-500 border border-gray-700'
-                          }`}
+                          className={`flex-1 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${btn.variant === v ? 'bg-amber-500 text-gray-950' : 'bg-gray-800 text-gray-500 border border-gray-700'
+                            }`}
                         >
                           {v}
                         </button>
@@ -348,22 +350,22 @@ export default function BannerConfigManager() {
                 <span className="text-[10px] font-bold text-gray-500">Suggested: 100x100 SVG/PNG</span>
               </div>
               <div className="flex items-center gap-6">
-                 <div className="w-20 h-20 bg-gray-800 rounded-xl border border-gray-700 flex items-center justify-center overflow-hidden shrink-0">
-                    <img 
-                      src={config.images.icon.src.startsWith('http') ? config.images.icon.src : `${API_BASE}${config.images.icon.src}`} 
-                      alt="Icon Preview" 
-                      className="max-w-full max-h-full object-contain"
-                    />
-                 </div>
-                 <div className="flex-1 space-y-3">
-                    <Input 
-                      type="file" 
-                      accept="image/*"
-                      onChange={(e) => e.target.files && handleImageUpload('icon', e.target.files[0])}
-                      className="bg-gray-800/50 border-gray-700 text-xs"
-                    />
-                    <p className="text-xs text-gray-500">Upload a small logo or icon to appear in the text section.</p>
-                 </div>
+                <div className="w-20 h-20 bg-gray-800 rounded-xl border border-gray-700 flex items-center justify-center overflow-hidden shrink-0">
+                  <img
+                    src={config.images.icon.src.startsWith('http') ? config.images.icon.src : `${API_BASE}${config.images.icon.src}`}
+                    alt="Icon Preview"
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
+                <div className="flex-1 space-y-3">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => e.target.files && handleImageUpload('icon', e.target.files[0])}
+                    className="bg-gray-800/50 border-gray-700 text-xs"
+                  />
+                  <p className="text-xs text-gray-500">Upload a small logo or icon to appear in the text section.</p>
+                </div>
               </div>
             </div>
 
@@ -376,22 +378,22 @@ export default function BannerConfigManager() {
                 <span className="text-[10px] font-bold text-gray-500">Suggested: 1440x1200 PNG</span>
               </div>
               <div className="space-y-4">
-                 <div className="w-full h-48 bg-gray-800 rounded-2xl border border-gray-700 flex items-center justify-center overflow-hidden">
-                    <img 
-                      src={config.images.banner.src.startsWith('http') ? config.images.banner.src : `${API_BASE}${config.images.banner.src}`} 
-                      alt="Banner Preview" 
-                      className="w-full h-full object-cover"
-                    />
-                 </div>
-                 <div className="space-y-3">
-                    <Input 
-                      type="file" 
-                      accept="image/*"
-                      onChange={(e) => e.target.files && handleImageUpload('banner', e.target.files[0])}
-                      className="bg-gray-800/50 border-gray-700"
-                    />
-                    <p className="text-xs text-gray-500">Upload the high-fidelity render for the right-hand hero section.</p>
-                 </div>
+                <div className="w-full h-48 bg-gray-800 rounded-2xl border border-gray-700 flex items-center justify-center overflow-hidden">
+                  <img
+                    src={config.images.banner.src.startsWith('http') ? config.images.banner.src : `${API_BASE}${config.images.banner.src}`}
+                    alt="Banner Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="space-y-3">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => e.target.files && handleImageUpload('banner', e.target.files[0])}
+                    className="bg-gray-800/50 border-gray-700"
+                  />
+                  <p className="text-xs text-gray-500">Upload the high-fidelity render for the right-hand hero section.</p>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -409,25 +411,25 @@ export default function BannerConfigManager() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-semibold text-gray-300">Floating Badge Text</label>
-              <Input 
-                value={config.badge.text} 
+              <Input
+                value={config.badge.text}
                 onChange={(e) => setConfig({ ...config, badge: { text: e.target.value } })}
                 className="bg-gray-800/50 border-gray-700 text-white"
               />
             </div>
-            
+
             <Separator className="bg-gray-800 my-6" />
-            
+
             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-               <div className="flex gap-3">
-                  <BadgeInfo className="text-amber-500 shrink-0" size={24} />
-                  <div className="space-y-1">
-                    <h4 className="text-sm font-bold text-amber-500">Pro Tip</h4>
-                    <p className="text-xs text-gray-400">Keep your banner title concise and use strong, punchy action words in the typing animation to drive engagement.</p>
-                  </div>
-               </div>
+              <div className="flex gap-3">
+                <BadgeInfo className="text-amber-500 shrink-0" size={24} />
+                <div className="space-y-1">
+                  <h4 className="text-sm font-bold text-amber-500">Pro Tip</h4>
+                  <p className="text-xs text-gray-400">Keep your banner title concise and use strong, punchy action words in the typing animation to drive engagement.</p>
+                </div>
+              </div>
             </div>
-            
+
             <div className="pt-4 flex justify-end">
               <Link href="/" target="_blank" className="flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-white transition-colors">
                 View Changes in Real-time <ExternalLink size={14} />

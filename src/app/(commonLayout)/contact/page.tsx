@@ -106,7 +106,7 @@ const ContactPage = () => {
                 {locations.map((location, index) => {
                   const imageSrc = location.image.startsWith('http') 
                     ? location.image 
-                    : (location.image.startsWith('/') ? `${API_BASE}${location.image}` : `${API_BASE}/${location.image}`);
+                    : (location.image.startsWith('/images') ? location.image : `${API_BASE}${location.image.startsWith('/') ? '' : '/'}${location.image}`);
                     
                   return (
                     <div

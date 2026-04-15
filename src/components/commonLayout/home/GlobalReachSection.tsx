@@ -122,6 +122,8 @@ const GlobalReachSection = () => {
                     src={
                       slide.imageUrl.startsWith("http")
                         ? slide.imageUrl
+                        : slide.imageUrl.startsWith("/images")
+                        ? slide.imageUrl
                         : `${API_BASE}${slide.imageUrl}`
                     }
                     alt={slide.title}

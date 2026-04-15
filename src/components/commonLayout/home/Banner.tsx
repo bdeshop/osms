@@ -25,9 +25,15 @@ const Banner = () => {
 
   // Helper to handle image paths
   const getImageUrl = (src: string) => {
-    if (src.startsWith('http') || src.startsWith('/images')) {
+    if (!src) return "";
+    if (src.startsWith('http')) {
       return src;
     }
+    // If it starts with /images, it's a local public asset
+    if (src.startsWith('/images')) {
+      return src;
+    }
+    // Otherwise it's a backend upload
     return `${API_BASE}${src}`;
   };
 

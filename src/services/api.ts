@@ -36,9 +36,14 @@ async function apiCall<T>(
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    console.error(`❌ API Error: ${endpoint}`, error);
-    throw new Error(error.message || "API request failed");
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch (e) {
+      errorData = { message: "Could not parse error response" };
+    }
+    console.error(`❌ API Error: ${response.status} ${endpoint}`, errorData);
+    throw new Error(errorData.message || `API request failed with status ${response.status}`);
   }
 
   const data = await response.json();
