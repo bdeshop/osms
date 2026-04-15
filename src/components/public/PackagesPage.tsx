@@ -94,7 +94,7 @@ export default function PackagesPage() {
                 Available Packages
               </p>
             </motion.div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 tracking-tighter mb-4 uppercase">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight mb-4 uppercase">
               SMS <span className="text-pink-600">Packages</span>
             </h1>
             <p className="text-gray-600 font-bold max-w-xl leading-relaxed uppercase text-[10px] tracking-widest">
@@ -118,7 +118,7 @@ export default function PackagesPage() {
                 <p className="text-gray-600 text-[9px] font-black uppercase tracking-widest mb-1">
                   Get Started
                 </p>
-                <p className="text-xl font-black text-gray-900 tracking-tighter uppercase">
+                <p className="text-xl font-bold text-gray-900 tracking-tight uppercase">
                   Login to Activate
                 </p>
               </div>
@@ -200,7 +200,7 @@ export default function PackagesPage() {
                   <div className="mb-8 flex items-start justify-between">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">
+                        <h3 className="text-2xl font-bold text-gray-900 uppercase tracking-tight">
                           {pkg.name}
                         </h3>
                       </div>
@@ -223,7 +223,7 @@ export default function PackagesPage() {
                           Message Volume
                         </p>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-2xl font-black text-gray-900 tracking-tighter">
+                          <span className="text-2xl font-bold text-gray-900 tracking-tight">
                             {pkg.messageCount.toLocaleString()}
                           </span>
                           <span className="text-[10px] text-gray-600 font-bold uppercase">
@@ -235,7 +235,7 @@ export default function PackagesPage() {
                         <p className="text-gray-600 text-[8px] font-black uppercase tracking-widest mb-1">
                           Total Price
                         </p>
-                        <span className="text-xl font-black text-gray-900 tracking-tighter">
+                        <span className="text-xl font-bold text-gray-900 tracking-tight">
                           ৳{pkg.totalPrice}
                         </span>
                       </div>
@@ -246,7 +246,7 @@ export default function PackagesPage() {
                         Cost Per Message
                       </p>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-pink-600 text-sm font-black tracking-tighter">
+                        <span className="text-pink-600 text-sm font-bold tracking-tight">
                           ৳{pkg.costPerMessage.toFixed(2)}
                         </span>
                         <span className="text-[8px] text-gray-600 font-bold uppercase">
@@ -322,7 +322,7 @@ export default function PackagesPage() {
             <div key={i} className="space-y-3">
               <div className={`flex items-center gap-3 ${item.color}`}>
                 <item.icon size={20} />
-                <h4 className="text-gray-900 font-black uppercase text-[10px] tracking-widest">
+                <h4 className="text-gray-900 font-bold uppercase text-[10px] tracking-tight">
                   {item.title}
                 </h4>
               </div>

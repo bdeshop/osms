@@ -67,6 +67,7 @@ export const publicAPI = {
   getNavbarConfig: () => apiCall("/frontend/navbar-config", { method: "GET" }),
 
   getFooterConfig: () => apiCall("/frontend/footer-config", { method: "GET" }),
+  getContactPageConfig: () => apiCall("/frontend/contact-page-config", { method: "GET" }),
 };
 
 // Auth APIs
@@ -315,6 +316,21 @@ export const adminAPI = {
     apiCall("/admin/footer-config", {
       method: "POST",
       body: JSON.stringify(data),
+    }),
+
+  // Contact Page Configuration
+  getContactPageConfig: () => apiCall("/admin/contact-page-config", { method: "GET" }),
+
+  updateContactPageConfig: (data: any) =>
+    apiCall("/admin/contact-page-config", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  uploadLocationImage: (formData: FormData) =>
+    apiCall("/admin/upload-location-image", {
+      method: "POST",
+      body: formData,
     }),
 };
 

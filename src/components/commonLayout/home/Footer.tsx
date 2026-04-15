@@ -60,7 +60,7 @@ const Footer = () => {
           {/* Left Section - Brand & Socials */}
           <div className="lg:col-span-2 flex flex-col items-start pr-0 lg:pr-12">
             <Link href="/" className="mb-6 group">
-              <span className="text-3xl font-black bg-gradient-to-r from-pink-500 to-rose-400 bg-clip-text text-transparent transition-all">
+              <span className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-rose-400 bg-clip-text text-transparent transition-all tracking-tight">
                 {companyName}
               </span>
             </Link>
@@ -91,7 +91,7 @@ const Footer = () => {
           <div className="lg:col-span-4 grid grid-cols-2 lg:grid-cols-4 gap-10">
             {config.sections.map((section) => (
               <div key={section.titleEn} className="space-y-6">
-                <h3 className="text-xs font-black text-gray-200 uppercase tracking-[0.2em]">
+                <h3 className="text-xs font-bold text-gray-200 uppercase tracking-tight">
                   {language === "en" ? section.titleEn : section.titleBn}
                 </h3>
                 <ul className="space-y-3">
@@ -124,13 +124,13 @@ const Footer = () => {
               <div className="flex items-center gap-2 bg-white/5 p-1 rounded-xl border border-white/5">
                 <button 
                   onClick={() => setLanguage("en")}
-                  className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${language === 'en' ? 'bg-pink-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+                  className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all tracking-tight ${language === 'en' ? 'bg-pink-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
                 >
                   ENGLISH
                 </button>
                 <button 
                   onClick={() => setLanguage("bn")}
-                  className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${language === 'bn' ? 'bg-pink-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+                  className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all tracking-tight ${language === 'bn' ? 'bg-pink-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
                 >
                   বাংলা
                 </button>
@@ -139,7 +139,7 @@ const Footer = () => {
               {/* Back to top hint */}
               <button 
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="text-[10px] font-black text-gray-500 hover:text-pink-500 transition-colors tracking-widest uppercase"
+                className="text-[10px] font-bold text-gray-500 hover:text-pink-500 transition-colors tracking-tight uppercase"
               >
                 Back to Top ↑
               </button>

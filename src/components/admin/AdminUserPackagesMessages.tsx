@@ -161,7 +161,7 @@ export default function AdminUserPackagesMessages() {
               <div className="bg-blue-500/20 p-2.5 rounded-xl border border-blue-500/30">
                 <Shield className="text-blue-500" size={28} />
               </div>
-              <h1 className="text-4xl font-extrabold text-white tracking-tight">
+              <h1 className="text-4xl font-bold text-white tracking-tight">
                 Usage Audits
               </h1>
             </div>
@@ -246,7 +246,7 @@ export default function AdminUserPackagesMessages() {
                   className="p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-6"
                 >
                   <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                    <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg tracking-tight">
                       {report.user.firstName[0]}{report.user.lastName[0]}
                     </div>
                     <div>
@@ -255,7 +255,7 @@ export default function AdminUserPackagesMessages() {
                         {report.user.role === 'ADMIN' && <span className="text-[10px] bg-red-500/20 text-red-500 px-2 py-0.5 rounded-full border border-red-500/30">Super Admin</span>}
                       </h3>
                       <p className="text-gray-400 text-sm italic">{report.user.email}</p>
-                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                      <div className="flex items-center gap-3 mt-1.5 text-[10px] text-gray-500 font-bold uppercase tracking-tight">
                         <span className="flex items-center gap-1"><Calendar size={10}/> Joined {formatDate(report.user.createdAt, 'date')}</span>
                         <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
                         <span className="w-1 h-1 bg-gray-700 rounded-full"></span>
@@ -269,12 +269,12 @@ export default function AdminUserPackagesMessages() {
                   <div className="flex items-center justify-between md:justify-end gap-10">
                     <div className="flex gap-8">
                        <div className="text-center">
-                          <p className="text-gray-500 text-[10px] font-black uppercase mb-1">Total Interaction</p>
-                          <p className="text-xl font-bold text-white">{report.usage.length}</p>
+                          <p className="text-gray-500 text-[10px] font-bold uppercase mb-1 tracking-tight">Total Interaction</p>
+                          <p className="text-xl font-bold text-white tracking-tight">{report.usage.length}</p>
                        </div>
                        <div className="text-center">
-                          <p className="text-gray-500 text-[10px] font-black uppercase mb-1">Messages</p>
-                          <p className="text-xl font-bold text-blue-500">{report.usage.reduce((acc, u) => acc + u.messageStats.totalSent, 0)}</p>
+                          <p className="text-gray-500 text-[10px] font-bold uppercase mb-1 tracking-tight">Messages</p>
+                          <p className="text-xl font-bold text-blue-500 tracking-tight">{report.usage.reduce((acc, u) => acc + u.messageStats.totalSent, 0)}</p>
                        </div>
                     </div>
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
@@ -315,8 +315,8 @@ export default function AdminUserPackagesMessages() {
                                   </div>
                                   <div>
                                     <div className="flex items-center gap-2 mb-1">
-                                      <h4 className="font-bold text-white">{usage.package.name}</h4>
-                                      <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
+                                      <h4 className="font-bold text-white tracking-tight">{usage.package.name}</h4>
+                                      <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border tracking-tight ${
                                         usage.currentStatus === 'selected' ? "bg-green-500/10 border-green-500/30 text-green-400" : "bg-red-500/10 border-red-500/30 text-red-400"
                                       }`}>
                                         {usage.currentStatus}
@@ -344,7 +344,7 @@ export default function AdminUserPackagesMessages() {
                                   {/* Interaction Timeline */}
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-700">
-                                      <h5 className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4 flex items-center gap-2">
+                                      <h5 className="text-[10px] font-bold uppercase tracking-tight text-gray-500 mb-4 flex items-center gap-2">
                                         <History size={12} className="text-amber-500" /> Lifecycle Timeline
                                       </h5>
                                       <div className="space-y-3 relative before:absolute before:left-2 before:top-2 before:bottom-2 before:w-px before:bg-gray-700">
@@ -363,7 +363,7 @@ export default function AdminUserPackagesMessages() {
                                     </div>
 
                                     <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-700">
-                                       <h5 className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4 flex items-center gap-2">
+                                       <h5 className="text-[10px] font-bold uppercase tracking-tight text-gray-500 mb-4 flex items-center gap-2">
                                         <Activity size={12} className="text-blue-500" /> Usage Analysis
                                       </h5>
                                       <div className="space-y-4">
@@ -395,7 +395,7 @@ export default function AdminUserPackagesMessages() {
 
                                   {/* Deep Logs */}
                                   <div className="space-y-4">
-                                     <h5 className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                                     <h5 className="text-[10px] font-bold uppercase tracking-tight text-gray-500 flex items-center gap-2">
                                         <Shield size={12} className="text-red-500" /> Deep Audit Logs (Anti-Fraud)
                                       </h5>
                                       {usage.messageStats.messages.length === 0 ? (
@@ -441,8 +441,8 @@ export default function AdminUserPackagesMessages() {
                                                    </div>
                                                 </div>
                                                 <div className="text-right shrink-0">
-                                                   <p className="text-[10px] text-white font-black">{formatDate(msg.createdAt, "date")}</p>
-                                                   <p className="text-[10px] text-gray-500">{formatDate(msg.createdAt, "time" as any)}</p>
+                                                   <p className="text-[10px] text-white font-bold tracking-tight">{formatDate(msg.createdAt, "date")}</p>
+                                                   <p className="text-[10px] text-gray-500 tracking-tight">{formatDate(msg.createdAt, "time" as any)}</p>
                                                    {msg.status === 'failed' && (
                                                      <div className="mt-2 flex items-center justify-end gap-1 text-red-400 text-[10px] font-bold">
                                                         <AlertCircle size={10} />

@@ -53,7 +53,7 @@ function StatCard({ title, value, icon, trend, trendUp, delay = 0 }: StatCardPro
       <div className="flex items-start justify-between">
         <div>
           <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-2 group-hover:text-gray-400 transition-colors">{title}</p>
-          <p className="text-3xl font-black text-white tracking-tighter">{value}</p>
+          <p className="text-3xl font-bold text-white tracking-tight">{value}</p>
           {trend && (
             <div className={`flex items-center gap-1 text-[10px] font-bold mt-3 px-2 py-0.5 rounded-full w-fit ${trendUp ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
               {trendUp ? <TrendingUp size={10} /> : <Activity size={10} />} {trend}
@@ -130,9 +130,9 @@ export default function AdminDashboard() {
                className="flex items-center gap-2 mb-4"
             >
                <span className="w-8 h-1 bg-amber-500 rounded-full"></span>
-               <p className="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em]">System Intelligence</p>
+               <p className="text-amber-500 text-[10px] font-bold uppercase tracking-tight">System Intelligence</p>
             </motion.div>
-            <h1 className="text-5xl font-black text-white tracking-tighter mb-3">
+            <h1 className="text-5xl font-bold text-white tracking-tight mb-3">
               Admin <span className="text-amber-500">Core</span>
             </h1>
             <p className="text-gray-400 text-lg max-w-xl font-medium leading-relaxed">
@@ -204,7 +204,7 @@ export default function AdminDashboard() {
                  <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                        <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                       <span className="text-[10px] text-white font-black uppercase">Traffic</span>
+                       <span className="text-[10px] text-white font-bold uppercase tracking-tight">Traffic</span>
                     </div>
                  </div>
               </div>
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                  {analytics.messageTrends.map((trend, i) => (
                    <div key={i} className="flex-1 flex flex-col items-center group relative cursor-pointer pt-12">
                       {/* Tooltip on hover */}
-                      <div className="absolute top-0 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-amber-500 text-gray-900 text-[10px] font-black px-2 py-1 rounded mb-2 z-10 shadow-lg">
+                      <div className="absolute top-0 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-amber-500 text-gray-900 text-[10px] font-bold px-2 py-1 rounded mb-2 z-10 shadow-lg tracking-tight">
                         {trend.count} SMS
                       </div>
                       
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
                                <Globe size={14} className="text-blue-500/60" />
                                <span className="text-white font-bold text-sm tracking-tight">{loc._id}</span>
                             </div>
-                            <span className="text-[10px] text-gray-400 font-black">{percent}%</span>
+                            <span className="text-[10px] text-gray-400 font-bold tracking-tight">{percent}%</span>
                          </div>
                          <div className="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-gray-700/50">
                             <motion.div 
@@ -275,7 +275,7 @@ export default function AdminDashboard() {
               
               <div className="mt-8 pt-8 border-t border-gray-700/50">
                  <div className="bg-blue-500/5 rounded-2xl p-4 border border-blue-500/10">
-                    <p className="text-blue-400 text-[10px] font-black uppercase mb-1">Top Coverage</p>
+                    <p className="text-blue-400 text-[10px] font-bold uppercase mb-1 tracking-tight">Top Coverage</p>
                     <p className="text-white text-xs leading-relaxed italic font-medium">
                       "{analytics.topLocations[0]?._id}" remains your primary hub for SMS traffic this month.
                     </p>
@@ -306,11 +306,11 @@ export default function AdminDashboard() {
                             <div className="flex items-center justify-between">
                                <div>
                                   <p className="text-xs text-gray-500 font-bold uppercase mb-1 group-hover/item:text-amber-500 transition-colors tracking-widest">Active Plan</p>
-                                  <h4 className="text-white font-black uppercase text-lg">{pkg.name}</h4>
+                                  <h4 className="text-white font-bold uppercase text-lg tracking-tight">{pkg.name}</h4>
                                </div>
                                <div className="text-right">
                                   <p className="text-lg font-bold text-white">{pkg.count.toLocaleString()}</p>
-                                  <p className="text-[9px] text-gray-500 uppercase font-black">Subscribers</p>
+                                  <p className="text-[9px] text-gray-500 uppercase font-bold">Subscribers</p>
                                </div>
                             </div>
                          </div>
@@ -343,8 +343,8 @@ export default function AdminDashboard() {
                       />
                    </svg>
                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                      <p className="text-4xl font-black text-white">{analytics.overview.successRate}%</p>
-                      <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Reliability</p>
+                      <p className="text-4xl font-bold text-white tracking-tight">{analytics.overview.successRate}%</p>
+                      <p className="text-gray-500 text-[10px] font-bold uppercase tracking-tight">Reliability</p>
                    </div>
                 </div>
               </div>

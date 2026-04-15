@@ -110,9 +110,9 @@ export default function AdminPaymentsPage() {
               className="flex items-center gap-2 mb-3"
             >
               <span className="w-8 h-1 bg-amber-500 rounded-full"></span>
-              <p className="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em]">Financial Operations</p>
+              <p className="text-amber-500 text-[10px] font-bold uppercase tracking-tight">Financial Operations</p>
             </motion.div>
-            <h1 className="text-4xl font-black text-white tracking-tighter mb-2">
+            <h1 className="text-4xl font-bold text-white tracking-tight mb-2">
               Payment <span className="text-amber-500">Approvals</span>
             </h1>
             <p className="text-gray-400 font-medium">
@@ -125,7 +125,7 @@ export default function AdminPaymentsPage() {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-tight transition-all ${
                   filter === f 
                     ? "bg-amber-500 text-gray-900" 
                     : "text-gray-500 hover:text-gray-300"
@@ -147,7 +147,7 @@ export default function AdminPaymentsPage() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 px-8 bg-gray-800/20 rounded-3xl border border-gray-700/30">
             <Loader className="animate-spin text-amber-500 mb-4" size={32} />
-            <p className="text-gray-500 font-black uppercase tracking-widest text-[10px]">Loading Records...</p>
+            <p className="text-gray-500 font-bold uppercase tracking-tight text-[10px]">Loading Records...</p>
           </div>
         ) : payments.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-8 bg-gray-800/20 rounded-3xl border border-dashed border-gray-700/30 text-center">
@@ -173,10 +173,10 @@ export default function AdminPaymentsPage() {
                       </div>
                       <div>
                         <div className="flex items-center gap-3 mb-1">
-                          <p className="text-white font-black text-lg tracking-tight">
+                          <p className="text-white font-bold text-lg tracking-tight">
                             {payment.userId.firstName} {payment.userId.lastName}
                           </p>
-                          <span className="text-[10px] bg-gray-900 border border-gray-700 text-gray-500 px-2 py-0.5 rounded-full font-black uppercase tracking-tighter">
+                          <span className="text-[10px] bg-gray-900 border border-gray-700 text-gray-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-tight">
                             {payment.userId.email}
                           </span>
                         </div>
@@ -196,8 +196,8 @@ export default function AdminPaymentsPage() {
 
                     <div className="flex flex-col sm:flex-row items-center gap-6 lg:text-right">
                       <div>
-                        <p className="text-gray-500 text-[9px] font-black uppercase tracking-[0.2em] mb-1">Recharge Amount</p>
-                        <p className="text-3xl font-black text-white tracking-tighter">
+                        <p className="text-gray-500 text-[9px] font-bold uppercase tracking-tight mb-1">Recharge Amount</p>
+                        <p className="text-3xl font-bold text-white tracking-tight">
                           <span className="text-amber-500">৳</span>{payment.amount}
                         </p>
                       </div>
@@ -215,7 +215,7 @@ export default function AdminPaymentsPage() {
                           <button
                             onClick={() => handleApprove(payment._id)}
                             disabled={!!actionLoading}
-                            className="px-6 py-3 rounded-2xl bg-green-500 text-gray-900 hover:bg-green-600 transition-all font-black uppercase text-[10px] tracking-widest flex items-center gap-2 shadow-lg shadow-green-500/20"
+                            className="px-6 py-3 rounded-2xl bg-green-500 text-gray-900 hover:bg-green-600 transition-all font-bold uppercase text-[10px] tracking-tight flex items-center gap-2 shadow-lg shadow-green-500/20"
                           >
                             {actionLoading === payment._id ? (
                               <Loader className="animate-spin" size={16} />
@@ -230,7 +230,7 @@ export default function AdminPaymentsPage() {
                       )}
 
                       {filter !== "COMPLETED" && (
-                        <div className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border ${
+                        <div className={`px-4 py-2 rounded-2xl text-[10px] font-bold uppercase tracking-tight flex items-center gap-2 border ${
                           payment.status === 'APPROVED' 
                             ? 'bg-green-500/10 text-green-500 border-green-500/20' 
                             : 'bg-red-500/10 text-red-500 border-red-500/20'

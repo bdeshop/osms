@@ -31,7 +31,7 @@
         "xl": "text-5xl",
         "2xl": "text-6xl"
       },
-      "weight": "font-extrabold",
+      "weight": "font-bold",
       "lineHeight": "leading-tight"
     },
     "body": {

@@ -1,47 +1,50 @@
+"use client";
+
 import ContactFormSection from "@/components/common/ContactPage";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/commonLayout/Navbar";
 import Footer from "@/components/commonLayout/home/Footer";
+import { publicAPI, API_BASE } from "@/services/api";
+import { Loader } from "lucide-react";
 
-const page = () => {
-  const locations = [
-    {
-      name: "Singapore",
-      type: "Headquarters",
-      address: "108 KENG LEE ROAD, #03-01, KENG LEE VIEW, SINGAPORE",
-      image:
-        "https://images.unsplash.com/photo-1565967511849-76a60a516170?auto=format&fit=crop&q=80&w=800",
-    },
-    {
-      name: "Latvia",
-      type: "European Division",
-      address: "Skanstes iela, Riga, LV-1013, Latvia",
-      image:
-        "https://images.unsplash.com/photo-1564507592333-c0a5a2a0d6c0?auto=format&fit=crop&q=80&w=800",
-    },
-    {
-      name: "Armenia",
-      type: "Regional Division",
-      address: "Yerevan, Armenia",
-      image:
-        "https://images.unsplash.com/photo-1570158268183-d296b2892211?auto=format&fit=crop&q=80&w=800",
-    },
-    {
-      name: "Cyprus",
-      type: "Regional Division",
-      address: "Nicosia, Cyprus",
-      image:
-        "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?auto=format&fit=crop&q=80&w=800",
-    },
-    {
-      name: "Philippines",
-      type: "Regional Division",
-      address: "Manila, Philippines",
-      image:
-        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?auto=format&fit=crop&q=80&w=800",
-    },
-  ];
+interface Location {
+  name: string;
+  type: string;
+  address: string;
+  image: string;
+}
+
+interface ContactPageConfig {
+  titleEn: string;
+  titleBn: string;
+  locations: Location[];
+}
+
+const ContactPage = () => {
+  const [config, setConfig] = useState<ContactPageConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [language, setLanguage] = useState<"en" | "bn">("en");
+
+  useEffect(() => {
+    fetchConfig();
+  }, []);
+
+  const fetchConfig = async () => {
+    try {
+      const response = (await publicAPI.getContactPageConfig()) as any;
+      if (response.success) {
+        setConfig(response.data);
+      }
+    } catch (err) {
+      console.error("Failed to load contact page config", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const title = language === "en" ? config?.titleEn : config?.titleBn;
+  const locations = config?.locations || [];
 
   return (
     <>
@@ -54,12 +57,13 @@ const page = () => {
               {/* LEFT - Text Content */}
               <div className="w-full lg:w-1/2 text-center lg:text-left space-y-4 sm:space-y-6">
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 leading-tight">
-                  Contact Us
+                  {language === "en" ? "Contact Us" : "যোগাযোগ করুন"}
                 </h1>
 
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-lg mx-auto lg:mx-0">
-                  Want to collaborate with us? Hear from us and the team, and we
-                  will get in touch with you as soon as possible. or contact us
+                  {language === "en" 
+                    ? "Want to collaborate with us? Hear from us and the team, and we will get in touch with you as soon as possible." 
+                    : "আমাদের সাথে কাজ করতে চান? আমাদের এবং টিমের কাছ থেকে শুনুন, এবং আমরা যত তাড়াতাড়ি সম্ভব আপনার সাথে যোগাযোগ করব।"}
                 </p>
               </div>
 
@@ -67,7 +71,7 @@ const page = () => {
               <div className="w-full lg:w-1/2 max-w-lg">
                 <Image
                   src="https://www.laaffic.com/public/images/contact-us/banner.png"
-                  alt="Contact Us - Team collaboration illustration"
+                  alt="Contact Us"
                   width={500}
                   height={400}
                   priority
@@ -88,46 +92,65 @@ const page = () => {
             {/* Title */}
             <div className="text-center mb-12 md:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
-                Based in Singapore, Reaching Globally
+                {title || (language === "en" ? "Based in Singapore, Reaching Globally" : "সিঙ্গাপুর ভিত্তিক, বিশ্বব্যাপী পৌঁছানো")}
               </h2>
             </div>
 
-            {/* Locations Grid */}
-            <div className="space-y-6 lg:space-y-8">
-              {locations.map((location, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col md:flex-row gap-6 lg:gap-8 items-start"
-                >
-                  {/* Image */}
-                  <div className="w-full md:w-1/3 lg:w-2/5">
-                    <div className="relative rounded-xl overflow-hidden shadow-lg group h-48 md:h-56 lg:h-64">
-                      <img
-                        src={location.image}
-                        alt={location.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
-                      <div className="absolute bottom-4 left-4 text-white">
-                        <h3 className="text-2xl lg:text-3xl font-bold">
-                          {location.name}
-                        </h3>
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-20 bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
+                <Loader className="animate-spin text-pink-500 mb-4" size={32} />
+                <p className="text-sm font-medium text-gray-400">Loading locations...</p>
+              </div>
+            ) : (
+              <div className="space-y-6 lg:space-y-12">
+                {locations.map((location, index) => {
+                  const imageSrc = location.image.startsWith('http') 
+                    ? location.image 
+                    : (location.image.startsWith('/') ? `${API_BASE}${location.image}` : `${API_BASE}/${location.image}`);
+                    
+                  return (
+                    <div
+                      key={index}
+                      className="flex flex-col md:flex-row gap-8 lg:gap-12 items-center group"
+                    >
+                      {/* Image Container */}
+                      <div className="w-full md:w-1/2 lg:w-2/5">
+                        <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl shadow-gray-200/50 group-hover:shadow-pink-100/50 transition-all duration-500">
+                          <img
+                            src={imageSrc}
+                            alt={location.name}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-linear-to-t from-gray-900/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                          <div className="absolute bottom-6 left-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                            <h3 className="text-3xl lg:text-4xl font-bold tracking-tight">
+                              {location.name}
+                            </h3>
+                            <div className="h-1 w-12 bg-pink-500 rounded-full mt-2 group-hover:w-24 transition-all duration-500" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Content Container */}
+                      <div className="w-full md:w-1/2 lg:w-3/5 space-y-4">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-50 text-pink-600 border border-pink-100/50">
+                          <div className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
+                          <span className="text-xs font-bold uppercase tracking-widest">{location.type}</span>
+                        </div>
+                        <h4 className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-pink-600 transition-colors tracking-tight">
+                          {location.name} Office
+                        </h4>
+                        <div className="p-6 rounded-2xl bg-gray-50/50 border border-gray-100 group-hover:bg-white group-hover:border-pink-50 group-hover:shadow-xl group-hover:shadow-gray-200/40 transition-all duration-500">
+                           <p className="text-base sm:text-lg text-gray-600 leading-relaxed font-medium">
+                            {location.address}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="w-full md:w-2/3 lg:w-3/5 flex flex-col justify-center">
-                    <h4 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                      {location.type}
-                    </h4>
-                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                      {location.address}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </section>
 
@@ -137,4 +160,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ContactPage;

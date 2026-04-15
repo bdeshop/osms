@@ -91,11 +91,11 @@ export default function ProfilePage() {
           className="flex flex-col md:flex-row md:items-end justify-between gap-4"
         >
           <div>
-            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight uppercase">Identity</h1>
-            <p className="text-gray-500 font-bold uppercase tracking-widest text-xs mt-2">Manage your global profile settings</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight uppercase">Identity</h1>
+            <p className="text-gray-500 font-bold uppercase tracking-tight text-xs mt-2">Manage your global profile settings</p>
           </div>
           <div className="bg-white/5 border border-white/5 px-4 py-2 rounded-2xl backdrop-blur-md">
-             <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">ID: {user?._id.slice(-8)}</span>
+             <span className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">ID: {user?._id.slice(-8)}</span>
           </div>
         </motion.div>
 
@@ -113,16 +113,16 @@ export default function ProfilePage() {
             {/* Avatar & Basic Info */}
             <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
               <div className="relative group/avatar">
-                <div className="w-32 h-32 rounded-[2rem] bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center text-gray-950 text-5xl font-black shadow-2xl shadow-amber-500/30 transform group-hover/avatar:rotate-6 transition-transform duration-500">
+                <div className="w-32 h-32 rounded-[2rem] bg-linear-to-br from-amber-400 to-amber-600 flex items-center justify-center text-gray-950 text-5xl font-bold shadow-2xl shadow-amber-500/30 transform group-hover/avatar:rotate-6 transition-transform duration-500 tracking-tight">
                   {userInitials}
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-green-500 w-6 h-6 rounded-full border-4 border-gray-900 shadow-lg" />
               </div>
               
               <div className="text-center md:text-left pt-2">
-                <h2 className="text-3xl font-black text-white mb-2">{user?.firstName} {user?.lastName}</h2>
+                <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">{user?.firstName} {user?.lastName}</h2>
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${getRoleColor(user?.role || "")}`}>
+                  <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-tight border ${getRoleColor(user?.role || "")}`}>
                     {user?.role.replace("_", " ")}
                   </span>
                   <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 bg-white/5 px-3 py-1.5 rounded-full">
@@ -139,7 +139,7 @@ export default function ProfilePage() {
                 <div className="p-3 bg-amber-500/10 rounded-2xl w-fit mb-4 text-amber-500 group-hover/item:scale-110 transition-transform">
                   <Mail size={20} />
                 </div>
-                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Authenticated Email</p>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-tight mb-1">Authenticated Email</p>
                 <p className="text-white font-bold truncate">{user?.email}</p>
               </div>
 
@@ -147,7 +147,7 @@ export default function ProfilePage() {
                 <div className="p-3 bg-blue-500/10 rounded-2xl w-fit mb-4 text-blue-500 group-hover/item:scale-110 transition-transform">
                   <Shield size={20} />
                 </div>
-                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Access Level</p>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-tight mb-1">Access Level</p>
                 <p className="text-white font-bold">{user?.role.replace("_", " ")}</p>
               </div>
 
@@ -155,7 +155,7 @@ export default function ProfilePage() {
                 <div className="p-3 bg-green-500/10 rounded-2xl w-fit mb-4 text-green-500 group-hover/item:scale-110 transition-transform">
                   <Lock size={20} />
                 </div>
-                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Security Status</p>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-tight mb-1">Security Status</p>
                 <p className="text-white font-bold">{user?.isActive ? "Verified & Active" : "Suspended"}</p>
               </div>
 
@@ -163,7 +163,7 @@ export default function ProfilePage() {
                 <div className="p-3 bg-purple-500/10 rounded-2xl w-fit mb-4 text-purple-500 group-hover/item:scale-110 transition-transform">
                   <ExternalLink size={20} />
                 </div>
-                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Session Region</p>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-tight mb-1">Session Region</p>
                 <p className="text-white font-bold">Bangladeshi Gateway</p>
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function ProfilePage() {
               <motion.button 
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-gray-950 font-black py-4 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-amber-500/20 uppercase text-xs tracking-widest"
+                className="flex-1 bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-xl shadow-amber-500/20 uppercase text-xs tracking-tight"
               >
                 <Edit2 size={16} />
                 Request Data Update
@@ -182,7 +182,7 @@ export default function ProfilePage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleLogout}
-                className="flex-1 bg-white/5 hover:bg-red-500/10 text-gray-400 hover:text-red-500 font-black py-4 rounded-2xl flex items-center justify-center gap-3 transition-all border border-white/10 hover:border-red-500/30 uppercase text-xs tracking-widest"
+                className="flex-1 bg-white/5 hover:bg-red-500/10 text-gray-400 hover:text-red-500 font-bold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all border border-white/10 hover:border-red-500/30 uppercase text-xs tracking-tight"
               >
                 <LogOut size={16} />
                 Terminate Session
@@ -198,7 +198,7 @@ export default function ProfilePage() {
           transition={{ delay: 0.4 }}
           className="bg-gray-900/20 border border-white/5 rounded-3xl p-6 text-center"
         >
-          <div className="flex items-center justify-center gap-2 text-gray-600 font-bold text-[10px] uppercase tracking-tighter">
+          <div className="flex items-center justify-center gap-2 text-gray-600 font-bold text-[10px] uppercase tracking-tight">
             <Shield size={12} />
             <span>Encrypted Session • Node 04/OSMS • Valid for 24h</span>
           </div>

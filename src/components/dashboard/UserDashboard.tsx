@@ -60,9 +60,9 @@ function StatCard({ title, value, icon, subtitle, color, delay = 0 }: StatCardPr
           {icon}
         </div>
         <div>
-          <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">{title}</p>
+          <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">{title}</p>
           <div className="flex items-end gap-2">
-            <p className="text-3xl font-black text-white tracking-tighter">{value}</p>
+            <p className="text-3xl font-bold text-white tracking-tight">{value}</p>
             {subtitle && <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">{subtitle}</p>}
           </div>
         </div>
@@ -144,9 +144,9 @@ export default function UserDashboard() {
                className="flex items-center gap-2 mb-3"
             >
                <span className="w-8 h-1 bg-amber-500 rounded-full"></span>
-               <p className="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em]">Personal Usage Hub</p>
+               <p className="text-amber-500 text-[10px] font-bold uppercase tracking-tight">Personal Usage Hub</p>
             </motion.div>
-            <h1 className="text-4xl font-black text-white tracking-tighter mb-2">
+            <h1 className="text-4xl font-bold text-white tracking-tight mb-2">
               My <span className="text-amber-500">Dashboard</span>
             </h1>
             <p className="text-gray-400 font-medium leading-relaxed">
@@ -154,7 +154,7 @@ export default function UserDashboard() {
             </p>
           </div>
           
-             <a href="/user/recharge" className="bg-amber-500 hover:bg-amber-600 text-gray-900 px-5 py-2.5 rounded-2xl transition-all text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-amber-500/20">
+             <a href="/user/recharge" className="bg-amber-500 hover:bg-amber-600 text-gray-900 px-5 py-2.5 rounded-2xl transition-all text-xs font-bold uppercase tracking-tight flex items-center gap-2 shadow-lg shadow-amber-500/20">
                 <DollarSign size={16} /> Recharge
              </a>
              <a href="/user/packages" className="bg-gray-800 hover:bg-gray-700 text-white px-5 py-2.5 rounded-2xl border border-gray-700 transition-all text-xs font-bold uppercase tracking-widest flex items-center gap-2">
@@ -207,8 +207,8 @@ export default function UserDashboard() {
            {/* Package Utilization (Bar Chart Style) */}
            <div className="lg:col-span-4 bg-gray-800/30 rounded-3xl border border-gray-700/50 p-8">
               <div className="mb-10">
-                <h3 className="text-xl font-black text-white mb-1 uppercase tracking-tighter">Plan Analysis</h3>
-                <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Message distribution per package</p>
+                <h3 className="text-xl font-bold text-white mb-1 uppercase tracking-tight">Plan Analysis</h3>
+                <p className="text-gray-500 text-[10px] font-bold uppercase tracking-tight">Message distribution per package</p>
               </div>
 
               <div className="space-y-6">
@@ -225,7 +225,7 @@ export default function UserDashboard() {
                                  <div className="w-2 h-2 rounded-full bg-amber-500/50"></div>
                                  <span className="text-white font-bold text-sm tracking-tight truncate max-w-[150px]">{pkg.name}</span>
                               </div>
-                              <span className="text-[10px] text-gray-400 font-black">{percent}%</span>
+                              <span className="text-[10px] text-gray-400 font-bold tracking-tight">{percent}%</span>
                            </div>
                            <div className="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-gray-700/50">
                               <motion.div 
@@ -256,8 +256,8 @@ export default function UserDashboard() {
            <div className="lg:col-span-8 bg-gray-800/30 rounded-3xl border border-gray-700/50 p-8 flex flex-col">
               <div className="flex items-center justify-between mb-10">
                  <div>
-                    <h3 className="text-xl font-black text-white mb-1 uppercase tracking-tighter">Live Activity</h3>
-                    <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Chronological stream of recent delivery logs</p>
+                    <h3 className="text-xl font-bold text-white mb-1 uppercase tracking-tight">Live Activity</h3>
+                    <p className="text-gray-500 text-[10px] font-bold uppercase tracking-tight">Chronological stream of recent delivery logs</p>
                  </div>
                  <MessageSquare className="text-amber-500/40" size={32} />
               </div>
@@ -280,7 +280,7 @@ export default function UserDashboard() {
                                   {getStatusIcon(msg.status)}
                                </div>
                                <div>
-                                  <p className="text-white font-black text-sm tracking-tight mb-1">{msg.recipient}</p>
+                                  <p className="text-white font-bold text-sm tracking-tight mb-1">{msg.recipient}</p>
                                   <p className="text-gray-400 text-xs line-clamp-1 italic">"{msg.message}"</p>
                                </div>
                             </div>
@@ -301,7 +301,7 @@ export default function UserDashboard() {
               )}
 
               <div className="mt-6">
-                 <a href="/user/messages" className="w-full bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white py-3 rounded-2xl border border-gray-700/50 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all">
+                 <a href="/user/messages" className="w-full bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white py-3 rounded-2xl border border-gray-700/50 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-tight transition-all">
                     View Comprehensive Audit History <ArrowRight size={14} />
                  </a>
               </div>

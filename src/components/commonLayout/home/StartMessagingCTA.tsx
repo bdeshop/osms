@@ -10,7 +10,7 @@ export const StartMessagingCTA = () => {
         className={`container mx-auto ${themeConfig.spacing.container.padding} text-center`}
       >
         <h2
-          className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight`}
+          className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight`}
         >
           Start Messaging with Laaffic
         </h2>

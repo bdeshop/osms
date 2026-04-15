@@ -105,6 +105,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: LayoutList,
       },
       {
+        title: "Contact Page Config",
+        url: "/admin/contact-page-config",
+        icon: Mail,
+      },
+      {
         title: "Messaging",
         icon: MessageCircle,
         items: [
