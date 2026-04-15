@@ -6,6 +6,7 @@ import { publicAPI } from "@/services/api";
 import { API_BASE } from "@/services/api";
 import { Loader } from "lucide-react";
 import * as LucideIcons from "lucide-react";
+import themeConfig from "@/data/themeConfig.json";
 
 interface ServiceChannel {
   _id: string;
@@ -76,9 +77,16 @@ const ServicesGrid = () => {
 
   if (loading) {
     return (
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
-        <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-          <Loader className="animate-spin text-pink-600" size={32} />
+      <section
+        className={`py-12 sm:py-16 lg:py-20 bg-${themeConfig.colors.background.white}`}
+      >
+        <div
+          className={`${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding} flex items-center justify-center`}
+        >
+          <Loader
+            className={`animate-spin text-${themeConfig.colors.primary}`}
+            size={32}
+          />
         </div>
       </section>
     );
@@ -89,13 +97,21 @@ const ServicesGrid = () => {
   }
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white">
-      <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className={`py-12 sm:py-16 lg:py-20 bg-${themeConfig.colors.background.white}`}
+    >
+      <div
+        className={`${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding}`}
+      >
         <div className="text-center mb-10 sm:mb-12 lg:mb-14">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+          <h2
+            className={`text-2xl sm:text-3xl lg:text-4xl font-bold text-${themeConfig.colors.text.primary} mb-2 sm:mb-3`}
+          >
             Boosts the Global iGaming Business
           </h2>
-          <p className="text-lg sm:text-xl lg:text-2xl bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent font-bold">
+          <p
+            className={`text-lg sm:text-xl lg:text-2xl bg-gradient-to-r ${themeConfig.colors.gradient.primary} bg-clip-text text-transparent font-bold`}
+          >
             Beyond Your Imagination
           </p>
         </div>
@@ -117,9 +133,13 @@ const ServicesGrid = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500 -z-10"></div>
 
               {/* Card */}
-              <div className="relative p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 border-gray-100 bg-white shadow-sm hover:shadow-lg transition-all duration-300 group-hover:border-transparent overflow-hidden h-full flex flex-col items-center justify-center">
+              <div
+                className={`relative p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 border-${themeConfig.colors.border} bg-${themeConfig.colors.background.white} shadow-sm hover:shadow-lg transition-all duration-300 group-hover:border-transparent overflow-hidden h-full flex flex-col items-center justify-center`}
+              >
                 {/* Animated gradient border on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r ${themeConfig.colors.gradient.primary} rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
+                ></div>
 
                 {/* Content */}
                 <div className="relative z-10 flex flex-col items-center justify-center text-center">
@@ -136,7 +156,9 @@ const ServicesGrid = () => {
                       service.icon
                     )}
                   </div>
-                  <h3 className="font-semibold text-sm sm:text-base text-gray-900 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300">
+                  <h3
+                    className={`font-semibold text-sm sm:text-base text-${themeConfig.colors.text.primary} group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300`}
+                  >
                     {service.name}
                   </h3>
                 </div>

@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { publicAPI } from "@/services/api";
 import { API_BASE } from "@/services/api";
 import { Loader } from "lucide-react";
+import themeConfig from "@/data/themeConfig.json";
 
 interface Testimonial {
   _id: string;
@@ -58,9 +59,14 @@ const TestimonialSlider = () => {
 
   if (loading) {
     return (
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 flex items-center justify-center">
-          <Loader className="animate-spin text-pink-600" size={32} />
+      <section className={`py-16 bg-${themeConfig.colors.background.white}`}>
+        <div
+          className={`container mx-auto ${themeConfig.spacing.container.padding} flex items-center justify-center`}
+        >
+          <Loader
+            className={`animate-spin text-${themeConfig.colors.primary}`}
+            size={32}
+          />
         </div>
       </section>
     );
@@ -87,13 +93,17 @@ const TestimonialSlider = () => {
   };
 
   return (
-    <section className="py-16 bg-white">
+    <section className={`py-16 bg-${themeConfig.colors.background.white}`}>
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           {/* Slider Card */}
-          <div className="relative bg-gray-50 rounded-2xl p-8 md:p-12 shadow-sm border border-gray-100">
+          <div
+            className={`relative bg-${themeConfig.colors.background.light} rounded-2xl p-8 md:p-12 shadow-sm border border-${themeConfig.colors.border}`}
+          >
             {/* Testimonial Text */}
-            <blockquote className="text-lg md:text-xl text-gray-700 leading-relaxed italic mb-8 relative z-10">
+            <blockquote
+              className={`text-lg md:text-xl text-${themeConfig.colors.text.primary} leading-relaxed italic mb-8 relative z-10`}
+            >
               {current.quote}
             </blockquote>
 
@@ -104,7 +114,9 @@ const TestimonialSlider = () => {
                 alt={current.attribution}
                 className="h-12 object-contain mb-3"
               />
-              <p className="mt-3 text-gray-600 text-sm md:text-base">
+              <p
+                className={`mt-3 text-${themeConfig.colors.text.secondary} text-sm md:text-base`}
+              >
                 {current.attribution}
               </p>
             </div>
@@ -115,7 +127,7 @@ const TestimonialSlider = () => {
             <button
               onClick={prevSlide}
               aria-label="Previous testimonial"
-              className="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              className={`w-10 h-10 rounded-lg bg-${themeConfig.colors.background.lighter} hover:bg-gray-200 flex items-center justify-center transition-colors`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +150,9 @@ const TestimonialSlider = () => {
                   onClick={() => goToSlide(index)}
                   aria-label={`Go to testimonial ${index + 1}`}
                   className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentIndex ? "bg-gray-800" : "bg-gray-300"
+                    index === currentIndex
+                      ? `bg-${themeConfig.colors.text.primary}`
+                      : "bg-gray-300"
                   }`}
                 />
               ))}
@@ -147,7 +161,7 @@ const TestimonialSlider = () => {
             <button
               onClick={nextSlide}
               aria-label="Next testimonial"
-              className="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              className={`w-10 h-10 rounded-lg bg-${themeConfig.colors.background.lighter} hover:bg-gray-200 flex items-center justify-center transition-colors`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

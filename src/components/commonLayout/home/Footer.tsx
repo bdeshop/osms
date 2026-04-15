@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Facebook, Twitter, Linkedin, Youtube } from "lucide-react";
 import footerData from "@/data/footerData.json";
+import themeConfig from "@/data/themeConfig.json";
 
 const iconMap: Record<string, React.ReactNode> = {
   Facebook: (
@@ -17,8 +18,12 @@ const iconMap: Record<string, React.ReactNode> = {
 
 const Footer = () => {
   return (
-    <footer className="relative w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white overflow-hidden">
-      <div className="relative max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 lg:pt-20 pb-3">
+    <footer
+      className={`relative w-full bg-gradient-to-r ${themeConfig.colors.gradient.primary} text-white overflow-hidden`}
+    >
+      <div
+        className={`relative ${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding} pt-12 sm:pt-16 lg:pt-20 pb-3`}
+      >
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
           {/* Left Section - Logo & Tagline & Socials */}

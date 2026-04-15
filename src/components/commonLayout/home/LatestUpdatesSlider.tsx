@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import themeConfig from "@/data/themeConfig.json";
 
 // Update data (keep your structure)
 const updates = [
@@ -72,9 +73,13 @@ export default function LatestUpdatesSlider() {
   return (
     <section className="relative w-full overflow-hidden bg-[#F5257D]">
       {/* Content */}
-      <div className="max-w-[1300px] mx-auto px-4 py-16 md:py-24 lg:py-32">
+      <div
+        className={`${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding} py-16 md:py-24 lg:py-32`}
+      >
         {/* Headline */}
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-12 text-center">
+        <h2
+          className={`text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-12 text-center`}
+        >
           Latest updates from o-sms
         </h2>
 

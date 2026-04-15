@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { publicAPI } from "@/services/api";
 import { Loader } from "lucide-react";
+import themeConfig from "@/data/themeConfig.json";
 
 interface Stat {
   _id: string;
@@ -45,10 +46,17 @@ const StatsCards = () => {
 
   if (loading) {
     return (
-      <section className="w-full py-8 sm:py-12 lg:py-16 bg-white">
-        <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        className={`w-full py-8 sm:py-12 lg:py-16 bg-${themeConfig.colors.background.white}`}
+      >
+        <div
+          className={`${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding}`}
+        >
           <div className="flex items-center justify-center">
-            <Loader className="animate-spin text-pink-600" size={32} />
+            <Loader
+              className={`animate-spin text-${themeConfig.colors.primary}`}
+              size={32}
+            />
           </div>
         </div>
       </section>
@@ -60,21 +68,31 @@ const StatsCards = () => {
   }
 
   return (
-    <section className="w-full py-8 sm:py-12 lg:py-16 bg-white">
-      <div className="max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      className={`w-full py-8 sm:py-12 lg:py-16 bg-${themeConfig.colors.background.white}`}
+    >
+      <div
+        className={`${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding}`}
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <div
               key={stat._id || index}
-              className="relative p-2 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl border border-pink-200 bg-white shadow-sm hover:shadow-lg transition-shadow duration-300"
+              className={`relative p-2 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl border border-pink-200 bg-${themeConfig.colors.background.white} shadow-sm hover:shadow-lg transition-shadow duration-300`}
             >
               {/* Gradient border effect via pseudo-element */}
-              <div className="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-pink-500 to-purple-500 opacity-0 hover:opacity-10 transition-opacity duration-300 pointer-events-none"></div>
+              <div
+                className={`absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r ${themeConfig.colors.gradient.primary} opacity-0 hover:opacity-10 transition-opacity duration-300 pointer-events-none`}
+              ></div>
               <div className="relative z-10">
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">
+                <h3
+                  className={`text-2xl sm:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${themeConfig.colors.gradient.primaryReverse}`}
+                >
                   {stat.value}
                 </h3>
-                <p className="mt-2 sm:mt-3 text-gray-600 text-xs sm:text-sm lg:text-base leading-relaxed">
+                <p
+                  className={`mt-2 sm:mt-3 text-${themeConfig.colors.text.secondary} text-xs sm:text-sm lg:text-base leading-relaxed`}
+                >
                   {stat.label}
                 </p>
               </div>

@@ -1,0 +1,28 @@
+{
+  "products": [
+    {
+      "name": "SMS Marketing",
+      "description": "Send bulk SMS campaigns",
+      "href": "/products/sms",
+      "icon": "📱"
+    },
+    {
+      "name": "Voice Services",
+      "description": "AI-powered voice calls",
+      "href": "/products/voice",
+      "icon": "📞"
+    },
+    {
+      "name": "OTP Services",
+      "description": "Secure OTP delivery",
+      "href": "/products/otp",
+      "icon": "🔐"
+    },
+    {
+      "name": "WhatsApp",
+      "description": "WhatsApp business messaging",
+      "href": "/products/whatsapp",
+      "icon": "💬"
+    }
+  ]
+}

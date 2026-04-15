@@ -7,6 +7,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
 import { publicAPI } from "@/services/api";
 import { API_BASE } from "@/services/api";
+import themeConfig from "@/data/themeConfig.json";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -56,7 +57,9 @@ const GlobalReachSection = () => {
     return (
       <section className="relative w-full overflow-hidden text-white py-20">
         <div className="absolute inset-0 bg-gradient-to-br from-[#d946ef] via-[#a21caf] to-[#ec4899] opacity-95" />
-        <div className="relative max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+        <div
+          className={`relative ${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding} flex items-center justify-center`}
+        >
           <Loader className="animate-spin text-white" size={40} />
         </div>
       </section>
@@ -73,7 +76,9 @@ const GlobalReachSection = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-[#d946ef] via-[#a21caf] to-[#ec4899] opacity-95" />
 
       {/* Content Container */}
-      <div className="relative max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
+      <div
+        className={`relative ${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding} py-12 md:py-16 lg:py-20`}
+      >
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-10 tracking-tight drop-shadow-md">
           Latest Updates from o-sms
         </h2>

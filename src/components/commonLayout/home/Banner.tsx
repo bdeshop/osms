@@ -6,23 +6,33 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useTypingAnimation } from "@/hooks/useTypingAnimation";
 import bannerData from "@/data/bannerData.json";
+import themeConfig from "@/data/themeConfig.json";
 
 const Banner = () => {
   const { displayedText } = useTypingAnimation(bannerData.typingWords, 100);
+  const theme = themeConfig;
 
   return (
-    <section className="relative w-full overflow-hidden bg-white">
+    <section
+      className={`relative w-full overflow-hidden bg-${theme.colors.background.white}`}
+    >
       {/* Gradient Background Overlay */}
       <div className="absolute inset-0 pointer-events-none" />
 
-      <div className="relative max-w-[1300px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div
+        className={`relative ${theme.spacing.container.maxWidth} mx-auto ${theme.spacing.container.padding}`}
+      >
         <div className="flex flex-col-reverse lg:flex-row items-center justify-between gap-8 sm:gap-12 lg:gap-16 pt-12 sm:pt-16 lg:pt-20 min-h-[480px] lg:min-h-[600px]">
           {/* LEFT - Text Content */}
-          <div className="w-full lg:w-1/2 max-w-2xl text-center lg:text-left space-y-4 sm:space-y-6 lg:space-y-8">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">
+          <div
+            className={`w-full lg:w-1/2 max-w-2xl text-center lg:text-left space-y-4 sm:space-y-6 lg:space-y-8`}
+          >
+            <h1
+              className={`${theme.fonts.heading.size.md} sm:${theme.fonts.heading.size.lg} lg:${theme.fonts.heading.size.xl} xl:${theme.fonts.heading.size["2xl"]} ${theme.fonts.heading.weight} text-${theme.colors.text.primary} ${theme.fonts.heading.lineHeight} tracking-tight`}
+            >
               {bannerData.title}
               <br className="hidden sm:block" />
-              <span className="text-pink-600">
+              <span className={`text-${theme.colors.primary}`}>
                 {bannerData.subtitle}{" "}
                 <span className="inline-block min-w-[180px] sm:min-w-[200px]">
                   {displayedText}
@@ -31,7 +41,9 @@ const Banner = () => {
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 font-medium max-w-xl mx-auto lg:mx-0">
+            <p
+              className={`${theme.fonts.body.size.base} sm:${theme.fonts.body.size.lg} lg:${theme.fonts.body.size.xl} text-${theme.colors.text.secondary} ${theme.fonts.body.weight} max-w-xl mx-auto lg:mx-0`}
+            >
               {bannerData.description}
             </p>
 
@@ -41,10 +53,10 @@ const Banner = () => {
                   <Button
                     size="lg"
                     variant={btn.variant === "primary" ? "default" : "outline"}
-                    className={`w-full sm:w-auto min-w-[160px] sm:min-w-[180px] text-sm sm:text-base lg:text-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 group rounded-lg ${
+                    className={`w-full sm:w-auto min-w-[160px] sm:min-w-[180px] ${theme.fonts.button.size} lg:text-lg ${theme.fonts.button.weight} shadow-md hover:shadow-lg transition-all duration-300 group rounded-lg ${
                       btn.variant === "primary"
-                        ? "bg-pink-600 hover:bg-pink-700 text-white"
-                        : "border-2 border-pink-600 text-pink-600 hover:bg-pink-50 hover:text-pink-700"
+                        ? theme.components.button.primary
+                        : theme.components.button.outline
                     }`}
                   >
                     {btn.label}
@@ -84,7 +96,9 @@ const Banner = () => {
             </div>
 
             {/* Floating Badge */}
-            <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 lg:-bottom-8 lg:-right-8 bg-pink-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg text-xs sm:text-sm lg:text-base font-bold">
+            <div
+              className={`absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 lg:-bottom-8 lg:-right-8 bg-${theme.colors.primary} text-${theme.colors.text.white} px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg text-xs sm:text-sm lg:text-base font-bold`}
+            >
               {bannerData.badge.text}
             </div>
           </div>

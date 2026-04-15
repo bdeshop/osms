@@ -3,36 +3,11 @@
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import productsData from "@/data/productsData.json";
 
 export default function Navbar() {
   const [isProductsOpen, setIsProductsOpen] = useState(false);
-
-  const products = [
-    {
-      name: "SMS Marketing",
-      description: "Send bulk SMS campaigns",
-      href: "/products/sms",
-      icon: "📱",
-    },
-    {
-      name: "Voice Services",
-      description: "AI-powered voice calls",
-      href: "/products/voice",
-      icon: "📞",
-    },
-    {
-      name: "OTP Services",
-      description: "Secure OTP delivery",
-      href: "/products/otp",
-      icon: "🔐",
-    },
-    {
-      name: "WhatsApp",
-      description: "WhatsApp business messaging",
-      href: "/products/whatsapp",
-      icon: "💬",
-    },
-  ];
+  const products = productsData.products;
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
@@ -89,17 +64,6 @@ export default function Navbar() {
                   </Link>
                 ))}
               </div>
-
-              {/* Divider */}
-              <div className="border-t border-gray-100" />
-
-              {/* View All Link */}
-              <Link
-                href="/products"
-                className="block px-4 py-3 text-sm font-semibold text-pink-600 hover:bg-pink-50 transition-colors text-center"
-              >
-                View All Products →
-              </Link>
             </div>
           </div>
 
