@@ -19,6 +19,7 @@ import {
   MessageSquareQuote,
   Menu,
   LayoutList,
+  Image as ImageIcon,
 } from "lucide-react";
 
 export const SIDEBAR_CONFIG: SidebarSection[] = [
@@ -108,6 +109,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         title: "Contact Page Config",
         url: "/admin/contact-page-config",
         icon: Mail,
+      },
+      {
+        title: "Banner Config",
+        url: "/admin/banner-config",
+        icon: ImageIcon,
       },
       {
         title: "Messaging",

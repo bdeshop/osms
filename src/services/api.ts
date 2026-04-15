@@ -68,6 +68,7 @@ export const publicAPI = {
 
   getFooterConfig: () => apiCall("/frontend/footer-config", { method: "GET" }),
   getContactPageConfig: () => apiCall("/frontend/contact-page-config", { method: "GET" }),
+  getBannerConfig: () => apiCall("/frontend/banner-config", { method: "GET" }),
 };
 
 // Auth APIs
@@ -331,6 +332,14 @@ export const adminAPI = {
     apiCall("/admin/upload-location-image", {
       method: "POST",
       body: formData,
+    }),
+
+  // Banner Configuration
+  getBannerConfig: () => apiCall("/admin/banner-config", { method: "GET" }),
+  updateBannerConfig: (data: any) =>
+    apiCall("/admin/banner-config", {
+      method: "POST",
+      body: JSON.stringify(data),
     }),
 };
 

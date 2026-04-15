@@ -10,7 +10,8 @@ export const useTypingAnimation = (
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const currentWord = words[wordIndex];
+    if (!words || words.length === 0) return;
+    const currentWord = words[wordIndex] || "";
     let timer: NodeJS.Timeout;
 
     if (!isDeleting) {
