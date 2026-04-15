@@ -1,11 +1,7 @@
-import HeroProducts from "@/components/pages/products/HeroProducts"
+import HeroProducts from "@/components/pages/products/HeroProducts";
 
 const page = () => {
-  return (
-    <div>
-     
-    </div>
-  )
-}
+  return <div></div>;
+};
 
-export default page
+export default page;
