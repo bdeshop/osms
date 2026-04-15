@@ -29,7 +29,8 @@ async function apiCall<T>(
 
   console.log(`📡 API Call: ${options.method || "GET"} ${endpoint}`);
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const url = `${API_BASE_URL}${endpoint}`;
+  const response = await fetch(url, {
     ...options,
     headers,
   });
@@ -62,6 +63,10 @@ export const publicAPI = {
       method: "POST",
       body: JSON.stringify(data),
     }),
+
+  getNavbarConfig: () => apiCall("/frontend/navbar-config", { method: "GET" }),
+
+  getFooterConfig: () => apiCall("/frontend/footer-config", { method: "GET" }),
 };
 
 // Auth APIs
@@ -292,6 +297,24 @@ export const adminAPI = {
   markContactAsReplied: (contactId: string) =>
     apiCall(`/admin/frontend/contact-us/${contactId}/mark-replied`, {
       method: "PATCH",
+    }),
+
+  // Navbar Configuration
+  getNavbarConfig: () => apiCall("/admin/navbar-config", { method: "GET" }),
+
+  updateNavbarConfig: (data: any) =>
+    apiCall("/admin/navbar-config", {
+      method: "POST",
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    }),
+
+  // Footer Configuration
+  getFooterConfig: () => apiCall("/admin/footer-config", { method: "GET" }),
+
+  updateFooterConfig: (data: any) =>
+    apiCall("/admin/footer-config", {
+      method: "POST",
+      body: JSON.stringify(data),
     }),
 };
 

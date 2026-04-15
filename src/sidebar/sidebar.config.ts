@@ -4,22 +4,21 @@ import {
   LayoutDashboard,
   FileText,
   MessageCircle,
-  Phone,
   Shield,
   Mail,
   Settings,
   BarChart3,
   Zap,
   Users,
-  Code,
   Folder,
-  Key,
   Package,
   User,
   CreditCard,
   Newspaper,
   Radio,
   MessageSquareQuote,
+  Menu,
+  LayoutList,
 } from "lucide-react";
 
 export const SIDEBAR_CONFIG: SidebarSection[] = [
@@ -94,6 +93,16 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         title: "Testimonials",
         url: "/admin/testimonials",
         icon: MessageSquareQuote,
+      },
+      {
+        title: "Navbar Config",
+        url: "/admin/navbar-config",
+        icon: Menu,
+      },
+      {
+        title: "Footer Config",
+        url: "/admin/footer-config",
+        icon: LayoutList,
       },
       {
         title: "Messaging",
