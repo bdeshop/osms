@@ -1,3 +1,5 @@
+"use client";
+
 import DashboardHeader from "@/sidebar/DashboardHeader";
 import DashboardSidebarWrapper from "@/sidebar/DashboardSidebarWrapper";
 import RoleProtectedLayout from "@/components/RoleProtectedLayout";

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "@/components/commonLayout/Navbar";
 import Footer from "@/components/commonLayout/home/Footer";
 import { publicAPI, API_BASE } from "@/services/api";
+import { useLanguage } from "@/context/LanguageContext";
 import { Loader } from "lucide-react";
 
 interface Location {
@@ -24,7 +25,7 @@ interface ContactPageConfig {
 const ContactPage = () => {
   const [config, setConfig] = useState<ContactPageConfig | null>(null);
   const [loading, setLoading] = useState(true);
-  const [language, setLanguage] = useState<"en" | "bn">("en");
+  const { language } = useLanguage();
 
   useEffect(() => {
     fetchConfig();
@@ -61,8 +62,8 @@ const ContactPage = () => {
                 </h1>
 
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-lg mx-auto lg:mx-0">
-                  {language === "en" 
-                    ? "Want to collaborate with us? Hear from us and the team, and we will get in touch with you as soon as possible." 
+                  {language === "en"
+                    ? "Want to collaborate with us? Hear from us and the team, and we will get in touch with you as soon as possible."
                     : "আমাদের সাথে কাজ করতে চান? আমাদের এবং টিমের কাছ থেকে শুনুন, এবং আমরা যত তাড়াতাড়ি সম্ভব আপনার সাথে যোগাযোগ করব।"}
                 </p>
               </div>
@@ -92,22 +93,29 @@ const ContactPage = () => {
             {/* Title */}
             <div className="text-center mb-12 md:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
-                {title || (language === "en" ? "Based in Singapore, Reaching Globally" : "সিঙ্গাপুর ভিত্তিক, বিশ্বব্যাপী পৌঁছানো")}
+                {title ||
+                  (language === "en"
+                    ? "Based in Singapore, Reaching Globally"
+                    : "সিঙ্গাপুর ভিত্তিক, বিশ্বব্যাপী পৌঁছানো")}
               </h2>
             </div>
 
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
                 <Loader className="animate-spin text-pink-500 mb-4" size={32} />
-                <p className="text-sm font-medium text-gray-400">Loading locations...</p>
+                <p className="text-sm font-medium text-gray-400">
+                  Loading locations...
+                </p>
               </div>
             ) : (
               <div className="space-y-6 lg:space-y-12">
                 {locations.map((location, index) => {
-                  const imageSrc = location.image.startsWith('http') 
-                    ? location.image 
-                    : (location.image.startsWith('/images') ? location.image : `${API_BASE}${location.image.startsWith('/') ? '' : '/'}${location.image}`);
-                    
+                  const imageSrc = location.image.startsWith("http")
+                    ? location.image
+                    : location.image.startsWith("/images")
+                      ? location.image
+                      : `${API_BASE}${location.image.startsWith("/") ? "" : "/"}${location.image}`;
+
                   return (
                     <div
                       key={index}
@@ -135,13 +143,15 @@ const ContactPage = () => {
                       <div className="w-full md:w-1/2 lg:w-3/5 space-y-4">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-50 text-pink-600 border border-pink-100/50">
                           <div className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
-                          <span className="text-xs font-bold uppercase tracking-widest">{location.type}</span>
+                          <span className="text-xs font-bold uppercase tracking-widest">
+                            {location.type}
+                          </span>
                         </div>
                         <h4 className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-pink-600 transition-colors tracking-tight">
                           {location.name} Office
                         </h4>
                         <div className="p-6 rounded-2xl bg-gray-50/50 border border-gray-100 group-hover:bg-white group-hover:border-pink-50 group-hover:shadow-xl group-hover:shadow-gray-200/40 transition-all duration-500">
-                           <p className="text-base sm:text-lg text-gray-600 leading-relaxed font-medium">
+                          <p className="text-base sm:text-lg text-gray-600 leading-relaxed font-medium">
                             {location.address}
                           </p>
                         </div>

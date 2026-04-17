@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { API_BASE } from "@/services/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function UserLogin() {
   const router = useRouter();
+  const { language } = useLanguage();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -31,7 +33,11 @@ export default function UserLogin() {
 
     // Validation
     if (!formData.email || !formData.password) {
-      setError("Email and password are required");
+      setError(
+        language === "en"
+          ? "Email and password are required"
+          : "ইমেল এবং পাসওয়ার্ড প্রয়োজন",
+      );
       setLoading(false);
       return;
     }
@@ -64,7 +70,13 @@ export default function UserLogin() {
       // Redirect to user dashboard
       router.push("/user/overview");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(
+        err instanceof Error
+          ? err.message
+          : language === "en"
+            ? "Login failed"
+            : "লগইন ব্যর্থ হয়েছে",
+      );
     } finally {
       setLoading(false);
     }
@@ -87,11 +99,15 @@ export default function UserLogin() {
 
           {/* Main Headline */}
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mt-16 mb-6 leading-tight">
-            SMS Drives Your Brand Forward
+            {language === "en"
+              ? "SMS Drives Your Brand Forward"
+              : "এসএমএস আপনার ব্র্যান্ডকে এগিয়ে নিয়ে যায়"}
           </h1>
 
           <p className="text-xl text-gray-600 mb-12">
-            Trusted Gaming Marketing Solution Provider
+            {language === "en"
+              ? "Trusted Gaming Marketing Solution Provider"
+              : "বিশ্বস্ত গেমিং মার্কেটিং সমাধান প্রদানকারী"}
           </p>
 
           {/* Illustration Placeholder */}
@@ -104,15 +120,21 @@ export default function UserLogin() {
           </div>
 
           <p className="mt-10 text-gray-600 text-lg">
-            5,000+ brands rely on Laaffic to power their Gaming marketing
+            {language === "en"
+              ? "5,000+ brands rely on Laaffic to power their Gaming marketing"
+              : "৫,০০০+ ব্র্যান্ড তাদের গেমিং মার্কেটিং শক্তিশালী করতে Laaffic এর উপর নির্ভর করে"}
           </p>
         </div>
 
         {/* RIGHT SIDE - Login Form */}
         <div className="bg-white p-8 md:p-10 lg:p-12 rounded-2xl shadow-lg border border-gray-200">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Login</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            {language === "en" ? "Login" : "লগইন"}
+          </h2>
           <p className="text-gray-600 text-sm mb-8">
-            Welcome back! Please login to your account
+            {language === "en"
+              ? "Welcome back! Please login to your account"
+              : "স্বাগতম! আপনার অ্যাকাউন্টে লগইন করুন"}
           </p>
 
           {/* Error */}
@@ -126,12 +148,14 @@ export default function UserLogin() {
             {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+                {language === "en" ? "Email Address" : "ইমেল ঠিকানা"}
               </label>
               <input
                 type="email"
                 name="email"
-                placeholder="you@example.com"
+                placeholder={
+                  language === "en" ? "you@example.com" : "আপনার@উদাহরণ.com"
+                }
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -142,7 +166,7 @@ export default function UserLogin() {
             {/* Password */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
+                {language === "en" ? "Password" : "পাসওয়ার্ড"}
               </label>
               <div className="relative">
                 <input
@@ -171,13 +195,15 @@ export default function UserLogin() {
                   type="checkbox"
                   className="w-4 h-4 rounded border-gray-300 text-pink-600 focus:ring-pink-500"
                 />
-                Remember me
+                {language === "en" ? "Remember me" : "আমাকে মনে রাখুন"}
               </label>
               <Link
                 href="#"
                 className="text-pink-600 hover:text-pink-700 font-medium"
               >
-                Forgot password?
+                {language === "en"
+                  ? "Forgot password?"
+                  : "পাসওয়ার্ড ভুলে গেছেন?"}
               </Link>
             </div>
 
@@ -192,7 +218,7 @@ export default function UserLogin() {
               ) : (
                 <>
                   <LogIn size={20} />
-                  Login
+                  {language === "en" ? "Login" : "লগইন"}
                 </>
               )}
             </button>
@@ -200,12 +226,12 @@ export default function UserLogin() {
 
           {/* Footer */}
           <div className="mt-8 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
+            {language === "en" ? "Don't have an account?" : "অ্যাকাউন্ট নেই?"}{" "}
             <Link
               href="/user-register"
               className="text-pink-600 hover:text-pink-700 font-medium"
             >
-              Sign up here
+              {language === "en" ? "Sign up here" : "এখানে সাইন আপ করুন"}
             </Link>
             <p className="mt-4 text-xs text-gray-500">
               © 2026 Laaffic PTE. LTD.

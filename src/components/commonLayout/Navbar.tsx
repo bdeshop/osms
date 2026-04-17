@@ -27,6 +27,7 @@ import {
 import { useState, useEffect } from "react";
 import { API_BASE } from "@/services/api";
 import { useNavbarConfig } from "@/hooks/useNavbarConfig";
+import { useLanguage } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Icon Mapper
@@ -62,7 +63,7 @@ const IconMapper = ({
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [language, setLanguage] = useState<"en" | "bn">("en");
+  const { language, toggleLanguage } = useLanguage();
   const { config, loading } = useNavbarConfig();
 
   // Close mobile menu on resize
@@ -103,8 +104,6 @@ export default function Navbar() {
   };
 
   const logoSrc = config?.logoImage ? getImageUrl(config.logoImage) : null;
-
-  const toggleLanguage = () => setLanguage((l) => (l === "en" ? "bn" : "en"));
 
   return (
     <nav className="bg-white/70 backdrop-blur-xl border-b border-gray-100/50 sticky top-0 z-50 transition-all duration-300">

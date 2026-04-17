@@ -1,3 +1,5 @@
+"use client";
+
 import PackagesPage from "@/components/public/PackagesPage";
 import Navbar from "@/components/commonLayout/Navbar";
 import Footer from "@/components/commonLayout/home/Footer";

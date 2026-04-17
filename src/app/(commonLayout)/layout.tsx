@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode } from "react";
 import Header from "@/components/commonLayout/home/Header";
 import Footer from "@/components/commonLayout/home/Footer";

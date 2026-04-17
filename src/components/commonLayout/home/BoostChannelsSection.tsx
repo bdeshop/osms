@@ -7,6 +7,7 @@ import { API_BASE } from "@/services/api";
 import { Loader } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import themeConfig from "@/data/themeConfig.json";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ServiceChannel {
   _id: string;
@@ -19,6 +20,7 @@ interface ServiceChannel {
 }
 
 const ServicesGrid = () => {
+  const { language } = useLanguage();
   const [services, setServices] = useState<ServiceChannel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -146,7 +148,13 @@ const ServicesGrid = () => {
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center mb-2 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300 overflow-hidden">
                     {service.iconType === "image" ? (
                       <img
-                        src={service.icon.startsWith('http') ? service.icon : (service.icon.startsWith('/images') ? service.icon : `${API_BASE}${service.icon.startsWith('/') ? '' : '/'}${service.icon}`)}
+                        src={
+                          service.icon.startsWith("http")
+                            ? service.icon
+                            : service.icon.startsWith("/images")
+                              ? service.icon
+                              : `${API_BASE}${service.icon.startsWith("/") ? "" : "/"}${service.icon}`
+                        }
                         alt={service.name}
                         className="w-full h-full object-cover"
                       />
@@ -159,7 +167,7 @@ const ServicesGrid = () => {
                   <h3
                     className={`font-semibold text-sm sm:text-base text-${themeConfig.colors.text.primary} group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300`}
                   >
-                    {service.name}
+                    {language === "en" ? service.name : service.nameBn}
                   </h3>
                 </div>
 

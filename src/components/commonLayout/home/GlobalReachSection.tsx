@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, Loader } from "lucide-react";
 import { publicAPI } from "@/services/api";
 import { API_BASE } from "@/services/api";
 import themeConfig from "@/data/themeConfig.json";
+import { useLanguage } from "@/context/LanguageContext";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -25,6 +26,7 @@ type NewsUpdateItem = {
 };
 
 const GlobalReachSection = () => {
+  const { language } = useLanguage();
   const swiperRef = useRef<any>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -123,8 +125,8 @@ const GlobalReachSection = () => {
                       slide.imageUrl.startsWith("http")
                         ? slide.imageUrl
                         : slide.imageUrl.startsWith("/images")
-                        ? slide.imageUrl
-                        : `${API_BASE}${slide.imageUrl}`
+                          ? slide.imageUrl
+                          : `${API_BASE}${slide.imageUrl}`
                     }
                     alt={slide.title}
                     className="max-w-xs sm:max-w-sm lg:max-w-md w-full object-contain rounded-lg sm:rounded-xl  transform transition duration-700 hover:scale-[1.02]"
@@ -138,10 +140,12 @@ const GlobalReachSection = () => {
                   key={activeIndex}
                 >
                   <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold mb-3 sm:mb-4 tracking-tight drop-shadow-lg">
-                    {slide.title}
+                    {language === "en" ? slide.title : slide.titleBn}
                   </h3>
                   <p className="text-sm sm:text-base lg:text-lg text-white/90 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                    {slide.description}
+                    {language === "en"
+                      ? slide.description
+                      : slide.descriptionBn}
                   </p>
 
                   {/* Optional CTA */}

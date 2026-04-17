@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { publicAPI } from "@/services/api";
 import { Loader } from "lucide-react";
 import themeConfig from "@/data/themeConfig.json";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Stat {
   _id: string;
@@ -18,6 +19,7 @@ interface Stat {
 }
 
 const StatsCards = () => {
+  const { language } = useLanguage();
   const [stats, setStats] = useState<Stat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -93,7 +95,7 @@ const StatsCards = () => {
                 <p
                   className={`mt-2 sm:mt-3 text-${themeConfig.colors.text.secondary} text-xs sm:text-sm lg:text-base leading-relaxed`}
                 >
-                  {stat.label}
+                  {language === "en" ? stat.label : stat.labelBn}
                 </p>
               </div>
             </div>
