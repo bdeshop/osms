@@ -1,7 +1,7 @@
-export const API_BASE_URL = "http://localhost:9000/api";
-export const API_BASE = "http://localhost:9000";
-// export const API_BASE_URL = "https://o-sms.com/backend/api";
-// export const API_BASE = "https://o-sms.com/backend";
+// export const API_BASE_URL = "http://localhost:9000/api";
+// export const API_BASE = "http://localhost:9000";
+export const API_BASE_URL = "https://o-sms.com/backend/api";
+export const API_BASE = "https://o-sms.com/backend";
 // Get auth token from localStorage
 const getAuthToken = () => {
   if (typeof window !== "undefined") {
@@ -43,7 +43,9 @@ async function apiCall<T>(
       errorData = { message: "Could not parse error response" };
     }
     console.error(`❌ API Error: ${response.status} ${endpoint}`, errorData);
-    throw new Error(errorData.message || `API request failed with status ${response.status}`);
+    throw new Error(
+      errorData.message || `API request failed with status ${response.status}`,
+    );
   }
 
   const data = await response.json();
@@ -72,7 +74,8 @@ export const publicAPI = {
   getNavbarConfig: () => apiCall("/frontend/navbar-config", { method: "GET" }),
 
   getFooterConfig: () => apiCall("/frontend/footer-config", { method: "GET" }),
-  getContactPageConfig: () => apiCall("/frontend/contact-page-config", { method: "GET" }),
+  getContactPageConfig: () =>
+    apiCall("/frontend/contact-page-config", { method: "GET" }),
   getBannerConfig: () => apiCall("/frontend/banner-config", { method: "GET" }),
 };
 
@@ -325,7 +328,8 @@ export const adminAPI = {
     }),
 
   // Contact Page Configuration
-  getContactPageConfig: () => apiCall("/admin/contact-page-config", { method: "GET" }),
+  getContactPageConfig: () =>
+    apiCall("/admin/contact-page-config", { method: "GET" }),
 
   updateContactPageConfig: (data: any) =>
     apiCall("/admin/contact-page-config", {
