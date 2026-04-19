@@ -98,7 +98,7 @@ const TestimonialSlider = () => {
         <div className="max-w-4xl mx-auto">
           {/* Slider Card */}
           <div
-            className={`relative bg-${themeConfig.colors.background.light} rounded-2xl p-6 md:p-12 shadow-sm border border-${themeConfig.colors.border}`}
+            className={`relative bg-${themeConfig.colors.background.light} rounded-2xl p-8 md:p-12 shadow-sm border border-${themeConfig.colors.border}`}
           >
             {/* Testimonial Text */}
             <blockquote

@@ -91,9 +91,9 @@ export default function UserLogin() {
           <div className="absolute top-0 left-0">
             <div className="flex items-center gap-2">
               <div className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                LA
+                O
               </div>
-              <span className="text-2xl font-bold text-pink-600">Laaffic</span>
+              <span className="text-2xl font-bold text-pink-600">sms</span>
             </div>
           </div>
 
@@ -233,9 +233,6 @@ export default function UserLogin() {
             >
               {language === "en" ? "Sign up here" : "এখানে সাইন আপ করুন"}
             </Link>
-            <p className="mt-4 text-xs text-gray-500">
-              © 2026 Laaffic PTE. LTD.
-            </p>
           </div>
         </div>
       </div>

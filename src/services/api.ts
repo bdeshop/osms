@@ -27,10 +27,7 @@ async function apiCall<T>(
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  console.log(`📡 API Call: ${options.method || "GET"} ${endpoint}`);
-
-  const url = `${API_BASE_URL}${endpoint}`;
-  const response = await fetch(url, {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });
@@ -42,14 +39,16 @@ async function apiCall<T>(
     } catch (e) {
       errorData = { message: "Could not parse error response" };
     }
-    console.error(`❌ API Error: ${response.status} ${endpoint}`, errorData);
+    
+    // In production, keep minimal error logging if needed, or remove completely
+    // console.error(`❌ API Error: ${response.status} ${endpoint}`, errorData);
+    
     throw new Error(
       errorData.message || `API request failed with status ${response.status}`,
     );
   }
 
   const data = await response.json();
-  console.log(`✅ API Success: ${endpoint}`, data);
   return data;
 }
 
@@ -247,6 +246,8 @@ export const adminAPI = {
       method: "PATCH",
       body: formData,
     }),
+
+  seedDashboardData: () => apiCall("/admin/seed-dashboard-data", { method: "POST" }),
 
   deleteNewsUpdate: (newsId: string) =>
     apiCall(`/admin/news-updates/${newsId}`, {

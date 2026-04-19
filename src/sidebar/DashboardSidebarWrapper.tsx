@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { UserRole } from "@/types/user.role";
 import DashboardSidebar from "./DashboardSidebar";
 
 export default function DashboardSidebarWrapper() {
-  const [role, setRole] = useState<UserRole>("USER");
-  const [isLoading, setIsLoading] = useState(true);
+  const [role, setRole] = useState<UserRole | null>(null);
 
   useEffect(() => {
     try {
@@ -18,14 +17,15 @@ export default function DashboardSidebarWrapper() {
       }
     } catch (error) {
       console.error("Failed to get user role:", error);
-    } finally {
-      setIsLoading(false);
+      setRole("USER");
     }
   }, []);
 
-  if (isLoading) {
-    return null;
-  }
+  // Memoize the sidebar to prevent re-renders
+  const sidebar = useMemo(() => {
+    if (!role) return null;
+    return <DashboardSidebar role={role} />;
+  }, [role]);
 
-  return <DashboardSidebar role={role} />;
+  return sidebar;
 }

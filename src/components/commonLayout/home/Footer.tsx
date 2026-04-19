@@ -70,7 +70,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-sm text-gray-400 mb-8 leading-relaxed max-w-xs font-medium italic">
-              "{tagline}"
+              {tagline}
             </p>
 
             {/* Social Icons with custom styling */}

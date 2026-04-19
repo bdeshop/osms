@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import themeConfig from "@/data/themeConfig.json";
+import Link from "next/link";
 
 export const StartMessagingCTA = () => {
   return (
@@ -12,7 +13,7 @@ export const StartMessagingCTA = () => {
         <h2
           className={`text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight`}
         >
-          Start Messaging with Laaffic
+          Start Messaging with o-sms
         </h2>
 
         <p
@@ -23,12 +24,14 @@ export const StartMessagingCTA = () => {
         </p>
 
         <div className="mt-8">
-          <Button
-            size="lg"
-            className={`bg-${themeConfig.colors.background.white} text-${themeConfig.colors.text.primary} hover:bg-${themeConfig.colors.background.white} font-semibold px-8 py-6 rounded-full shadow-lg`}
-          >
-            Contact Us
-          </Button>
+          <Link href="/contact">
+            <Button
+              size="lg"
+              className={`bg-${themeConfig.colors.background.white} text-${themeConfig.colors.text.primary} hover:bg-${themeConfig.colors.background.white} font-semibold px-8 py-6 rounded-full shadow-lg`}
+            >
+              Contact Us
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

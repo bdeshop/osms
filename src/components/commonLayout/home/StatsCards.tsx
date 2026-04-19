@@ -29,9 +29,7 @@ const StatsCards = () => {
       try {
         setLoading(true);
         setError(null);
-        console.log("📥 Fetching homepage stats");
         const response = (await publicAPI.getHomepageStats()) as any;
-        console.log("✅ Stats fetched:", response.data);
         setStats(response.data || []);
       } catch (err) {
         console.error("❌ Failed to fetch stats:", err);
@@ -90,7 +88,7 @@ const StatsCards = () => {
                 <h3
                   className={`text-2xl sm:text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${themeConfig.colors.gradient.primaryReverse}`}
                 >
-                  {stat.value}
+                  {language === "en" ? stat.value : stat.valueBn}
                 </h3>
                 <p
                   className={`mt-2 sm:mt-3 text-${themeConfig.colors.text.secondary} text-xs sm:text-sm lg:text-base leading-relaxed`}

@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true,
   },
+  // Static export for cPanel hosting
+  output: "export",
+  distDir: "out",
+  // Enable trailing slash for proper directory structure
+  trailingSlash: true,
 };
 
 export default nextConfig;

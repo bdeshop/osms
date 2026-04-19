@@ -39,9 +39,7 @@ const GlobalReachSection = () => {
       try {
         setLoading(true);
         setError(null);
-        console.log("📥 Fetching news updates");
         const response = (await publicAPI.getNewsUpdates()) as any;
-        console.log("✅ News updates fetched:", response.data);
         setUpdates(response.data || []);
       } catch (err) {
         console.error("❌ Failed to fetch news updates:", err);
@@ -149,14 +147,14 @@ const GlobalReachSection = () => {
                   </p>
 
                   {/* Optional CTA */}
-                  {/* <div className="mt-6 sm:mt-8">
+                  <div className="mt-6 sm:mt-8">
                     <Link
-                      href="/"
+                      href="/contact"
                       className="inline-block px-6 sm:px-8 py-2.5 sm:py-3 bg-white text-purple-700 font-semibold text-sm sm:text-base rounded-full shadow-lg hover:bg-purple-100 transition duration-300 transform hover:-translate-y-1"
                     >
                       Discover More →
                     </Link>
-                  </div> */}
+                  </div>
                 </div>
               </div>
             </SwiperSlide>

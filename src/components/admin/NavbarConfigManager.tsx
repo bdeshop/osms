@@ -42,7 +42,6 @@ interface NavbarConfig {
   logoTextEn: string;
   logoTextBn: string;
   logoImage?: string;
-  favicon?: string;
   menu: NavbarMenuItem[];
   isActive: boolean;
 }
@@ -55,8 +54,6 @@ export default function NavbarConfigManager() {
   const [success, setSuccess] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
-  const [selectedFavicon, setSelectedFavicon] = useState<File | null>(null);
-  const [faviconPreviewUrl, setFaviconPreviewUrl] = useState<string>("");
 
   const [editingMenu, setEditingMenu] = useState<{ index: number; data: NavbarMenuItem } | null>(null);
   const [showMenuModal, setShowMenuModal] = useState(false);
@@ -73,9 +70,6 @@ export default function NavbarConfigManager() {
         setConfig(response.data);
         if (response.data.logoImage) {
           setPreviewUrl(response.data.logoImage.startsWith('http') ? response.data.logoImage : `${API_BASE}${response.data.logoImage}`);
-        }
-        if (response.data.favicon) {
-          setFaviconPreviewUrl(response.data.favicon.startsWith('http') ? response.data.favicon : `${API_BASE}${response.data.favicon}`);
         }
       } else setError(response.message || "Failed to load configuration");
     } catch (err) {
@@ -94,15 +88,6 @@ export default function NavbarConfigManager() {
     }
   };
 
-  const handleFaviconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFavicon(file);
-      const url = URL.createObjectURL(file);
-      setFaviconPreviewUrl(url);
-    }
-  };
-
   const handleSaveConfig = async () => {
     if (!config) return;
     try {
@@ -110,10 +95,9 @@ export default function NavbarConfigManager() {
       setError("");
 
       let payload: any;
-      if (selectedFile || selectedFavicon) {
+      if (selectedFile) {
         const formData = new FormData();
-        if (selectedFile) formData.append("logo", selectedFile);
-        if (selectedFavicon) formData.append("favicon", selectedFavicon);
+        formData.append("logo", selectedFile);
         formData.append("config", JSON.stringify(config));
         payload = formData;
       } else {
@@ -125,12 +109,8 @@ export default function NavbarConfigManager() {
         setSuccess("Navbar configuration saved successfully");
         setConfig(response.data);
         setSelectedFile(null);
-        setSelectedFavicon(null);
         if (response.data.logoImage) {
           setPreviewUrl(response.data.logoImage.startsWith('http') ? response.data.logoImage : `${API_BASE}${response.data.logoImage}`);
-        }
-        if (response.data.favicon) {
-          setFaviconPreviewUrl(response.data.favicon.startsWith('http') ? response.data.favicon : `${API_BASE}${response.data.favicon}`);
         }
         setTimeout(() => setSuccess(""), 3000);
       } else setError(response.message || "Failed to save configuration");
@@ -197,23 +177,6 @@ export default function NavbarConfigManager() {
                       </div>
                     )}
                     <input type="file" accept="image/*" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Site Favicon</label>
-                <div className="relative group">
-                  <div className="w-full h-24 bg-black/40 rounded-lg border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-3 overflow-hidden hover:border-amber-500/30 transition-colors">
-                    {faviconPreviewUrl ? (
-                      <img src={faviconPreviewUrl} alt="Favicon" className="w-8 h-8 object-contain" />
-                    ) : (
-                      <div className="text-center">
-                        <Plus size={20} className="mx-auto text-gray-600 mb-1" />
-                        <p className="text-[10px] text-gray-500">Upload Favicon</p>
-                      </div>
-                    )}
-                    <input type="file" accept="image/*" onChange={handleFaviconChange} className="absolute inset-0 opacity-0 cursor-pointer" />
                   </div>
                 </div>
               </div>

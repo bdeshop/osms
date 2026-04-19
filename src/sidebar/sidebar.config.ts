@@ -71,73 +71,71 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: Settings,
       },
       {
-        title: "Contact Us",
-        url: "/admin/contact-us",
-        icon: Mail,
-      },
-      {
-        title: "Homepage Stats",
-        url: "/admin/homepage-stats",
-        icon: BarChart3,
-      },
-      {
-        title: "News Updates",
-        url: "/admin/news-updates",
-        icon: Newspaper,
-      },
-      {
-        title: "Service Channels",
-        url: "/admin/service-channels",
-        icon: Radio,
-      },
-      {
-        title: "Testimonials",
-        url: "/admin/testimonials",
-        icon: MessageSquareQuote,
-      },
-      {
-        title: "Navbar Config",
-        url: "/admin/navbar-config",
-        icon: Menu,
-      },
-      {
-        title: "Footer Config",
-        url: "/admin/footer-config",
-        icon: LayoutList,
-      },
-      {
-        title: "Contact Page Config",
-        url: "/admin/contact-page-config",
-        icon: Mail,
-      },
-      {
-        title: "Banner Config",
-        url: "/admin/banner-config",
-        icon: ImageIcon,
-      },
-      {
-        title: "Messaging",
-        icon: MessageCircle,
+        title: "Content Management",
+        icon: Settings,
         items: [
-          { title: "Send SMS", url: "/admin/messaging/sms", icon: Mail },
-          { title: "Campaign", url: "/admin/messaging/campaign", icon: Zap },
+          { title: "Contact Us", url: "/admin/contact-us", icon: Mail },
           {
-            title: "Send Using File",
-            url: "/admin/messaging/file",
-            icon: Folder,
+            title: "Homepage Stats",
+            url: "/admin/homepage-stats",
+            icon: BarChart3,
           },
           {
-            title: "Sender ID",
-            url: "/admin/messaging/sender-id",
-            icon: Settings,
+            title: "News Updates",
+            url: "/admin/news-updates",
+            icon: Newspaper,
           },
           {
-            title: "Non Masking ID",
-            url: "/admin/messaging/non-masking",
-            icon: Shield,
+            title: "Service Channels",
+            url: "/admin/service-channels",
+            icon: Radio,
+          },
+          {
+            title: "Testimonials",
+            url: "/admin/testimonials",
+            icon: MessageSquareQuote,
+          },
+          { title: "Navbar Config", url: "/admin/navbar-config", icon: Menu },
+          {
+            title: "Footer Config",
+            url: "/admin/footer-config",
+            icon: LayoutList,
+          },
+          {
+            title: "Contact Page Config",
+            url: "/admin/contact-page-config",
+            icon: Mail,
+          },
+          {
+            title: "Banner Config",
+            url: "/admin/banner-config",
+            icon: ImageIcon,
           },
         ],
       },
+      // {
+      //   title: "Messaging",
+      //   icon: MessageCircle,
+      //   items: [
+      //     { title: "Send SMS", url: "/admin/messaging/sms", icon: Mail },
+      //     { title: "Campaign", url: "/admin/messaging/campaign", icon: Zap },
+      //     {
+      //       title: "Send Using File",
+      //       url: "/admin/messaging/file",
+      //       icon: Folder,
+      //     },
+      //     {
+      //       title: "Sender ID",
+      //       url: "/admin/messaging/sender-id",
+      //       icon: Settings,
+      //     },
+      //     {
+      //       title: "Non Masking ID",
+      //       url: "/admin/messaging/non-masking",
+      //       icon: Shield,
+      //     },
+      //   ],
+      // },
     ],
   },
 
@@ -146,7 +144,7 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
   // ============================================
   {
     title: "User Panel",
-    roles: ["USER", "ADMIN"],
+    roles: ["USER"],
     items: [
       {
         title: "Dashboard",

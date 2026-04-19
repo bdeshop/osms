@@ -1,18 +1,11 @@
-import PackagesPage from "@/components/public/PackagesPage";
-import Navbar from "@/components/commonLayout/Navbar";
-import Footer from "@/components/commonLayout/home/Footer";
+"use client";
 
-export const metadata = {
-  title: "SMS Packages - SMS Gateway",
-  description: "Browse and select from our SMS messaging packages",
-};
+import PackagesPage from "@/components/public/PackagesPage";
 
 export default function PackagesPageRoute() {
   return (
-    <>
-      <Navbar />
+    <div className="pt-8 pb-16">
       <PackagesPage />
-      <Footer />
-    </>
+    </div>
   );
 }

@@ -11,7 +11,7 @@ export default function DashboardLayout({
 }) {
   return (
     <RoleProtectedLayout allowedRoles={["ADMIN", "USER"]}>
-      <div className="flex min-h-screen bg-gray-900">
+      <div className="flex min-h-screen bg-gray-900" suppressHydrationWarning>
         {/* Sticky Sidebar */}
         <div className="sticky top-0 h-screen">
           <DashboardSidebarWrapper />

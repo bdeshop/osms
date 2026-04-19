@@ -19,7 +19,6 @@ export default function Home() {
       <ServiceSlider/>
       <BrandMarquee/>
       <TestimonialSlider/>
-      <LatestUpdatesSlider/>
       <StartMessagingCTA/>
     </main>
   );

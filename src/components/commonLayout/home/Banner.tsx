@@ -59,7 +59,7 @@ const Banner = () => {
               <br className="hidden sm:block" />
               <span className={`text-${theme.colors.primary}`}>
                 {config.subtitle}{" "}
-                <span className="inline-block min-w-fit">
+                <span className="inline-block min-w-[180px] sm:min-w-[200px]">
                   {displayedText}
                   <span className="animate-pulse">|</span>
                 </span>
@@ -78,7 +78,7 @@ const Banner = () => {
                   <Button
                     size="lg"
                     variant={btn.variant === "primary" ? "default" : "outline"}
-                    className={`w-full sm:w-auto min-w-[140px] sm:min-w-[180px] ${theme.fonts.button.size} lg:text-lg ${theme.fonts.button.weight} shadow-md hover:shadow-lg transition-all duration-300 group rounded-lg ${
+                    className={`w-full sm:w-auto min-w-[160px] sm:min-w-[180px] ${theme.fonts.button.size} lg:text-lg ${theme.fonts.button.weight} shadow-md hover:shadow-lg transition-all duration-300 group rounded-lg ${
                       btn.variant === "primary"
                         ? theme.components.button.primary
                         : theme.components.button.outline

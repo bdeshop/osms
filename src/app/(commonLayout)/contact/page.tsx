@@ -3,11 +3,11 @@
 import ContactFormSection from "@/components/common/ContactPage";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import Navbar from "@/components/commonLayout/Navbar";
-import Footer from "@/components/commonLayout/home/Footer";
 import { publicAPI, API_BASE } from "@/services/api";
 import { useLanguage } from "@/context/LanguageContext";
 import { Loader } from "lucide-react";
+import Navbar from "@/components/commonLayout/Navbar";
+import Footer from "@/components/commonLayout/home/Footer";
 
 interface Location {
   name: string;
@@ -49,7 +49,6 @@ const ContactPage = () => {
 
   return (
     <>
-      <Navbar />
       <main>
         {/* Banner Section */}
         <section className="relative overflow-hidden bg-white">
@@ -163,8 +162,6 @@ const ContactPage = () => {
             )}
           </div>
         </section>
-
-        <Footer />
       </main>
     </>
   );
