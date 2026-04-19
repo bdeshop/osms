@@ -79,8 +79,21 @@ export default function DashboardSidebar({ role }: SidebarProps) {
 
       {/* Navigation Container */}
       <nav className="flex-1 px-4 py-8 space-y-8 overflow-y-auto custom-scrollbar">
-        {SIDEBAR_CONFIG.filter((section) => section.roles.includes(role)).map(
-          (section, i) => (
+        {SIDEBAR_CONFIG.filter((section) => {
+          const isRoleAllowed = section.roles.includes(role);
+          if (!isRoleAllowed) return false;
+
+          // If the user is an ADMIN, show either Admin or User panel based on route
+          if (role === "ADMIN") {
+            const isAdminRoute = pathname.startsWith("/admin");
+            const isUserRoute = pathname.startsWith("/user");
+
+            if (isAdminRoute && section.title === "User Panel") return false;
+            if (isUserRoute && section.title === "Admin Panel") return false;
+          }
+
+          return true;
+        }).map((section, i) => (
             <div key={i} className="space-y-3">
               {/* Section Title with Animated Underline */}
               <div className="px-3 flex items-center justify-between">
@@ -265,9 +278,20 @@ export default function DashboardSidebar({ role }: SidebarProps) {
               </div>
               <nav className="flex-1 px-4 py-8 overflow-y-auto space-y-6">
                 {/* Mobile menu content logic matches desktop but with SheetClose */}
-                {SIDEBAR_CONFIG.filter((section) =>
-                  section.roles.includes(role),
-                ).map((section, i) => (
+                {SIDEBAR_CONFIG.filter((section) => {
+                  const isRoleAllowed = section.roles.includes(role);
+                  if (!isRoleAllowed) return false;
+
+                  if (role === "ADMIN") {
+                    const isAdminRoute = pathname.startsWith("/admin");
+                    const isUserRoute = pathname.startsWith("/user");
+
+                    if (isAdminRoute && section.title === "User Panel") return false;
+                    if (isUserRoute && section.title === "Admin Panel") return false;
+                  }
+
+                  return true;
+                }).map((section, i) => (
                   <div key={i} className="space-y-3">
                     <h3 className="px-3 text-[10px] font-black text-gray-600 uppercase tracking-widest">
                       {section.title}

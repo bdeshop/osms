@@ -146,7 +146,7 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
   // ============================================
   {
     title: "User Panel",
-    roles: ["USER"],
+    roles: ["USER", "ADMIN"],
     items: [
       {
         title: "Dashboard",
