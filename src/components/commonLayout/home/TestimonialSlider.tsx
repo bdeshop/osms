@@ -59,9 +59,11 @@ const TestimonialSlider = () => {
 
   if (loading) {
     return (
-      <section className={`py-16 bg-${themeConfig.colors.background.white}`}>
+      <section
+        className={`py-12 sm:py-16 md:py-20 lg:py-24 bg-${themeConfig.colors.background.white}`}
+      >
         <div
-          className={`container mx-auto ${themeConfig.spacing.container.padding} flex items-center justify-center`}
+          className={`${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding} flex items-center justify-center`}
         >
           <Loader
             className={`animate-spin text-${themeConfig.colors.primary}`}
@@ -93,29 +95,39 @@ const TestimonialSlider = () => {
   };
 
   return (
-    <section className={`py-16 bg-${themeConfig.colors.background.white}`}>
-      <div className="container mx-auto px-4">
+    <section
+      className={`py-12 sm:py-16 md:py-20 lg:py-24 bg-${themeConfig.colors.background.white}`}
+    >
+      <div
+        className={`${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding}`}
+      >
         <div className="max-w-4xl mx-auto">
           {/* Slider Card */}
           <div
-            className={`relative bg-${themeConfig.colors.background.light} rounded-2xl p-8 md:p-12 shadow-sm border border-${themeConfig.colors.border}`}
+            className={`relative bg-${themeConfig.colors.background.light} rounded-lg sm:rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 lg:p-12 shadow-sm border border-${themeConfig.colors.border}`}
           >
             {/* Testimonial Text */}
             <blockquote
-              className={`text-lg md:text-xl text-${themeConfig.colors.text.primary} leading-relaxed italic mb-8 relative z-10`}
+              className={`text-sm sm:text-base md:text-lg lg:text-xl text-${themeConfig.colors.text.primary} leading-relaxed italic mb-4 sm:mb-6 md:mb-8 relative z-10 line-clamp-4 sm:line-clamp-none`}
             >
-              {current.quote}
+              "{current.quote}"
             </blockquote>
 
             {/* Logo & Attribution */}
             <div className="flex flex-col items-center">
               <img
-                src={current.logoUrl?.startsWith('http') ? current.logoUrl : (current.logoUrl?.startsWith('/images') ? current.logoUrl : `${API_BASE}${current.logoUrl}`)}
+                src={
+                  current.logoUrl?.startsWith("http")
+                    ? current.logoUrl
+                    : current.logoUrl?.startsWith("/images")
+                      ? current.logoUrl
+                      : `${API_BASE}${current.logoUrl}`
+                }
                 alt={current.attribution}
-                className="h-12 object-contain mb-3"
+                className="h-8 sm:h-10 md:h-12 object-contain mb-2 sm:mb-3"
               />
               <p
-                className={`mt-3 text-${themeConfig.colors.text.secondary} text-sm md:text-base`}
+                className={`mt-2 sm:mt-3 text-${themeConfig.colors.text.secondary} text-xs sm:text-sm md:text-base`}
               >
                 {current.attribution}
               </p>
@@ -123,15 +135,15 @@ const TestimonialSlider = () => {
           </div>
 
           {/* Navigation Arrows */}
-          <div className="flex justify-between mt-8 max-w-md mx-auto">
+          <div className="flex justify-between items-center mt-6 sm:mt-8 md:mt-10 max-w-md mx-auto gap-2 sm:gap-4">
             <button
               onClick={prevSlide}
               aria-label="Previous testimonial"
-              className={`w-10 h-10 rounded-lg bg-${themeConfig.colors.background.lighter} hover:bg-gray-200 flex items-center justify-center transition-colors`}
+              className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg bg-${themeConfig.colors.background.lighter} hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-600"
+                className="h-4 sm:h-5 w-4 sm:w-5 text-gray-600"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -143,13 +155,13 @@ const TestimonialSlider = () => {
               </svg>
             </button>
 
-            <div className="flex space-x-2">
+            <div className="flex gap-1.5 sm:gap-2 flex-wrap justify-center">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
                   aria-label={`Go to testimonial ${index + 1}`}
-                  className={`w-3 h-3 rounded-full transition-colors ${
+                  className={`w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full transition-colors ${
                     index === currentIndex
                       ? `bg-${themeConfig.colors.text.primary}`
                       : "bg-gray-300"
@@ -161,11 +173,11 @@ const TestimonialSlider = () => {
             <button
               onClick={nextSlide}
               aria-label="Next testimonial"
-              className={`w-10 h-10 rounded-lg bg-${themeConfig.colors.background.lighter} hover:bg-gray-200 flex items-center justify-center transition-colors`}
+              className={`w-8 sm:w-10 h-8 sm:h-10 rounded-lg bg-${themeConfig.colors.background.lighter} hover:bg-gray-200 flex items-center justify-center transition-colors flex-shrink-0`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-600"
+                className="h-4 sm:h-5 w-4 sm:w-5 text-gray-600"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >

@@ -318,6 +318,12 @@ const DashboardSidebar = React.memo(function DashboardSidebar({
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [openDropdowns, setOpenDropdowns] = useState<Set<string>>(new Set());
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Hydration fix
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
     const checkIfMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -357,6 +363,10 @@ const DashboardSidebar = React.memo(function DashboardSidebar({
   };
 
   const isDropdownOpen = (title: string) => openDropdowns.has(title);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
     <>

@@ -96,14 +96,26 @@ export default function Navbar() {
 
   const logoText = language === "en" ? config?.logoTextEn : config?.logoTextBn;
   const menuItems = config?.menu || [];
+
   const getImageUrl = (src: string) => {
     if (!src) return "";
+    // If it's already a full URL
     if (src.startsWith("http")) return src;
+    // If it's a local public asset
     if (src.startsWith("/images")) return src;
-    return `${API_BASE}${src}`;
+    // If it's an upload path from backend
+    if (src.startsWith("/uploads")) return `${API_BASE}${src}`;
+    // Default: prepend API_BASE
+    return `${API_BASE}${src.startsWith("/") ? src : "/" + src}`;
   };
 
   const logoSrc = config?.logoImage ? getImageUrl(config.logoImage) : null;
+
+  console.log("Navbar - Logo Image Debug:", {
+    configLogoImage: config?.logoImage,
+    constructedUrl: logoSrc,
+    apiBase: API_BASE,
+  });
 
   return (
     <nav className="bg-white/70 backdrop-blur-xl border-b border-gray-100/50 sticky top-0 z-50 transition-all duration-300">
@@ -115,16 +127,20 @@ export default function Navbar() {
             className="flex items-center gap-2 group relative z-50"
           >
             {logoSrc ? (
-              <div className="relative">
+              <div className="relative h-10 w-auto">
                 <img
                   src={logoSrc}
-                  alt={logoText}
+                  alt={logoText || "Logo"}
                   className="h-10 w-auto object-contain transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
+                  onError={(e) => {
+                    console.error("Logo image failed to load:", logoSrc);
+                    e.currentTarget.style.display = "none";
+                  }}
                 />
                 <div className="absolute -inset-2 bg-pink-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             ) : (
-              <span className="text-2xl font-black tracking-tighter bg-gradient-to-br from-pink-600 via-rose-500 to-amber-500 bg-clip-text text-transparent">
+              <span className="text-2xl font-black tracking-tighter bg-linear-to-br from-pink-600 via-rose-500 to-amber-500 bg-clip-text text-transparent">
                 {logoText || "o-sms"}
               </span>
             )}

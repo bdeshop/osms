@@ -105,14 +105,14 @@ const ServicesGrid = () => {
       <div
         className={`${themeConfig.spacing.container.maxWidth} mx-auto ${themeConfig.spacing.container.padding}`}
       >
-        <div className="text-center mb-10 sm:mb-12 lg:mb-14">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-14">
           <h2
-            className={`text-2xl sm:text-3xl lg:text-4xl font-bold text-${themeConfig.colors.text.primary} mb-2 sm:mb-3`}
+            className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-${themeConfig.colors.text.primary} mb-2 sm:mb-3`}
           >
             Boosts the Global iGaming Business
           </h2>
           <p
-            className={`text-lg sm:text-xl lg:text-2xl bg-gradient-to-r ${themeConfig.colors.gradient.primary} bg-clip-text text-transparent font-bold`}
+            className={`text-base sm:text-lg md:text-xl lg:text-2xl bg-gradient-to-r ${themeConfig.colors.gradient.primary} bg-clip-text text-transparent font-bold`}
           >
             Beyond Your Imagination
           </p>
@@ -123,7 +123,7 @@ const ServicesGrid = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6"
         >
           {services.map((service, idx) => (
             <motion.div
@@ -136,7 +136,7 @@ const ServicesGrid = () => {
 
               {/* Card */}
               <div
-                className={`relative p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 border-${themeConfig.colors.border} bg-${themeConfig.colors.background.white} shadow-sm hover:shadow-lg transition-all duration-300 group-hover:border-transparent overflow-hidden h-full flex flex-col items-center justify-center`}
+                className={`relative p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl md:rounded-2xl border-2 border-${themeConfig.colors.border} bg-${themeConfig.colors.background.white} shadow-sm hover:shadow-lg transition-all duration-300 group-hover:border-transparent overflow-hidden h-full flex flex-col items-center justify-center min-h-[120px] sm:min-h-[140px] md:min-h-[160px]`}
               >
                 {/* Animated gradient border on hover */}
                 <div
@@ -145,7 +145,7 @@ const ServicesGrid = () => {
 
                 {/* Content */}
                 <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center mb-2 sm:mb-3 text-lg sm:text-xl group-hover:scale-110 transition-transform duration-300 overflow-hidden">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center mb-2 sm:mb-3 text-lg sm:text-xl md:text-2xl group-hover:scale-110 transition-transform duration-300 overflow-hidden shrink-0">
                     {service.iconType === "image" ? (
                       <img
                         src={
@@ -165,7 +165,7 @@ const ServicesGrid = () => {
                     )}
                   </div>
                   <h3
-                    className={`font-semibold text-sm sm:text-base text-${themeConfig.colors.text.primary} group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300`}
+                    className={`font-semibold text-xs sm:text-sm md:text-base text-${themeConfig.colors.text.primary} group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-pink-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300 line-clamp-2`}
                   >
                     {language === "en" ? service.name : service.nameBn}
                   </h3>
