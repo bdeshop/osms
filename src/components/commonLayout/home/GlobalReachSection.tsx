@@ -9,10 +9,8 @@ import { publicAPI } from "@/services/api";
 import { API_BASE } from "@/services/api";
 import themeConfig from "@/data/themeConfig.json";
 import { useLanguage } from "@/context/LanguageContext";
-
 import "swiper/css";
 import "swiper/css/navigation";
-import Link from "next/link";
 
 type NewsUpdateItem = {
   _id: string;
@@ -147,14 +145,6 @@ const GlobalReachSection = () => {
                   </p>
 
                   {/* Optional CTA */}
-                  <div className="mt-4 sm:mt-6 md:mt-8">
-                    <Link
-                      href="/contact"
-                      className="inline-block px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 bg-white text-purple-700 font-semibold text-xs sm:text-sm md:text-base rounded-full shadow-lg hover:bg-purple-100 transition duration-300 transform hover:-translate-y-1"
-                    >
-                      Discover More →
-                    </Link>
-                  </div>
                 </div>
               </div>
             </SwiperSlide>
