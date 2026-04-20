@@ -76,6 +76,9 @@ export const publicAPI = {
   getContactPageConfig: () =>
     apiCall("/frontend/contact-page-config", { method: "GET" }),
   getBannerConfig: () => apiCall("/frontend/banner-config", { method: "GET" }),
+
+  getChatWidgetConfig: () =>
+    apiCall("/frontend/chat-widget-config", { method: "GET" }),
 };
 
 // Auth APIs
@@ -348,6 +351,15 @@ export const adminAPI = {
   getBannerConfig: () => apiCall("/admin/banner-config", { method: "GET" }),
   updateBannerConfig: (data: any) =>
     apiCall("/admin/banner-config", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  // Chat Widget Configuration
+  getChatWidgetConfig: () =>
+    apiCall("/admin/chat-widget-config", { method: "GET" }),
+  updateChatWidgetConfig: (data: any) =>
+    apiCall("/admin/chat-widget-config", {
       method: "POST",
       body: JSON.stringify(data),
     }),

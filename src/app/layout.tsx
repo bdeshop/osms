@@ -13,13 +13,39 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "o-sms - SMS Gateway",
-  description: "o-sms - Trusted SMS & Voice Marketing Solution Provider",
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
+const API_BASE = "https://o-sms.com/backend";
+
+async function getNavbarConfig() {
+  try {
+    const res = await fetch(`${API_BASE}/api/frontend/navbar-config`, {
+      next: { revalidate: 60 }, // revalidate every 60 seconds
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json?.data ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const navbarConfig = await getNavbarConfig();
+  const faviconUrl = navbarConfig?.favicon
+    ? navbarConfig.favicon.startsWith("http")
+      ? navbarConfig.favicon
+      : `${API_BASE}${navbarConfig.favicon}`
+    : "/favicon.ico";
+
+  return {
+    title: "o-sms - SMS Gateway",
+    description: "o-sms - Trusted SMS & Voice Marketing Solution Provider",
+    icons: {
+      icon: faviconUrl,
+      shortcut: faviconUrl,
+      apple: faviconUrl,
+    },
+  };
+}
 
 export default function RootLayout({
   children,

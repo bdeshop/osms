@@ -270,7 +270,7 @@ export default function Header() {
               asChild
               className="bg-fuchsia-600 hover:bg-fuchsia-700 text-white rounded-full px-6"
             >
-              <Link href="/signup">Free Trial</Link>
+              <Link href="/signup">Signup</Link>
             </Button>
           </div>
 
@@ -373,7 +373,7 @@ export default function Header() {
                       className="bg-fuchsia-600 hover:bg-fuchsia-700"
                       asChild
                     >
-                      <Link href="/signup">Start Free Trial</Link>
+                      <Link href="/signup">SignUp Now</Link>
                     </Button>
                   </div>
                 </div>

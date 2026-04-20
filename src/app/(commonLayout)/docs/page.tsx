@@ -7,11 +7,11 @@ import PublicAPIDocumentation from "@/components/pages/PublicAPIDocumentation";
 export default function DocsPage() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main>
         <PublicAPIDocumentation />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

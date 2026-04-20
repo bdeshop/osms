@@ -304,7 +304,7 @@ export default function Navbar() {
               href="/user-register"
               className="px-6 py-3 rounded-full bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white font-semibold transition-all shadow-xl shadow-pink-200/50 active:scale-95 text-[14px]"
             >
-              {language === "en" ? "Free Trial" : "বিনামূল্যে ট্রায়াল"}
+              {language === "en" ? "Signup" : "বিনামূল্যে ট্রায়াল"}
             </Link>
 
             {/* Mobile Menu Toggle */}

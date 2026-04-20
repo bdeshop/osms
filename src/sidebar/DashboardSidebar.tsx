@@ -217,97 +217,169 @@ const MobileSidebar = ({
   toggleDropdown,
   isDropdownOpen,
 }: MobileSidebarProps) => (
-  <div className="lg:hidden fixed top-0 left-0 w-full z-50 pointer-events-none">
-    <div className="p-4 pointer-events-auto">
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
-          <button className="bg-gray-900 border border-white/5 p-2 rounded-xl text-white shadow-2xl active:scale-95 transition-transform">
-            {isOpen ? <XIcon size={20} /> : <MenuIcon size={20} />}
-          </button>
-        </SheetTrigger>
-        <SheetContent
-          side="left"
-          className="w-72 p-0 bg-gray-900 border-r border-white/5"
+  <div className="lg:hidden">
+    {/* Mobile Trigger Button - Fixed to top left but above everything */}
+    <div className="fixed top-3 left-4 z-[100] pointer-events-none">
+      <div className="pointer-events-auto">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="bg-amber-500 text-gray-950 p-2.5 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-amber-400/20 active:scale-90 transition-all duration-200 flex items-center justify-center backdrop-blur-sm"
+          aria-label="Toggle Menu"
         >
-          <div className="flex flex-col h-full overflow-hidden">
-            <div className="h-16 flex items-center justify-center border-b border-white/5">
-              <Logo />
-            </div>
-            <nav className="flex-1 px-4 py-8 overflow-y-auto space-y-6">
-              {SIDEBAR_CONFIG.filter((section) =>
-                section.roles.includes(role),
-              ).map((section, i) => (
-                <div key={i} className="space-y-3">
-                  <h3 className="px-3 text-[10px] font-black text-gray-600 uppercase tracking-widest">
-                    {section.title}
-                  </h3>
-                  <div className="space-y-1">
-                    {section.items.map((item) => (
-                      <div key={item.title}>
-                        {hasChildren(item) ? (
-                          <div className="space-y-1">
-                            <button
-                              onClick={() => toggleDropdown(item.title)}
-                              className="flex items-center justify-between w-full px-4 py-2.5 text-sm font-bold text-gray-400"
-                            >
-                              <span className="flex items-center gap-3">
-                                {item.icon && <item.icon size={16} />}
-                                {item.title}
-                              </span>
-                              <ChevronDown
-                                size={14}
-                                className={cn(
-                                  "transition-transform",
-                                  isDropdownOpen(item.title) && "rotate-180",
-                                )}
-                              />
-                            </button>
+          {isOpen ? <XIcon size={20} /> : <MenuIcon size={20} />}
+        </button>
+      </div>
+    </div>
+
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <SheetContent
+        side="left"
+        className="w-72 p-0 bg-gray-950 border-r border-white/5"
+      >
+        <div className="flex flex-col h-full">
+          {/* Mobile Sidebar Head */}
+          <div className="h-24 flex items-center justify-between px-6 border-b border-white/5 bg-gray-900/50">
+            <Logo />
+            <SheetClose asChild>
+              <button className="p-2 rounded-lg hover:bg-white/5 text-gray-400">
+                <XIcon size={20} />
+              </button>
+            </SheetClose>
+          </div>
+
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-8 overflow-y-auto space-y-8 custom-scrollbar">
+            {SIDEBAR_CONFIG.filter((section) =>
+              section.roles.includes(role),
+            ).map((section, i) => (
+              <div key={i} className="space-y-3">
+                <h3 className="px-4 text-[10px] font-black text-amber-500/50 uppercase tracking-[0.2em]">
+                  {section.title}
+                </h3>
+                <div className="space-y-1">
+                  {section.items.map((item) => (
+                    <div key={item.title}>
+                      {hasChildren(item) ? (
+                        <div className="space-y-1">
+                          <button
+                            onClick={() => toggleDropdown(item.title)}
+                            className={cn(
+                              "flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-bold transition-colors",
+                              isDropdownOpen(item.title)
+                                ? "bg-white/5 text-white"
+                                : "text-gray-400 hover:bg-white/5 hover:text-gray-200",
+                            )}
+                          >
+                            <span className="flex items-center gap-3">
+                              {item.icon && (
+                                <item.icon
+                                  size={18}
+                                  className={
+                                    isDropdownOpen(item.title)
+                                      ? "text-amber-500"
+                                      : "text-gray-500"
+                                  }
+                                />
+                              )}
+                              {item.title}
+                            </span>
+                            <ChevronDown
+                              size={14}
+                              className={cn(
+                                "transition-transform duration-300",
+                                isDropdownOpen(item.title) && "rotate-180",
+                              )}
+                            />
+                          </button>
+                          <AnimatePresence>
                             {isDropdownOpen(item.title) && (
-                              <div className="ml-8 space-y-1">
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                className="ml-8 space-y-1 overflow-hidden"
+                              >
                                 {item.items?.map((sub) => (
                                   <SheetClose asChild key={sub.url}>
                                     <Link
                                       href={sub.url!}
                                       className={cn(
-                                        "block px-4 py-2 text-xs font-bold",
+                                        "block px-4 py-2 text-xs font-bold transition-colors",
                                         pathname === sub.url
-                                          ? "text-amber-500"
-                                          : "text-gray-500",
+                                          ? "text-amber-400"
+                                          : "text-gray-500 hover:text-gray-300",
                                       )}
                                     >
-                                      {sub.title}
+                                      <span className="flex items-center gap-2">
+                                        <span
+                                          className={cn(
+                                            "w-1 h-1 rounded-full",
+                                            pathname === sub.url
+                                              ? "bg-amber-400"
+                                              : "bg-gray-700",
+                                          )}
+                                        />
+                                        {sub.title}
+                                      </span>
                                     </Link>
                                   </SheetClose>
                                 ))}
-                              </div>
+                              </motion.div>
                             )}
-                          </div>
-                        ) : (
-                          <SheetClose asChild>
-                            <Link
-                              href={item.url!}
-                              className={cn(
-                                "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold",
-                                pathname === item.url
-                                  ? "bg-amber-500/10 text-amber-500"
-                                  : "text-gray-400",
-                              )}
-                            >
-                              {item.icon && <item.icon size={16} />}
-                              {item.title}
-                            </Link>
-                          </SheetClose>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        <SheetClose asChild>
+                          <Link
+                            href={item.url!}
+                            className={cn(
+                              "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all",
+                              pathname === item.url
+                                ? "bg-amber-500/10 text-amber-500"
+                                : "text-gray-400 hover:bg-white/5 hover:text-gray-200",
+                            )}
+                          >
+                            {item.icon && (
+                              <item.icon
+                                size={18}
+                                className={cn(
+                                  "transition-colors",
+                                  pathname === item.url
+                                    ? "text-amber-500"
+                                    : "text-gray-500",
+                                )}
+                              />
+                            )}
+                            {item.title}
+                          </Link>
+                        </SheetClose>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </nav>
+              </div>
+            ))}
+          </nav>
+
+          {/* User Role Footer info for Mobile */}
+          <div className="p-6 border-t border-white/5 bg-black/20">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 font-black text-xs">
+                {role[0]}
+              </div>
+              <div>
+                <p className="text-xs font-black text-white uppercase tracking-tighter">
+                  Active Session
+                </p>
+                <p className="text-[10px] text-gray-500 uppercase font-bold">
+                  Role: {role}
+                </p>
+              </div>
+            </div>
           </div>
-        </SheetContent>
-      </Sheet>
-    </div>
+        </div>
+      </SheetContent>
+    </Sheet>
   </div>
 );
 
