@@ -430,6 +430,8 @@ export const paymentAPI = {
 
   rejectRecharge: (paymentId: string) =>
     apiCall(`/admin/payments/${paymentId}/reject`, { method: "POST" }),
+
+  getMyPayments: () => apiCall("/payment/my-payments", { method: "GET" }),
 };
 
 // Messaging APIs

@@ -168,6 +168,11 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         icon: CreditCard,
       },
       {
+        title: "Transaction History",
+        url: "/user/transactions",
+        icon: LayoutList,
+      },
+      {
         title: "Messages",
         url: "/user/messages",
         icon: MessageCircle,
